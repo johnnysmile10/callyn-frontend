@@ -10,7 +10,7 @@ const Hero = () => {
           AI That Calls, Books, and Closes — While You Focus on Growth
         </h1>
         <p className="text-xl md:text-2xl text-gray-200 mb-8 mx-auto max-w-3xl">
-          Callyn handles your calls, books appointments, and helps you close deals so you don't have to. Perfect for small teams who can't call everyone.
+          Callyn handles your calls, answers, follows up, and books — so you can focus on close and business growth
         </p>
         <div className="flex flex-col md:flex-row justify-center gap-4">
           <Button className="rounded-full bg-white text-blue-900 hover:bg-gray-200 text-lg py-6 px-8">
