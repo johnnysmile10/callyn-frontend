@@ -9,9 +9,6 @@ const PricingPlans = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-callyn-darkBlue mb-4">
             CALLYN WILL HELP YOU WITH...
           </h2>
-          <p className="text-xl md:text-2xl text-gray-700">
-            See how Callyn compares to traditional solutions.
-          </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
