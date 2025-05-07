@@ -9,8 +9,8 @@ const HowItWorks = () => {
     },
     {
       number: "2",
-      title: "Confirm Rosie has things right.",
-      description: "Rosie will be trained on your specific business information. Make adjustments, add questions you want asked when taking a message, and more.",
+      title: "Customize Answers & Add Questions",
+      description: "Callyn learns your business fast. Add key info, choose what questions to ask callers, and customize how Callyn responds — all in minutes.",
       image: "/lovable-uploads/62ea189c-696d-4629-a154-b6c91f973291.png"
     },
     {
