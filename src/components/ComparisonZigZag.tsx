@@ -26,6 +26,12 @@ const ComparisonZigZag = () => {
       title: "Scale your business effortlessly.",
       description: "Handle increasing call volumes without hiring additional staff or missing important opportunities.",
       image: "/lovable-uploads/c1bf6c33-6c5c-4279-a6b1-53004666eb3c.png"
+    },
+    {
+      number: "5",
+      title: "Get 24/7 coverage for your business.",
+      description: "Never miss another opportunity with round-the-clock call answering that doesn't sleep.",
+      image: "/lovable-uploads/62ea189c-696d-4629-a154-b6c91f973291.png"
     }
   ];
 
@@ -109,7 +115,7 @@ const ComparisonZigZag = () => {
         </div>
 
         {/* Fourth Panel - Scale your business */}
-        <div>
+        <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <img 
@@ -128,6 +134,30 @@ const ComparisonZigZag = () => {
               <p className="text-lg text-gray-600">
                 {comparisons[3].description}
               </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Fifth Panel - 24/7 Coverage */}
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div className="order-2 md:order-1">
+              <div className="bg-rosie-lightPurple text-rosie-purple py-2 px-6 rounded-full inline-block mb-6 font-medium">
+                STEP {comparisons[4].number}
+              </div>
+              <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
+                {comparisons[4].title}
+              </h3>
+              <p className="text-lg text-gray-600">
+                {comparisons[4].description}
+              </p>
+            </div>
+            <div className="order-1 md:order-2">
+              <img 
+                src={comparisons[4].image} 
+                alt={`Step ${comparisons[4].number} - 24/7 coverage`}
+                className="rounded-lg shadow-lg w-full"
+              />
             </div>
           </div>
         </div>
