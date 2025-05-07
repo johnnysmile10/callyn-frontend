@@ -10,7 +10,7 @@ interface AddOnsSectionProps {
 
 const AddOnsSection = ({ addOns }: AddOnsSectionProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-900 rounded-xl p-8 text-white">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-900 rounded-xl p-8 text-white mt-12">
       <div>
         <div className="flex items-center gap-2 mb-4">
           <Zap className="w-5 h-5 text-callyn-blue" />

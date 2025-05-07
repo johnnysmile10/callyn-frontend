@@ -1,11 +1,12 @@
 
 export interface PlanFeatures {
   inboundCalls: boolean;
-  customizedAnswers: boolean;
+  customScriptSupport: boolean;
   textTranscripts: boolean;
   calendarIntegration: boolean;
-  advancedRouting: boolean;
+  smartRouting: boolean;
   apiAccess: boolean;
+  prioritySupport: boolean;
 }
 
 export interface PricingPlan {
