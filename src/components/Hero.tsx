@@ -1,6 +1,5 @@
 
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -12,22 +11,13 @@ const Hero = () => {
         <p className="text-xl md:text-2xl text-gray-200 mb-8 mx-auto max-w-3xl">
           Callyn handles your calls, answers, follows up, and books — so you can focus on close and business growth
         </p>
-        <div className="flex flex-col md:flex-row justify-center gap-4">
+        <div className="flex justify-center">
           <Button className="rounded-full bg-white text-blue-900 hover:bg-gray-200 text-lg py-6 px-8">
             Unlock your potential
           </Button>
-          <Button variant="outline" className="rounded-full border-white text-white hover:bg-blue-800 text-lg py-6 px-8">
-            <Phone size={18} className="mr-2" />
-            Contact sales
-          </Button>
         </div>
-        <p className="mt-6 text-gray-300">
-          Built for closers, solopreneurs, commission-based pros, and fast-moving teams.
-        </p>
       </div>
       <div className="absolute inset-0 opacity-20 bg-pattern"></div>
-      
-      {/* Removed the image section that was here previously */}
     </section>
   );
 };
