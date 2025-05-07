@@ -31,7 +31,7 @@ const HowItWorks = () => {
     <section className="bg-white py-16 md:py-24 px-4">
       <div className="container mx-auto">
         <h2 className="text-3xl md:text-5xl font-bold text-rosie-darkPurple text-center mb-4">
-          How it Works
+          Callyn Learns Your Business Within Minutes
         </h2>
         <p className="text-xl text-gray-600 text-center mb-16 max-w-3xl mx-auto">
           Powerful, yet super easy to set up and get started in minutes.
