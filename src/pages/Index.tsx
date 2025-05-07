@@ -3,7 +3,6 @@ import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ComparisonTable from "@/components/ComparisonTable";
 import HowItWorks from "@/components/HowItWorks";
-import ProcessSteps from "@/components/ProcessSteps";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,6 @@ const Index = () => {
       
       <ComparisonTable />
       <HowItWorks />
-      <ProcessSteps />
       <Testimonials />
       
       {/* Contact Form */}
