@@ -1,8 +1,8 @@
+
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ComparisonTable from "@/components/ComparisonTable";
 import HowItWorks from "@/components/HowItWorks";
-import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import PricingPlans from "@/components/PricingPlans";
@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import ContactForm from "@/components/ContactForm";
 import ComparisonColumns from "@/components/ComparisonColumns";
 import ComparisonZigZag from "@/components/ComparisonZigZag";
+import PricingTable from "@/components/PricingTable";
 
 const Index = () => {
   return (
@@ -28,7 +29,9 @@ const Index = () => {
       <ComparisonColumns /> */}
       
       <HowItWorks />
-      <Testimonials />
+      
+      {/* Replaced Testimonials with PricingTable */}
+      <PricingTable />
       
       {/* Contact Form */}
       <ContactForm />
