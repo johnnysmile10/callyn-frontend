@@ -37,6 +37,7 @@ const ComparisonZigZag = () => {
   return (
     <section className="bg-white py-16 md:py-24 px-4">
       <div className="container mx-auto">
+        {/* Moved the headline to the top of the section */}
         <h2 className="text-3xl md:text-5xl font-bold text-rosie-darkPurple text-center mb-16">
           Never miss an opportunity because you can't answer the phone.
         </h2>
