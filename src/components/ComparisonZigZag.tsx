@@ -11,7 +11,6 @@ const ComparisonZigZag = () => {
       note: "And other small businesses that need to answer the phone..."
     },
     {
-      title: "Never miss another call or opportunity.",
       description: "Callyn is there anytime you're not around to answer calls.",
       image: "/lovable-uploads/b4d33bbd-2e33-45bb-ba2f-0fbe65f0bd78.png",
       comparison: [
@@ -37,7 +36,6 @@ const ComparisonZigZag = () => {
   return (
     <section className="bg-white py-16 md:py-24 px-4">
       <div className="container mx-auto">
-        {/* Moved the headline to the top of the section */}
         <h2 className="text-3xl md:text-5xl font-bold text-rosie-darkPurple text-center mb-16">
           Never miss an opportunity because you can't answer the phone.
         </h2>
@@ -84,8 +82,8 @@ const ComparisonZigZag = () => {
               />
             </div>
             <div>
-              <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
-                {comparisons[1].title}
+              <h3 className="text-3xl md:text-5xl font-bold text-rosie-darkPurple mb-4">
+                Never miss another call or opportunity.
               </h3>
               <p className="text-lg text-gray-600 mb-6">
                 {comparisons[1].description}
