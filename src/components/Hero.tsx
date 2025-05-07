@@ -1,26 +1,37 @@
 
 import { Button } from "@/components/ui/button";
+import { Phone } from "lucide-react";
 
 const Hero = () => {
   return (
-    <section className="bg-rosie-background py-16 md:py-24 px-4">
-      <div className="container mx-auto text-center max-w-3xl">
-        <h1 className="text-4xl md:text-6xl font-bold text-rosie-darkPurple mb-6">
-          AI answering service for your business calls.
+    <section className="bg-blue-900 text-white py-16 md:py-24 px-4 relative overflow-hidden">
+      <div className="container mx-auto text-center max-w-4xl relative z-10">
+        <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          AI That Calls, Books, and Closes — While You Focus on Growth
         </h1>
-        <p className="text-xl md:text-2xl text-gray-600 mb-8 mx-auto max-w-2xl">
-          10x better than voicemail. 10x cheaper than an answering service. 
-          Grow your business while Rosie answers your calls, helps set appointments, 
-          and sends you the messages.
+        <p className="text-xl md:text-2xl text-gray-200 mb-8 mx-auto max-w-3xl">
+          Callyn handles your calls, books appointments, and helps you close deals so you don't have to. Perfect for small teams who can't call everyone.
         </p>
         <div className="flex flex-col md:flex-row justify-center gap-4">
-          <Button className="rounded-full bg-rosie-purple hover:bg-rosie-darkPurple text-lg py-6 px-8">
-            Get Started for Free
+          <Button className="rounded-full bg-white text-blue-900 hover:bg-gray-200 text-lg py-6 px-8">
+            Unlock your potential
+          </Button>
+          <Button variant="outline" className="rounded-full border-white text-white hover:bg-blue-800 text-lg py-6 px-8">
+            <Phone size={18} className="mr-2" />
+            Contact sales
           </Button>
         </div>
-        <p className="mt-4 text-gray-500">
-          First 25 minutes completely free. No credit card required.
+        <p className="mt-6 text-gray-300">
+          Built for closers, solopreneurs, commission-based pros, and fast-moving teams.
         </p>
+      </div>
+      <div className="absolute inset-0 opacity-20 bg-pattern"></div>
+      <div className="hidden md:block absolute right-0 bottom-0 w-1/3 h-full">
+        <img 
+          src="/public/lovable-uploads/678b295d-febe-47ba-ab83-b7a0cd897548.png" 
+          alt="Person with headset" 
+          className="object-cover h-full w-full opacity-80"
+        />
       </div>
     </section>
   );

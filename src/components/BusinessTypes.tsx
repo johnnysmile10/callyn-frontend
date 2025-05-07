@@ -1,38 +1,102 @@
 
 const BusinessTypes = () => {
-  const businessTypes = [
-    "Home Services",
-    "Medical Clinics",
-    "Law Firms",
-    "Property Management",
-    "Construction",
-    "Landscaping",
-    "Hotels & Restaurants",
-    "Realty Groups",
-    "Gyms",
+  const benefits = [
+    {
+      title: "Callyn handles calls nonstop so you don't have to.",
+      image: "/public/lovable-uploads/c2329e29-7931-48f4-9056-5285843bd0e2.png"
+    },
+    {
+      title: "Exact script — tailored to your niche, every time.",
+      image: "/public/lovable-uploads/e406c4cd-746b-489d-b782-0d0a3e03f8a2.png"
+    },
+    {
+      title: "Calls, responses and follow-ups — all in one sheet.",
+      image: "/public/lovable-uploads/4458412b-a7ea-41e0-ab42-deccb671a378.png"
+    }
+  ];
+
+  const quotes = [
+    {
+      quote: "We're a small team — we can't call everyone. = Callyn",
+      image: "/public/lovable-uploads/7ef44233-156c-4bad-a3b0-c950117e25ba.png"
+    },
+    {
+      quote: "I need to say the right thing. = Callyn speaks your exact",
+      image: "/public/lovable-uploads/65c3cf06-4fad-4084-b4a9-7dcebbbbff2b.png"
+    },
+    {
+      quote: "I don't have a system — everything scattered. = Callyn tracks",
+      image: "/public/lovable-uploads/8e4741bc-292a-4295-ac6e-2d99371c88e2.png"
+    }
   ];
 
   return (
-    <section className="bg-white py-16 md:py-24 px-4">
+    <section className="py-16 md:py-24 px-4">
       <div className="container mx-auto">
-        <h2 className="text-3xl md:text-5xl font-bold text-rosie-darkPurple text-center mb-4">
-          Built for businesses like yours
-        </h2>
-        <p className="text-xl md:text-2xl text-gray-600 text-center mb-12">
-          Join other small businesses in your industry using Rosie.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {businessTypes.map((business, index) => (
-            <div key={index} className="business-card">
-              <h3 className="text-xl font-semibold text-rosie-darkPurple">{business}</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+          {benefits.map((item, index) => (
+            <div key={index} className="relative h-96 overflow-hidden">
+              <img 
+                src={item.image} 
+                alt={item.title} 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                <h3 className="text-2xl font-bold text-white">{item.title}</h3>
+              </div>
             </div>
           ))}
         </div>
         
-        <p className="text-xl text-center mt-12 text-rosie-darkPurple">
-          And other small businesses that need to answer the phone...
-        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+          {quotes.map((item, index) => (
+            <div key={index} className="relative h-96 overflow-hidden">
+              <img 
+                src={item.image} 
+                alt="Person" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-6">
+                <h3 className="text-2xl font-bold text-white">{item.quote}</h3>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-white p-12 rounded-lg shadow-xl text-center">
+          <h2 className="text-3xl md:text-5xl font-bold text-blue-900 mb-8">
+            Callyn Pricing Plans (Cold Callers & Small Businesses)
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="border border-gray-200 p-8 rounded-xl">
+              <img 
+                src="/public/lovable-uploads/678b295d-febe-47ba-ab83-b7a0cd897548.png" 
+                alt="Sales person" 
+                className="w-full h-48 object-cover rounded-lg mb-6"
+              />
+              <h3 className="text-2xl font-bold text-blue-900 mb-4">
+                Sales Plan = Perfect for sales, closer, appointment setter, and more
+              </h3>
+              <Button className="rounded-full bg-blue-900 hover:bg-blue-800 text-white mt-4">
+                Check it out
+              </Button>
+            </div>
+            
+            <div className="border border-gray-200 p-8 rounded-xl">
+              <img 
+                src="/public/lovable-uploads/7ef44233-156c-4bad-a3b0-c950117e25ba.png" 
+                alt="Business people" 
+                className="w-full h-48 object-cover rounded-lg mb-6"
+              />
+              <h3 className="text-2xl font-bold text-blue-900 mb-4">
+                Business Plan = Perfect for inbound and outbound call system
+              </h3>
+              <Button className="rounded-full bg-blue-900 hover:bg-blue-800 text-white mt-4">
+                Check it out
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

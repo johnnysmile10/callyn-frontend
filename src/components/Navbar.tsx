@@ -4,27 +4,26 @@ import { Phone } from "lucide-react";
 
 const Navbar = () => {
   return (
-    <nav className="bg-white py-4 px-6 md:px-10 flex justify-between items-center">
+    <nav className="bg-white py-4 px-6 md:px-10 flex justify-between items-center shadow-sm">
       <div className="flex items-center space-x-2">
-        <div className="h-10 w-10 bg-rosie-purple rounded-full flex items-center justify-center text-white font-bold">
-          <span className="text-xl">r</span>
+        <div className="h-10 w-auto font-bold">
+          <span className="text-3xl font-bold text-blue-900">CALLYN</span>
         </div>
-        <span className="text-2xl font-bold text-rosie-darkPurple">rosie</span>
       </div>
 
       <div className="hidden md:flex items-center space-x-8">
-        <a href="#" className="text-gray-700 hover:text-rosie-purple">Resources</a>
-        <a href="#" className="text-gray-700 hover:text-rosie-purple">Industries</a>
-        <a href="#" className="text-gray-700 hover:text-rosie-purple">Pricing</a>
-        <a href="#" className="text-gray-700 hover:text-rosie-purple">Login</a>
+        <a href="#" className="text-gray-700 hover:text-blue-900">Features</a>
+        <a href="#" className="text-gray-700 hover:text-blue-900">Solutions</a>
+        <a href="#" className="text-gray-700 hover:text-blue-900">Pricing</a>
+        <a href="#" className="text-gray-700 hover:text-blue-900">Login</a>
         
         <div className="flex items-center gap-4">
-          <Button variant="outline" className="rounded-full border-rosie-purple text-rosie-purple hover:text-rosie-purple hover:bg-rosie-lightPurple">
+          <Button variant="outline" className="rounded-full border-blue-900 text-blue-900 hover:text-white hover:bg-blue-900">
             <Phone size={16} className="mr-2" />
-            <span>412-569-0026</span>
+            <span>Contact Sales</span>
           </Button>
-          <Button className="rounded-full bg-rosie-purple hover:bg-rosie-darkPurple">
-            Get Started for Free
+          <Button className="rounded-full bg-blue-900 hover:bg-blue-800 text-white">
+            Get Started
           </Button>
         </div>
       </div>
