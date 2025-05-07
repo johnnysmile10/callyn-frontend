@@ -1,11 +1,11 @@
 
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import PricingPlans from "@/components/PricingPlans";
 import ComparisonTable from "@/components/ComparisonTable";
 import Features from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
 import Testimonials from "@/components/Testimonials";
-import PricingPlans from "@/components/PricingPlans";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 
@@ -14,11 +14,11 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <Hero />
+      <PricingPlans />
       <ComparisonTable />
       <HowItWorks />
       <Features />
       <Testimonials />
-      <PricingPlans />
       
       {/* CTA Section */}
       <section className="bg-rosie-background py-16 px-4">
