@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import PricingPlans from "@/components/PricingPlans";
 import { Separator } from "@/components/ui/separator";
 import ContactForm from "@/components/ContactForm";
+import ComparisonColumns from "@/components/ComparisonColumns";
 
 const Index = () => {
   return (
@@ -20,6 +21,7 @@ const Index = () => {
       <PricingPlans />
       
       <ComparisonTable />
+      <ComparisonColumns />
       <HowItWorks />
       <Testimonials />
       
