@@ -65,10 +65,19 @@ const BusinessTypes = () => {
           ))}
         </div>
 
-        <div className="bg-white p-12 rounded-lg shadow-xl text-center">
+        <div className="bg-white p-12 rounded-lg shadow-xl text-center mb-12">
           <h2 className="text-3xl md:text-5xl font-bold text-blue-900 mb-8">
             Callyn Pricing Plans (Cold Callers & Small Businesses)
           </h2>
+          
+          <div className="flex flex-col items-center mb-10">
+            <img 
+              src="/public/lovable-uploads/7e66c6f0-d34d-4009-9f7a-253cc160f22a.png" 
+              alt="Callyn Pricing" 
+              className="max-w-full h-auto mb-8"
+            />
+          </div>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="border border-gray-200 p-8 rounded-xl">
               <img 
