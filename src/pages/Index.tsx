@@ -14,6 +14,24 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <Hero />
+      
+      {/* Added section based on user's request - where the arrow points */}
+      <section className="bg-callyn-darkBlue text-white py-16 px-4">
+        <div className="container mx-auto text-center">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6">
+            Callyn Closes — While You Focus on Growth
+          </h2>
+          <p className="text-xl md:text-2xl text-gray-200 mb-8 mx-auto max-w-3xl">
+            Callyn handles your calls, answers, follows up, and books — so you can focus on close and business growth
+          </p>
+          <div className="flex justify-center">
+            <Button className="rounded-full bg-white text-callyn-darkBlue hover:bg-gray-200 text-lg py-6 px-8">
+              Unlock your potential
+            </Button>
+          </div>
+        </div>
+      </section>
+      
       <ComparisonTable />
       <HowItWorks />
       <PricingPlans />
