@@ -6,7 +6,6 @@ import Features from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
-import Benefits from "@/components/Benefits";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
@@ -16,23 +15,6 @@ const Index = () => {
       <Hero />
       <ComparisonTable />
       <HowItWorks />
-      
-      {/* Why Rosie Section */}
-      <section className="bg-rosie-background py-16 px-4">
-        <div className="container mx-auto max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-rosie-darkPurple mb-4">
-              Why Rosie is right for your small business.
-            </h2>
-            <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
-              The power of the latest AI tech, working for you 24/7.
-            </p>
-          </div>
-          
-          <Benefits />
-        </div>
-      </section>
-      
       <Features />
       <Testimonials />
       
