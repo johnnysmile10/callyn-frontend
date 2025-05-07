@@ -1,5 +1,5 @@
 
-import { BellRing, MessageSquare, Play, Sparkles } from "lucide-react";
+import { Bell, MessageSquare, Play, Sparkles } from "lucide-react";
 
 const Benefits = () => {
   return (
@@ -20,7 +20,7 @@ const Benefits = () => {
       {/* Feature 2 */}
       <div className="bg-rosie-deepPurple rounded-2xl p-10 text-white">
         <div className="mb-6">
-          <BellRing className="w-12 h-12 text-rosie-purple" />
+          <Bell className="w-12 h-12 text-rosie-purple" />
         </div>
         <h3 className="text-3xl font-bold mb-4">
           Get notified right away
