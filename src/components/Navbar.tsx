@@ -7,22 +7,22 @@ const Navbar = () => {
     <nav className="bg-white py-4 px-6 md:px-10 flex justify-between items-center shadow-sm">
       <div className="flex items-center space-x-2">
         <div className="h-10 w-auto font-bold">
-          <span className="text-3xl font-bold text-blue-900">CALLYN</span>
+          <span className="text-3xl font-bold text-callyn-darkBlue">CALLYN</span>
         </div>
       </div>
 
       <div className="hidden md:flex items-center space-x-8">
-        <a href="#" className="text-gray-700 hover:text-blue-900">Features</a>
-        <a href="#" className="text-gray-700 hover:text-blue-900">Solutions</a>
-        <a href="#" className="text-gray-700 hover:text-blue-900">Pricing</a>
-        <a href="#" className="text-gray-700 hover:text-blue-900">Login</a>
+        <a href="#" className="text-gray-700 hover:text-callyn-blue">Features</a>
+        <a href="#" className="text-gray-700 hover:text-callyn-blue">Solutions</a>
+        <a href="#" className="text-gray-700 hover:text-callyn-blue">Pricing</a>
+        <a href="#" className="text-gray-700 hover:text-callyn-blue">Login</a>
         
         <div className="flex items-center gap-4">
-          <Button variant="outline" className="rounded-full border-blue-900 text-blue-900 hover:text-white hover:bg-blue-900">
+          <Button variant="outline" className="rounded-full border-callyn-darkBlue text-callyn-darkBlue hover:text-white hover:bg-callyn-darkBlue">
             <Phone size={16} className="mr-2" />
             <span>Contact Sales</span>
           </Button>
-          <Button className="rounded-full bg-blue-900 hover:bg-blue-800 text-white">
+          <Button className="rounded-full bg-callyn-darkBlue hover:bg-callyn-blue text-white">
             Get Started
           </Button>
         </div>

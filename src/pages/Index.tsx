@@ -5,6 +5,7 @@ import ComparisonTable from "@/components/ComparisonTable";
 import Features from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
 import Testimonials from "@/components/Testimonials";
+import PricingPlans from "@/components/PricingPlans";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 
@@ -17,6 +18,7 @@ const Index = () => {
       <HowItWorks />
       <Features />
       <Testimonials />
+      <PricingPlans />
       
       {/* CTA Section */}
       <section className="bg-rosie-background py-16 px-4">
