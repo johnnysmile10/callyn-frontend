@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ComparisonTable from "@/components/ComparisonTable";
@@ -10,6 +9,7 @@ import PricingPlans from "@/components/PricingPlans";
 import { Separator } from "@/components/ui/separator";
 import ContactForm from "@/components/ContactForm";
 import ComparisonColumns from "@/components/ComparisonColumns";
+import ComparisonZigZag from "@/components/ComparisonZigZag";
 
 const Index = () => {
   return (
@@ -20,8 +20,13 @@ const Index = () => {
       {/* Moved PricingPlans section here based on user's request */}
       <PricingPlans />
       
-      <ComparisonTable />
-      <ComparisonColumns />
+      {/* New Zig-Zag Comparison Layout */}
+      <ComparisonZigZag />
+      
+      {/* Optional: Keep the old comparison components if needed */}
+      {/* <ComparisonTable />
+      <ComparisonColumns /> */}
+      
       <HowItWorks />
       <Testimonials />
       
