@@ -16,13 +16,6 @@ const Index = () => {
       <Navbar />
       <Hero />
       
-      {/* Green line separator */}
-      <div className="bg-callyn-darkBlue">
-        <div className="container mx-auto">
-          <Separator className="h-1 bg-green-500 w-full my-0" />
-        </div>
-      </div>
-      
       {/* Moved PricingPlans section here based on user's request */}
       <PricingPlans />
       
