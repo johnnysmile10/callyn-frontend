@@ -3,8 +3,8 @@ const HowItWorks = () => {
   const steps = [
     {
       number: "1",
-      title: "Train Rosie on your business.",
-      description: "Use your Google Business profile, website address or simple business information to get started.",
+      title: "Connect Your Google Business Profile",
+      description: "Paste your website from Google. Callyn will scan for opening hours, services, FAQs, and contact info.",
       image: "/lovable-uploads/b982e5a3-f2a8-4454-ba90-a92fe4242873.png"
     },
     {
@@ -44,7 +44,7 @@ const HowItWorks = () => {
               className={`flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-16`}
             >
               <div className="w-full md:w-1/2">
-                <div className="bg-rosie-lightPurple text-rosie-purple py-2 px-6 rounded-full inline-block mb-6 font-medium">
+                <div className={`${step.number === "1" ? "bg-callyn-blue text-white" : "bg-rosie-lightPurple text-rosie-purple"} py-2 px-6 rounded-full inline-block mb-6 font-medium`}>
                   STEP {step.number}
                 </div>
                 <h3 className="text-2xl md:text-4xl font-bold text-rosie-darkPurple mb-6">
