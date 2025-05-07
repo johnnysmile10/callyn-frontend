@@ -21,7 +21,7 @@ const HowItWorks = () => {
     },
     {
       number: "4",
-      title: "Rosie answers your calls and takes messages.",
+      title: "Every Call Answered, Every Lead Logged.",
       description: "When a call comes in, Rosie will answer the call, answer questions, and take a message according to your needs. You'll then be notified by email and/or text, and every call recording and transcript is saved in your calls inbox.",
       image: "/lovable-uploads/c1bf6c33-6c5c-4279-a6b1-53004666eb3c.png"
     }
