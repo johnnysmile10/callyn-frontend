@@ -4,13 +4,6 @@ import { Card } from "@/components/ui/card";
 const ComparisonZigZag = () => {
   const comparisons = [
     {
-      title: "Built for businesses like yours",
-      description: "Join other small businesses in your industry using Callyn.",
-      image: "/lovable-uploads/61cfe4eb-6a50-461f-b2ab-a358715e242c.png",
-      tags: ["Services", "Medical Clinics", "Law Firms", "Management", "Construction", "Landscaping", "Restaurants", "Realty Groups", "Gyms"],
-      note: "And other small businesses that need to answer the phone..."
-    },
-    {
       description: "Callyn is there anytime you're not around to answer calls.",
       image: "/lovable-uploads/b4d33bbd-2e33-45bb-ba2f-0fbe65f0bd78.png",
       comparison: [
@@ -40,43 +33,12 @@ const ComparisonZigZag = () => {
           Never miss an opportunity because you can't answer the phone.
         </h2>
 
-        {/* First Panel - Industry Types with Tags */}
-        <div className="mb-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="order-2 md:order-1">
-              <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
-                {comparisons[0].title}
-              </h3>
-              <p className="text-lg text-gray-600 mb-6">
-                {comparisons[0].description}
-              </p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {comparisons[0].tags.map((tag, idx) => (
-                  <span key={idx} className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <p className="text-sm text-gray-500 italic">
-                {comparisons[0].note}
-              </p>
-            </div>
-            <div className="order-1 md:order-2">
-              <img 
-                src={comparisons[0].image} 
-                alt="Businesses comparison"
-                className="rounded-lg shadow-lg w-full"
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Second Panel - Comparison Table */}
+        {/* Second Panel - Comparison Table (now first) */}
         <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <img 
-                src={comparisons[1].image} 
+                src={comparisons[0].image} 
                 alt="Voicemail vs Callyn comparison"
                 className="rounded-lg shadow-lg w-full"
               />
@@ -86,7 +48,7 @@ const ComparisonZigZag = () => {
                 Never miss another call or opportunity.
               </h3>
               <p className="text-lg text-gray-600 mb-6">
-                {comparisons[1].description}
+                {comparisons[0].description}
               </p>
               <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <div className="grid grid-cols-2">
@@ -97,7 +59,7 @@ const ComparisonZigZag = () => {
                     Callyn
                   </div>
                 </div>
-                {comparisons[1].comparison?.map((item, idx) => (
+                {comparisons[0].comparison?.map((item, idx) => (
                   <div key={idx} className="grid grid-cols-2 border-t border-gray-200">
                     <div className="p-3 text-sm border-r border-gray-200">
                       {item.voicemail}
@@ -112,20 +74,20 @@ const ComparisonZigZag = () => {
           </div>
         </div>
 
-        {/* Third Panel - No Hangups */}
+        {/* Third Panel - No Hangups (now second) */}
         <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="order-2 md:order-1">
               <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
-                {comparisons[2].title}
+                {comparisons[1].title}
               </h3>
               <p className="text-lg text-gray-600">
-                {comparisons[2].description}
+                {comparisons[1].description}
               </p>
             </div>
             <div className="order-1 md:order-2">
               <img 
-                src={comparisons[2].image} 
+                src={comparisons[1].image} 
                 alt="No hangups on voicemail"
                 className="rounded-lg shadow-lg w-full"
               />
@@ -133,22 +95,22 @@ const ComparisonZigZag = () => {
           </div>
         </div>
 
-        {/* Fourth Panel - Cost Savings */}
+        {/* Fourth Panel - Cost Savings (now third) */}
         <div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <img 
-                src={comparisons[3].image} 
+                src={comparisons[2].image} 
                 alt="Cost savings"
                 className="rounded-lg shadow-lg w-full"
               />
             </div>
             <div>
               <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
-                {comparisons[3].title}
+                {comparisons[2].title}
               </h3>
               <p className="text-lg text-gray-600">
-                {comparisons[3].description}
+                {comparisons[2].description}
               </p>
             </div>
           </div>
