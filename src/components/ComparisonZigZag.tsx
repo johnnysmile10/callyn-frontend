@@ -20,6 +20,12 @@ const ComparisonZigZag = () => {
       title: "Let's compare Callyn to voicemail.",
       description: "See how Callyn outperforms traditional voicemail in every aspect.",
       image: "/lovable-uploads/7ef44233-156c-4bad-a3b0-c950117e25ba.png"
+    },
+    {
+      number: "4",
+      title: "Scale your business effortlessly.",
+      description: "Handle increasing call volumes without hiring additional staff or missing important opportunities.",
+      image: "/lovable-uploads/c1bf6c33-6c5c-4279-a6b1-53004666eb3c.png"
     }
   ];
 
@@ -79,7 +85,7 @@ const ComparisonZigZag = () => {
         </div>
 
         {/* Third Panel - Comparison with voicemail */}
-        <div>
+        <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="order-2 md:order-1">
               <div className="bg-rosie-lightPurple text-rosie-purple py-2 px-6 rounded-full inline-block mb-6 font-medium">
@@ -98,6 +104,30 @@ const ComparisonZigZag = () => {
                 alt={`Step ${comparisons[2].number} - Comparison with voicemail`}
                 className="rounded-lg shadow-lg w-full"
               />
+            </div>
+          </div>
+        </div>
+
+        {/* Fourth Panel - Scale your business */}
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div>
+              <img 
+                src={comparisons[3].image} 
+                alt={`Step ${comparisons[3].number} - Scale your business`}
+                className="rounded-lg shadow-lg w-full"
+              />
+            </div>
+            <div>
+              <div className="bg-rosie-lightPurple text-rosie-purple py-2 px-6 rounded-full inline-block mb-6 font-medium">
+                STEP {comparisons[3].number}
+              </div>
+              <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
+                {comparisons[3].title}
+              </h3>
+              <p className="text-lg text-gray-600">
+                {comparisons[3].description}
+              </p>
             </div>
           </div>
         </div>
