@@ -5,7 +5,6 @@ import ComparisonTable from "@/components/ComparisonTable";
 import Features from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
 import Testimonials from "@/components/Testimonials";
-import BusinessTypes from "@/components/BusinessTypes";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 
@@ -17,7 +16,6 @@ const Index = () => {
       <ComparisonTable />
       <HowItWorks />
       <Features />
-      <BusinessTypes />
       <Testimonials />
       
       {/* CTA Section */}
