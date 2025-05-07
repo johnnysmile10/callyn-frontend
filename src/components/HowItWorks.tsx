@@ -33,29 +33,32 @@ const HowItWorks = () => {
         <h2 className="text-3xl md:text-5xl font-bold text-rosie-darkPurple text-center mb-4">
           How it Works
         </h2>
-        <p className="text-xl text-gray-600 text-center mb-16">
+        <p className="text-xl text-gray-600 text-center mb-16 max-w-3xl mx-auto">
           Powerful, yet super easy to set up and get started in minutes.
         </p>
 
-        <div className="space-y-16">
+        <div className="space-y-24">
           {steps.map((step, index) => (
-            <div key={index} className="step-card">
-              <div className={`w-1/2 ${index % 2 !== 0 ? 'order-2' : ''}`}>
-                <div className="bg-rosie-lightPurple p-2 rounded-lg inline-block mb-4">
-                  <span className="font-bold text-rosie-purple">STEP {step.number}</span>
+            <div 
+              key={index} 
+              className={`flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-16`}
+            >
+              <div className="w-full md:w-1/2">
+                <div className="bg-rosie-lightPurple text-rosie-purple py-2 px-6 rounded-full inline-block mb-6 font-medium">
+                  STEP {step.number}
                 </div>
-                <h3 className="text-2xl md:text-3xl font-bold text-rosie-darkPurple mb-4">
+                <h3 className="text-2xl md:text-4xl font-bold text-rosie-darkPurple mb-6">
                   {step.title}
                 </h3>
-                <p className="text-lg text-gray-600">
+                <p className="text-lg text-gray-600 max-w-lg">
                   {step.description}
                 </p>
               </div>
-              <div className={`w-1/2 ${index % 2 !== 0 ? 'order-1' : ''}`}>
+              <div className="w-full md:w-1/2">
                 <img
                   src={step.image}
                   alt={`Step ${step.number}`}
-                  className="w-full h-auto rounded-lg shadow-md"
+                  className="w-full h-auto rounded-lg shadow-lg"
                 />
               </div>
             </div>
