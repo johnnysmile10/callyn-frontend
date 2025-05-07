@@ -42,35 +42,5 @@ export const comparisonData: ComparisonItem[] = [
     description: "You'll get call logs, summaries, and SMS follow-ups sent to each lead. You can jump in anytime to close.",
     exampleText: "Only talk to people who want to talk to you.",
     image: "/lovable-uploads/7ef44233-156c-4bad-a3b0-c950117e25ba.png"
-  },
-  {
-    number: "6",
-    title: "No more hangups on voicemail.",
-    description: "No one leaves a voicemail anymore, but everyone will talk to Callyn.",
-    image: "/lovable-uploads/9dbbaf8d-f660-4b65-96a4-34691dbb3adf.png"
-  },
-  {
-    number: "7",
-    title: "10x cheaper than an answering service.",
-    description: "There's no need to spend a fortune on a human answering service.",
-    image: "/lovable-uploads/b9897370-78b6-4a76-98e5-43ebc0acc06d.png"
-  },
-  {
-    number: "8",
-    title: "Let's compare Callyn to voicemail.",
-    description: "See how Callyn outperforms traditional voicemail in every aspect.",
-    image: "/lovable-uploads/7ef44233-156c-4bad-a3b0-c950117e25ba.png"
-  },
-  {
-    number: "9",
-    title: "Scale your business effortlessly.",
-    description: "Handle increasing call volumes without hiring additional staff or missing important opportunities.",
-    image: "/lovable-uploads/c1bf6c33-6c5c-4279-a6b1-53004666eb3c.png"
-  },
-  {
-    number: "10",
-    title: "Get 24/7 coverage for your business.",
-    description: "Never miss another opportunity with round-the-clock call answering that doesn't sleep.",
-    image: "/lovable-uploads/62ea189c-696d-4629-a154-b6c91f973291.png"
   }
 ];
