@@ -66,43 +66,33 @@ const BusinessTypes = () => {
         </div>
 
         <div className="bg-white p-12 rounded-lg shadow-xl text-center mb-12">
-          <h2 className="text-3xl md:text-5xl font-bold text-blue-900 mb-8">
-            Callyn Pricing Plans (Cold Callers & Small Businesses)
-          </h2>
-          
-          <div className="flex flex-col items-center mb-10">
+          <div className="flex flex-col items-center">
+            <h2 className="text-4xl md:text-5xl font-bold text-blue-700 mb-12">
+              Callyn Pricing Plans (Cold Callers & Small Businesses)
+            </h2>
+            
             <img 
-              src="/public/lovable-uploads/7e66c6f0-d34d-4009-9f7a-253cc160f22a.png" 
+              src="/public/lovable-uploads/1633a9ec-d2dc-4f50-9630-5214c7dea06c.png" 
               alt="Callyn Pricing" 
-              className="max-w-full h-auto mb-8"
+              className="w-full max-w-4xl mb-12"
             />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="border border-gray-200 p-8 rounded-xl">
-              <img 
-                src="/public/lovable-uploads/678b295d-febe-47ba-ab83-b7a0cd897548.png" 
-                alt="Sales person" 
-                className="w-full h-48 object-cover rounded-lg mb-6"
-              />
-              <h3 className="text-2xl font-bold text-blue-900 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+            <div className="flex flex-col items-center">
+              <h3 className="text-2xl font-bold text-blue-700 mb-4">
                 Sales Plan = Perfect for sales, closer, appointment setter, and more
               </h3>
-              <Button className="rounded-full bg-blue-900 hover:bg-blue-800 text-white mt-4">
+              <Button className="rounded-full bg-blue-700 hover:bg-blue-800 text-white px-8 py-6 text-lg">
                 Check it out
               </Button>
             </div>
             
-            <div className="border border-gray-200 p-8 rounded-xl">
-              <img 
-                src="/public/lovable-uploads/7ef44233-156c-4bad-a3b0-c950117e25ba.png" 
-                alt="Business people" 
-                className="w-full h-48 object-cover rounded-lg mb-6"
-              />
-              <h3 className="text-2xl font-bold text-blue-900 mb-4">
+            <div className="flex flex-col items-center">
+              <h3 className="text-2xl font-bold text-blue-700 mb-4">
                 Business Plan = Perfect for inbound and outbound call system
               </h3>
-              <Button className="rounded-full bg-blue-900 hover:bg-blue-800 text-white mt-4">
+              <Button className="rounded-full bg-blue-700 hover:bg-blue-800 text-white px-8 py-6 text-lg">
                 Check it out
               </Button>
             </div>
