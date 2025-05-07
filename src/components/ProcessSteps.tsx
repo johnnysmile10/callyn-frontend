@@ -31,6 +31,14 @@ const ProcessSteps = () => {
       image: "/lovable-uploads/c1bf6c33-6c5c-4279-a6b1-53004666eb3c.png",
       buttonText: "Start Free Trial",
       exampleText: "It runs while you sleep or close deals."
+    },
+    {
+      number: "5",
+      title: "Review & Follow Up",
+      description: "You'll get call logs, summaries, and SMS follow-ups sent to each lead. You can jump in anytime to close.",
+      image: "/lovable-uploads/7ef44233-156c-4bad-a3b0-c950117e25ba.png",
+      buttonText: "See Examples",
+      exampleText: "Only talk to people who want to talk to you."
     }
   ];
 
