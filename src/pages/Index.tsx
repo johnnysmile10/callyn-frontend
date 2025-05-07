@@ -6,7 +6,6 @@ import HowItWorks from "@/components/HowItWorks";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import Benefits from "@/components/Benefits";
 import PricingPlans from "@/components/PricingPlans";
 import { Separator } from "@/components/ui/separator";
 
@@ -21,7 +20,6 @@ const Index = () => {
       
       <ComparisonTable />
       <HowItWorks />
-      <Benefits />
       <Testimonials />
       
       {/* CTA Section */}
