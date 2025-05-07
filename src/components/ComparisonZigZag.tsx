@@ -13,6 +13,11 @@ const ComparisonZigZag = () => {
       description: "There's no need to spend a fortune on a human answering service.",
       image: "/lovable-uploads/b9897370-78b6-4a76-98e5-43ebc0acc06d.png"
     },
+    {
+      title: "Let's compare Callyn to voicemail.",
+      description: "See how Callyn outperforms traditional voicemail in every aspect.",
+      image: "/lovable-uploads/7ef44233-156c-4bad-a3b0-c950117e25ba.png"
+    }
   ];
 
   return (
@@ -44,7 +49,7 @@ const ComparisonZigZag = () => {
         </div>
 
         {/* Second Panel - Cost Savings */}
-        <div>
+        <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <img 
@@ -60,6 +65,27 @@ const ComparisonZigZag = () => {
               <p className="text-lg text-gray-600">
                 {comparisons[1].description}
               </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Third Panel - Comparison with voicemail */}
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div className="order-2 md:order-1">
+              <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
+                {comparisons[2].title}
+              </h3>
+              <p className="text-lg text-gray-600">
+                {comparisons[2].description}
+              </p>
+            </div>
+            <div className="order-1 md:order-2">
+              <img 
+                src={comparisons[2].image} 
+                alt="Comparison with voicemail"
+                className="rounded-lg shadow-lg w-full"
+              />
             </div>
           </div>
         </div>
