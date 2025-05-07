@@ -26,13 +26,8 @@ const Hero = () => {
         </p>
       </div>
       <div className="absolute inset-0 opacity-20 bg-pattern"></div>
-      <div className="hidden md:block absolute right-0 bottom-0 w-1/3 h-full">
-        <img 
-          src="/public/lovable-uploads/678b295d-febe-47ba-ab83-b7a0cd897548.png" 
-          alt="Person with headset" 
-          className="object-cover h-full w-full opacity-80"
-        />
-      </div>
+      
+      {/* Removed the image section that was here previously */}
     </section>
   );
 };
