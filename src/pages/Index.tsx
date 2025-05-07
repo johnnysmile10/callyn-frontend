@@ -1,7 +1,6 @@
 
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import PricingPlans from "@/components/PricingPlans";
 import ComparisonTable from "@/components/ComparisonTable";
 import Features from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
@@ -14,7 +13,6 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <Hero />
-      <PricingPlans />
       <ComparisonTable />
       <HowItWorks />
       <Features />
