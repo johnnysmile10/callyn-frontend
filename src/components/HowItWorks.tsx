@@ -9,7 +9,7 @@ const HowItWorks = () => {
     },
     {
       number: "2",
-      title: "Customize Answers & Add Questions",
+      title: "Callyn uses your business script",
       description: "Callyn learns your business fast. Add key info, choose what questions to ask callers, and customize how Callyn responds — all in minutes.",
       image: "/lovable-uploads/62ea189c-696d-4629-a154-b6c91f973291.png"
     },
