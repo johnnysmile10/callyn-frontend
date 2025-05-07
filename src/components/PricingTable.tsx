@@ -1,14 +1,5 @@
 
-import { Check } from "lucide-react";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { Check, Target, LightningBolt } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const PricingTable = () => {
@@ -81,8 +72,24 @@ const PricingTable = () => {
     { minutes: "2,000", price: "$179" },
   ];
 
+  const featureLabels = {
+    inboundCalls: "AI Voice Calls & SMS Follow-Ups",
+    customizedAnswers: "Customized Answers",
+    textTranscripts: "Call Transcripts",
+    calendarIntegration: "Calendar Integration",
+    advancedRouting: "Advanced Call Routing",
+    apiAccess: "API Access"
+  };
+
+  const audienceLabels = {
+    "Small businesses": "Testing & Light Use",
+    "Growing businesses": "Solo Users",
+    "Established businesses": "Small Teams",
+    "High-volume sales teams": "Large Teams"
+  };
+
   return (
-    <section className="py-16 md:py-24 px-4 bg-white">
+    <section className="py-16 md:py-24 px-4 bg-callyn-background">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-callyn-darkBlue mb-4">
@@ -93,120 +100,71 @@ const PricingTable = () => {
           </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <Table className="w-full border-collapse">
-            <TableHeader>
-              <TableRow className="bg-gray-50">
-                <TableHead className="w-1/6 py-6">Plan</TableHead>
-                <TableHead className="w-1/6 py-6">Monthly Price</TableHead>
-                <TableHead className="w-1/6 py-6">Included Minutes</TableHead>
-                <TableHead className="w-1/3 py-6">Features</TableHead>
-                <TableHead className="w-1/6 py-6">Best For</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {pricingPlans.map((plan, index) => (
-                <TableRow 
-                  key={index} 
-                  className={plan.popular ? "bg-blue-50 border-blue-200 border-2" : ""}
-                >
-                  <TableCell className="font-medium py-6">
-                    <div className="flex flex-col">
-                      <span className="text-xl font-bold text-callyn-darkBlue">{plan.name}</span>
-                      {plan.popular && (
-                        <Badge className="mt-2 bg-callyn-blue text-white">Most Popular</Badge>
+        {/* Horizontal Pricing Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-16">
+          {pricingPlans.map((plan, index) => (
+            <Card 
+              key={index} 
+              className={`rounded-xl border overflow-hidden ${plan.popular ? "border-callyn-blue shadow-lg" : "border-gray-200"}`}
+            >
+              <div className={`px-6 py-4 ${plan.popular ? "bg-callyn-blue text-white" : "bg-gray-50"}`}>
+                <h3 className={`text-xl font-bold ${plan.popular ? "text-white" : "text-callyn-darkBlue"}`}>{plan.name}</h3>
+                {plan.popular && <span className="text-xs font-medium bg-white text-callyn-blue px-2 py-1 rounded-full">Most Popular</span>}
+              </div>
+              <CardContent className="p-6">
+                <div className="mb-6">
+                  <span className="text-3xl font-bold text-callyn-darkBlue">{plan.price}</span>
+                  <span className="text-gray-500">/mo</span>
+                </div>
+                <div className="mb-6">
+                  <span className="text-xl font-semibold">{plan.minutes} mins</span>
+                  <p className="text-gray-500 text-sm">Included</p>
+                </div>
+                <div className="space-y-4 mb-6">
+                  {Object.entries(plan.features).map(([key, value]) => (
+                    <div key={key} className="flex items-center gap-2">
+                      {value ? (
+                        <Check className="w-5 h-5 text-green-500" />
+                      ) : (
+                        <span className="w-5 h-5 flex items-center justify-center text-gray-400">-</span>
                       )}
+                      <span className="text-gray-700 text-sm">{featureLabels[key as keyof typeof featureLabels]}</span>
                     </div>
-                  </TableCell>
-                  <TableCell className="py-6">
-                    <span className="text-2xl font-bold text-callyn-darkBlue">{plan.price}</span>
-                    <span className="text-gray-500">/mo</span>
-                  </TableCell>
-                  <TableCell className="py-6">
-                    <span className="text-xl font-semibold">{plan.minutes} mins</span>
-                  </TableCell>
-                  <TableCell className="py-6">
-                    <div className="grid grid-cols-1 gap-2">
-                      <div className="flex items-center gap-2">
-                        {plan.features.inboundCalls ? (
-                          <Check className="w-5 h-5 text-green-500" />
-                        ) : (
-                          <span className="w-5 h-5 flex items-center justify-center text-gray-400">-</span>
-                        )}
-                        <span>Inbound Call Handling</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {plan.features.customizedAnswers ? (
-                          <Check className="w-5 h-5 text-green-500" />
-                        ) : (
-                          <span className="w-5 h-5 flex items-center justify-center text-gray-400">-</span>
-                        )}
-                        <span>Customized Answers</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {plan.features.textTranscripts ? (
-                          <Check className="w-5 h-5 text-green-500" />
-                        ) : (
-                          <span className="w-5 h-5 flex items-center justify-center text-gray-400">-</span>
-                        )}
-                        <span>Call Transcripts</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {plan.features.calendarIntegration ? (
-                          <Check className="w-5 h-5 text-green-500" />
-                        ) : (
-                          <span className="w-5 h-5 flex items-center justify-center text-gray-400">-</span>
-                        )}
-                        <span>Calendar Integration</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {plan.features.advancedRouting ? (
-                          <Check className="w-5 h-5 text-green-500" />
-                        ) : (
-                          <span className="w-5 h-5 flex items-center justify-center text-gray-400">-</span>
-                        )}
-                        <span>Advanced Call Routing</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {plan.features.apiAccess ? (
-                          <Check className="w-5 h-5 text-green-500" />
-                        ) : (
-                          <span className="w-5 h-5 flex items-center justify-center text-gray-400">-</span>
-                        )}
-                        <span>API Access</span>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="py-6">{plan.audience}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                  ))}
+                </div>
+                <div className="pt-4 border-t border-gray-100">
+                  <p className="text-sm text-gray-500">Best for: <span className="font-medium text-gray-700">{audienceLabels[plan.audience as keyof typeof audienceLabels]}</span></p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        {/* Add-ons section */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="bg-gray-50 border-0">
-            <CardContent className="p-8">
-              <h3 className="text-xl font-bold text-callyn-darkBlue mb-4">Need more minutes?</h3>
-              <div className="space-y-4">
-                {addOns.map((addon, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <span className="font-medium">+{addon.minutes} minutes</span>
-                    <span className="font-bold text-callyn-darkBlue">{addon.price}</span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+        {/* Add-ons section with horizontal layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-gray-900 rounded-xl p-8 text-white">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <LightningBolt className="w-5 h-5 text-callyn-blue" />
+              <h3 className="text-xl font-bold">Need more minutes?</h3>
+            </div>
+            <div className="space-y-2">
+              {addOns.map((addon, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-callyn-blue"></span>
+                  <span className="text-gray-300">+{addon.minutes} minutes = {addon.price}</span>
+                </div>
+              ))}
+            </div>
+          </div>
           
-          <Card className="bg-callyn-blue bg-opacity-10 border-0">
-            <CardContent className="p-8 flex flex-col items-center text-center">
-              <h3 className="text-xl font-bold text-callyn-darkBlue mb-4">Start with 50 free minutes</h3>
-              <p className="text-gray-600 mb-2">No credit card required</p>
-              <p className="text-sm text-gray-500">Try Callyn risk-free and see the benefits firsthand</p>
-            </CardContent>
-          </Card>
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Target className="w-5 h-5 text-callyn-blue" />
+              <h3 className="text-xl font-bold">Start with 50 free minutes</h3>
+            </div>
+            <p className="text-gray-300 mb-2">No credit card required</p>
+            <p className="text-sm text-gray-400">Try Callyn risk-free and see the benefits firsthand</p>
+          </div>
         </div>
       </div>
     </section>
