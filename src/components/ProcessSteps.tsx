@@ -26,10 +26,11 @@ const ProcessSteps = () => {
     },
     {
       number: "4",
-      title: "Scale your business effortlessly",
-      description: "As your business grows, Callyn grows with you. Handle increasing call volumes without hiring additional staff or missing important opportunities.",
-      image: "/lovable-uploads/9dbbaf8d-f660-4b65-96a4-34691dbb3adf.png",
-      buttonText: "Start Free Trial"
+      title: "Launch your campaign",
+      description: "Hit \"Start Calling.\" Callyn begins dialing, speaking, logging outcomes, and sending you summaries in real-time.",
+      image: "/lovable-uploads/c1bf6c33-6c5c-4279-a6b1-53004666eb3c.png",
+      buttonText: "Start Free Trial",
+      exampleText: "It runs while you sleep or close deals."
     }
   ];
 
@@ -56,9 +57,15 @@ const ProcessSteps = () => {
                 <h3 className="text-2xl md:text-4xl font-bold text-rosie-darkPurple mb-6">
                   {step.title}
                 </h3>
-                <p className="text-lg text-gray-600 max-w-lg mb-8">
+                <p className="text-lg text-gray-600 max-w-lg mb-4">
                   {step.description}
                 </p>
+                {step.exampleText && (
+                  <p className="text-lg text-gray-600 italic max-w-lg mb-8">
+                    {step.exampleText}
+                  </p>
+                )}
+                {!step.exampleText && <div className="mb-8"></div>}
                 <Button className="rounded-full bg-rosie-purple hover:bg-rosie-darkPurple text-white px-8 py-2">
                   {step.buttonText}
                 </Button>
@@ -66,7 +73,7 @@ const ProcessSteps = () => {
               <div className="w-full md:w-1/2">
                 <img
                   src={step.image}
-                  alt={`Step ${step.number}`}
+                  alt={`Step ${step.number}: ${step.title}`}
                   className="w-full h-auto rounded-lg shadow-lg"
                 />
               </div>

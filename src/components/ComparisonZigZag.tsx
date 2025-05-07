@@ -26,30 +26,37 @@ const ComparisonZigZag = () => {
     },
     {
       number: "4",
+      title: "Launch the Campaign",
+      description: "Hit \"Start Calling.\" Callyn begins dialing, speaking, logging outcomes, and sending you summaries in real-time.",
+      exampleText: "It runs while you sleep or close deals.",
+      image: "/lovable-uploads/c1bf6c33-6c5c-4279-a6b1-53004666eb3c.png"
+    },
+    {
+      number: "5",
       title: "No more hangups on voicemail.",
       description: "No one leaves a voicemail anymore, but everyone will talk to Callyn.",
       image: "/lovable-uploads/9dbbaf8d-f660-4b65-96a4-34691dbb3adf.png"
     },
     {
-      number: "5",
+      number: "6",
       title: "10x cheaper than an answering service.",
       description: "There's no need to spend a fortune on a human answering service.",
       image: "/lovable-uploads/b9897370-78b6-4a76-98e5-43ebc0acc06d.png"
     },
     {
-      number: "6",
+      number: "7",
       title: "Let's compare Callyn to voicemail.",
       description: "See how Callyn outperforms traditional voicemail in every aspect.",
       image: "/lovable-uploads/7ef44233-156c-4bad-a3b0-c950117e25ba.png"
     },
     {
-      number: "7",
+      number: "8",
       title: "Scale your business effortlessly.",
       description: "Handle increasing call volumes without hiring additional staff or missing important opportunities.",
       image: "/lovable-uploads/c1bf6c33-6c5c-4279-a6b1-53004666eb3c.png"
     },
     {
-      number: "8",
+      number: "9",
       title: "Get 24/7 coverage for your business.",
       description: "Never miss another opportunity with round-the-clock call answering that doesn't sleep.",
       image: "/lovable-uploads/62ea189c-696d-4629-a154-b6c91f973291.png"
@@ -150,13 +157,13 @@ const ComparisonZigZag = () => {
           </div>
         </div>
 
-        {/* Fourth Panel - No Hangups */}
+        {/* Fourth Panel - Launch the Campaign */}
         <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <img 
                 src={comparisons[3].image} 
-                alt={`Step ${comparisons[3].number} - No hangups on voicemail`}
+                alt={`Step ${comparisons[3].number} - Launch the Campaign`}
                 className="rounded-lg shadow-lg w-full"
               />
             </div>
@@ -167,18 +174,23 @@ const ComparisonZigZag = () => {
               <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
                 {comparisons[3].title}
               </h3>
-              <p className="text-lg text-gray-600">
+              <p className="text-lg text-gray-600 mb-2">
                 {comparisons[3].description}
               </p>
+              {comparisons[3].exampleText && (
+                <p className="text-lg text-gray-600 italic">
+                  {comparisons[3].exampleText}
+                </p>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Fifth Panel - Cost Savings */}
+        {/* Fifth Panel - No Hangups */}
         <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="order-2 md:order-1">
-              <div className="bg-rosie-lightPurple text-rosie-purple py-2 px-6 rounded-full inline-block mb-6 font-medium">
+              <div className="bg-callyn-blue text-white py-2 px-6 rounded-full inline-block mb-6 font-medium">
                 STEP {comparisons[4].number}
               </div>
               <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
@@ -187,24 +199,29 @@ const ComparisonZigZag = () => {
               <p className="text-lg text-gray-600">
                 {comparisons[4].description}
               </p>
+              {comparisons[4].exampleText && (
+                <p className="text-lg text-gray-600 italic">
+                  {comparisons[4].exampleText}
+                </p>
+              )}
             </div>
             <div className="order-1 md:order-2">
               <img 
                 src={comparisons[4].image} 
-                alt={`Step ${comparisons[4].number} - Cost savings`}
+                alt={`Step ${comparisons[4].number} - No more hangups`}
                 className="rounded-lg shadow-lg w-full"
               />
             </div>
           </div>
         </div>
 
-        {/* Sixth Panel - Comparison with voicemail */}
+        {/* Sixth Panel - Cost Savings */}
         <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <img 
                 src={comparisons[5].image} 
-                alt={`Step ${comparisons[5].number} - Comparison with voicemail`}
+                alt={`Step ${comparisons[5].number} - Cost savings`}
                 className="rounded-lg shadow-lg w-full"
               />
             </div>
@@ -218,15 +235,20 @@ const ComparisonZigZag = () => {
               <p className="text-lg text-gray-600">
                 {comparisons[5].description}
               </p>
+              {comparisons[5].exampleText && (
+                <p className="text-lg text-gray-600 italic">
+                  {comparisons[5].exampleText}
+                </p>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Seventh Panel - Scale your business */}
+        {/* Seventh Panel - Comparison with voicemail */}
         <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div className="order-2 md:order-1">
-              <div className="bg-rosie-lightPurple text-rosie-purple py-2 px-6 rounded-full inline-block mb-6 font-medium">
+              <div className="bg-callyn-blue text-white py-2 px-6 rounded-full inline-block mb-6 font-medium">
                 STEP {comparisons[6].number}
               </div>
               <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
@@ -235,24 +257,29 @@ const ComparisonZigZag = () => {
               <p className="text-lg text-gray-600">
                 {comparisons[6].description}
               </p>
+              {comparisons[6].exampleText && (
+                <p className="text-lg text-gray-600 italic">
+                  {comparisons[6].exampleText}
+                </p>
+              )}
             </div>
             <div className="order-1 md:order-2">
               <img 
                 src={comparisons[6].image} 
-                alt={`Step ${comparisons[6].number} - Scale your business`}
+                alt={`Step ${comparisons[6].number} - Comparison with voicemail`}
                 className="rounded-lg shadow-lg w-full"
               />
             </div>
           </div>
         </div>
 
-        {/* Eighth Panel - 24/7 Coverage */}
-        <div>
+        {/* Eighth Panel - Scale your business */}
+        <div className="mb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
             <div>
               <img 
                 src={comparisons[7].image} 
-                alt={`Step ${comparisons[7].number} - 24/7 coverage`}
+                alt={`Step ${comparisons[7].number} - Scale your business`}
                 className="rounded-lg shadow-lg w-full"
               />
             </div>
@@ -266,6 +293,40 @@ const ComparisonZigZag = () => {
               <p className="text-lg text-gray-600">
                 {comparisons[7].description}
               </p>
+              {comparisons[7].exampleText && (
+                <p className="text-lg text-gray-600 italic">
+                  {comparisons[7].exampleText}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Ninth Panel - 24/7 Coverage */}
+        <div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+            <div className="order-2 md:order-1">
+              <div className="bg-callyn-blue text-white py-2 px-6 rounded-full inline-block mb-6 font-medium">
+                STEP {comparisons[8].number}
+              </div>
+              <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">
+                {comparisons[8].title}
+              </h3>
+              <p className="text-lg text-gray-600">
+                {comparisons[8].description}
+              </p>
+              {comparisons[8].exampleText && (
+                <p className="text-lg text-gray-600 italic">
+                  {comparisons[8].exampleText}
+                </p>
+              )}
+            </div>
+            <div className="order-1 md:order-2">
+              <img 
+                src={comparisons[8].image} 
+                alt={`Step ${comparisons[8].number} - 24/7 coverage`}
+                className="rounded-lg shadow-lg w-full"
+              />
             </div>
           </div>
         </div>
