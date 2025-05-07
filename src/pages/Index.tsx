@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import PricingPlans from "@/components/PricingPlans";
 import { Separator } from "@/components/ui/separator";
+import ContactForm from "@/components/ContactForm";
 
 const Index = () => {
   return (
@@ -21,6 +22,9 @@ const Index = () => {
       <ComparisonTable />
       <HowItWorks />
       <Testimonials />
+      
+      {/* Contact Form */}
+      <ContactForm />
       
       {/* CTA Section */}
       <section className="bg-rosie-background py-16 px-4">
