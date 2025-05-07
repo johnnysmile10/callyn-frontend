@@ -15,8 +15,8 @@ const HowItWorks = () => {
     },
     {
       number: "3",
-      title: "Forward your calls to Rosie",
-      description: "No need to change your existing business number. Just forward calls to Rosie when you want her to answer.",
+      title: "Forward Calls to Callyn",
+      description: "No need to change your number. Just forward your calls, and Callyn will handle them 24/7 with your script and booking link.",
       image: "/lovable-uploads/3bd3d4c6-823e-4f57-b317-2611f91689af.png"
     },
     {
