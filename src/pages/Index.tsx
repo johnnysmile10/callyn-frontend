@@ -55,7 +55,7 @@ const Index = () => {
             Get Started for Free
           </Button>
           <p className="mt-4 text-gray-500">
-            First 25 minutes completely free. No credit card required.
+            First 45 minutes completely free. No credit card required.
           </p>
         </div>
       </section>

@@ -29,7 +29,7 @@ const AddOnsSection = ({ addOns }: AddOnsSectionProps) => {
       <div>
         <div className="flex items-center gap-2 mb-4">
           <Target className="w-5 h-5 text-callyn-blue" />
-          <h3 className="text-xl font-bold">Start with 50 free minutes</h3>
+          <h3 className="text-xl font-bold">Start with 45 free minutes</h3>
         </div>
         <p className="text-gray-300 mb-2">No credit card required</p>
         <p className="text-sm text-gray-400">Try Callyn risk-free and see the benefits firsthand</p>
