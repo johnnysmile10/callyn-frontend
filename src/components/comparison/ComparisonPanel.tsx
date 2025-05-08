@@ -25,7 +25,7 @@ const ComparisonPanel: React.FC<ComparisonPanelProps> = ({
     <div className={isLastItem ? "" : "mb-24"}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
         <div className={reverse ? "order-2 md:order-2" : "order-2 md:order-1"}>
-          <div className="bg-callyn-blue text-white py-2 px-6 rounded-full inline-block mb-6 font-medium">
+          <div className="bg-rosie-lightPurple text-rosie-purple py-2 px-6 rounded-full inline-block mb-6 font-medium">
             STEP {item.number}
           </div>
           <h3 className="text-3xl font-bold text-rosie-darkPurple mb-4">

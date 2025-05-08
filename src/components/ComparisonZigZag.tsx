@@ -2,6 +2,7 @@
 import React from 'react';
 import { comparisonData } from './comparison/comparisonData';
 import ComparisonPanel from './comparison/ComparisonPanel';
+import { Button } from './ui/button';
 
 const ComparisonZigZag: React.FC = () => {
   return (
@@ -19,6 +20,13 @@ const ComparisonZigZag: React.FC = () => {
             isLastItem={index === comparisonData.length - 1}
           />
         ))}
+
+        {/* Get Started For Free button at the end */}
+        <div className="mt-20 text-center">
+          <Button className="rounded-full bg-rosie-purple hover:bg-rosie-darkPurple text-white px-10 py-6 text-lg font-medium">
+            Get Started for Free
+          </Button>
+        </div>
       </div>
     </section>
   );
