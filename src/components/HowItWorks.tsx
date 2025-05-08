@@ -32,7 +32,7 @@ const HowItWorks = () => {
   return (
     <section className="bg-white py-16 md:py-24 px-4">
       <div className="container mx-auto">
-        <h2 className="text-3xl md:text-5xl font-bold text-rosie-darkPurple text-center mb-4">
+        <h2 className="text-3xl md:text-5xl font-bold text-callyn-darkBlue text-center mb-4">
           Callyn Learns Your Business Within Minutes
         </h2>
         <p className="text-xl text-gray-600 text-center mb-16 max-w-3xl mx-auto">
@@ -46,10 +46,10 @@ const HowItWorks = () => {
               className={`flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-16`}
             >
               <div className="w-full md:w-1/2">
-                <div className="bg-rosie-lightPurple text-rosie-purple py-2 px-6 rounded-full inline-block mb-6 font-medium">
+                <div className="bg-callyn-lightBlue text-callyn-blue py-2 px-6 rounded-full inline-block mb-6 font-medium">
                   STEP {step.number}
                 </div>
-                <h3 className="text-2xl md:text-4xl font-bold text-rosie-darkPurple mb-6">
+                <h3 className="text-2xl md:text-4xl font-bold text-callyn-darkBlue mb-6">
                   {step.title}
                 </h3>
                 <p className="text-lg text-gray-600 max-w-lg">
@@ -69,7 +69,7 @@ const HowItWorks = () => {
 
         {/* Get Started For Free button at the end */}
         <div className="mt-20 text-center">
-          <Button className="rounded-full bg-rosie-purple hover:bg-rosie-darkPurple text-white px-10 py-6 text-lg font-medium">
+          <Button className="rounded-full bg-callyn-blue hover:bg-callyn-darkBlue text-white px-10 py-6 text-lg font-medium">
             Get Started for Free
           </Button>
         </div>
