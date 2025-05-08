@@ -1,4 +1,6 @@
 
+import { Button } from "@/components/ui/button";
+
 const HowItWorks = () => {
   const steps = [
     {
@@ -63,6 +65,13 @@ const HowItWorks = () => {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Get Started For Free button at the end */}
+        <div className="mt-20 text-center">
+          <Button className="rounded-full bg-rosie-purple hover:bg-rosie-darkPurple text-white px-10 py-6 text-lg font-medium">
+            Get Started for Free
+          </Button>
         </div>
       </div>
     </section>
