@@ -74,9 +74,14 @@ const ProcessSteps = () => {
                   </p>
                 )}
                 {!step.exampleText && <div className="mb-8"></div>}
-                <Button className="rounded-full bg-callyn-blue hover:bg-callyn-darkBlue text-white px-8 py-2">
-                  {step.buttonText}
-                </Button>
+                <div className="flex flex-col items-start">
+                  <Button className="rounded-full bg-callyn-blue hover:bg-callyn-darkBlue text-white px-8 py-2">
+                    {step.buttonText}
+                  </Button>
+                  <p className="mt-2 text-sm text-gray-500">
+                    First 45 minutes completely free.
+                  </p>
+                </div>
               </div>
               <div className="w-full md:w-1/2">
                 <img
@@ -91,9 +96,14 @@ const ProcessSteps = () => {
 
         {/* Get Started For Free button at the end */}
         <div className="mt-20 text-center">
-          <Button className="rounded-full bg-callyn-blue hover:bg-callyn-darkBlue text-white px-10 py-6 text-lg font-medium">
-            Get Started for Free
-          </Button>
+          <div className="flex flex-col items-center">
+            <Button className="rounded-full bg-callyn-blue hover:bg-callyn-darkBlue text-white px-10 py-6 text-lg font-medium">
+              Get Started for Free
+            </Button>
+            <p className="mt-4 text-gray-500">
+              First 45 minutes completely free. No credit card required.
+            </p>
+          </div>
         </div>
       </div>
     </section>
