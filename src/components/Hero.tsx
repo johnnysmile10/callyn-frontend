@@ -11,10 +11,13 @@ const Hero = () => {
         <p className="text-xl md:text-2xl text-gray-200 mb-8 mx-auto max-w-3xl">
           Callyn handles your calls, answers, follows up, and books — in 20+ languages — so you can focus on closing and business growth.
         </p>
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center">
           <Button className="rounded-full bg-white text-callyn-darkBlue hover:bg-gray-200 text-lg py-6 px-8">
-            Try for free
+            Get Started for Free
           </Button>
+          <p className="mt-4 text-gray-300 text-sm">
+            First 45 minutes completely free. No credit card required.
+          </p>
         </div>
       </div>
       <div className="absolute inset-0 opacity-20 bg-pattern"></div>
