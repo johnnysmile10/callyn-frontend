@@ -2,6 +2,7 @@
 import { FC } from "react";
 import PricingCard from "./pricing/PricingCard";
 import AddOnsSection from "./pricing/AddOnsSection";
+import HybridModeExplainer from "./pricing/HybridModeExplainer";
 
 interface PricingTableProps {
   audience: "sales" | "business";
@@ -20,7 +21,8 @@ const PricingTable: FC<PricingTableProps> = ({ audience }) => {
         calendarIntegration: false,
         smartRouting: false,
         apiAccess: false,
-        prioritySupport: false
+        prioritySupport: false,
+        hybridMode: false
       },
       audience: audience === "sales" ? "Solo closers" : "Small businesses",
       popular: false,
@@ -36,7 +38,8 @@ const PricingTable: FC<PricingTableProps> = ({ audience }) => {
         calendarIntegration: true,
         smartRouting: false,
         apiAccess: false,
-        prioritySupport: false
+        prioritySupport: false,
+        hybridMode: true
       },
       audience: audience === "sales" ? "Growing sales teams" : "Growing businesses",
       popular: true,
@@ -52,7 +55,8 @@ const PricingTable: FC<PricingTableProps> = ({ audience }) => {
         calendarIntegration: true,
         smartRouting: true,
         apiAccess: false,
-        prioritySupport: true
+        prioritySupport: true,
+        hybridMode: true
       },
       audience: audience === "sales" ? "Established closers" : "Established businesses",
       popular: false,
@@ -68,7 +72,8 @@ const PricingTable: FC<PricingTableProps> = ({ audience }) => {
         calendarIntegration: true,
         smartRouting: true,
         apiAccess: true,
-        prioritySupport: true
+        prioritySupport: true,
+        hybridMode: true
       },
       audience: audience === "sales" ? "High-volume sales pros" : "High-volume sales teams",
       popular: false,
@@ -110,6 +115,9 @@ const PricingTable: FC<PricingTableProps> = ({ audience }) => {
             <PricingCard key={index} plan={plan} />
           ))}
         </div>
+        
+        {/* Hybrid Mode Explainer */}
+        <HybridModeExplainer />
 
         {/* Add-ons section */}
         <AddOnsSection addOns={addOns} />

@@ -7,6 +7,7 @@ export interface PlanFeatures {
   smartRouting: boolean;
   apiAccess: boolean;
   prioritySupport: boolean;
+  hybridMode: boolean;
 }
 
 export interface PricingPlan {

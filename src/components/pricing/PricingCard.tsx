@@ -21,7 +21,8 @@ const PricingCard = ({ plan }: PricingCardProps) => {
     calendarIntegration: "Calendar Integration",
     smartRouting: "Smart Call Routing",
     apiAccess: "API Access",
-    prioritySupport: "Priority Support"
+    prioritySupport: "Priority Support",
+    hybridMode: "Hybrid Mode (Jump In Live)"
   };
 
   return (
