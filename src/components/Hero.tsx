@@ -13,7 +13,7 @@ const Hero = () => {
         </p>
         <div className="flex justify-center">
           <Button className="rounded-full bg-white text-callyn-darkBlue hover:bg-gray-200 text-lg py-6 px-8">
-            Unlock your potential
+            Try for free
           </Button>
         </div>
       </div>
