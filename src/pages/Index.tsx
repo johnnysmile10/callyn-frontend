@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ComparisonTable from "@/components/ComparisonTable";
@@ -11,8 +12,11 @@ import ContactForm from "@/components/ContactForm";
 import ComparisonColumns from "@/components/ComparisonColumns";
 import ComparisonZigZag from "@/components/ComparisonZigZag";
 import PricingTable from "@/components/PricingTable";
+import PricingAudienceTabs from "@/components/pricing/PricingAudienceTabs";
 
 const Index = () => {
+  const [audience, setAudience] = useState<"sales" | "business">("sales");
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -30,8 +34,13 @@ const Index = () => {
       
       <HowItWorks />
       
-      {/* Replaced Testimonials with PricingTable */}
-      <PricingTable />
+      {/* Pricing Tabs and Table */}
+      <section className="bg-gray-900 pt-16">
+        <div className="container mx-auto">
+          <PricingAudienceTabs audience={audience} setAudience={setAudience} />
+        </div>
+      </section>
+      <PricingTable audience={audience} />
       
       {/* Contact Form */}
       <ContactForm />

@@ -24,13 +24,6 @@ const PricingCard = ({ plan }: PricingCardProps) => {
     prioritySupport: "Priority Support"
   };
 
-  const audienceLabels = {
-    "Small businesses": "Testing & Light Use",
-    "Growing businesses": "Solo Users",
-    "Established businesses": "Small Teams",
-    "High-volume sales teams": "High-Volume Closers & Teams"
-  };
-
   return (
     <div className={`flex flex-col ${plan.popular ? "border-l-4 border-callyn-blue pl-2" : ""}`}>
       <div className="flex items-center gap-2 mb-3">
@@ -63,7 +56,7 @@ const PricingCard = ({ plan }: PricingCardProps) => {
       </div>
       
       <div className="mt-auto">
-        <p className="text-sm text-gray-400">Best for: <span className="font-medium text-gray-300">{audienceLabels[plan.audience as keyof typeof audienceLabels]}</span></p>
+        <p className="text-sm text-gray-400">Best for: <span className="font-medium text-gray-300">{plan.audience}</span></p>
       </div>
     </div>
   );

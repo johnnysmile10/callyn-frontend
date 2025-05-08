@@ -1,8 +1,13 @@
 
+import { FC } from "react";
 import PricingCard from "./pricing/PricingCard";
 import AddOnsSection from "./pricing/AddOnsSection";
 
-const PricingTable = () => {
+interface PricingTableProps {
+  audience: "sales" | "business";
+}
+
+const PricingTable: FC<PricingTableProps> = ({ audience }) => {
   const pricingPlans = [
     {
       name: "Basic",
@@ -17,7 +22,7 @@ const PricingTable = () => {
         apiAccess: false,
         prioritySupport: false
       },
-      audience: "Small businesses",
+      audience: audience === "sales" ? "Solo closers" : "Small businesses",
       popular: false,
     },
     {
@@ -33,7 +38,7 @@ const PricingTable = () => {
         apiAccess: false,
         prioritySupport: false
       },
-      audience: "Growing businesses",
+      audience: audience === "sales" ? "Growing sales teams" : "Growing businesses",
       popular: true,
     },
     {
@@ -49,7 +54,7 @@ const PricingTable = () => {
         apiAccess: false,
         prioritySupport: true
       },
-      audience: "Established businesses",
+      audience: audience === "sales" ? "Established closers" : "Established businesses",
       popular: false,
     },
     {
@@ -65,7 +70,7 @@ const PricingTable = () => {
         apiAccess: true,
         prioritySupport: true
       },
-      audience: "High-volume sales teams",
+      audience: audience === "sales" ? "High-volume sales pros" : "High-volume sales teams",
       popular: false,
     },
   ];
@@ -76,15 +81,26 @@ const PricingTable = () => {
     { minutes: "2,000", price: "$179" },
   ];
 
+  const headlines = {
+    sales: {
+      title: "Choose your plan",
+      description: "Callyn helps you follow up, qualify, and book 24/7 — so you never miss a close."
+    },
+    business: {
+      title: "Choose your plan",
+      description: "Callyn turns missed calls into meetings, day or night. Maximize your ad ROI and improve customer service reliability."
+    }
+  };
+
   return (
     <section className="py-16 md:py-24 px-4 bg-gray-900">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            Choose your plan
+            {headlines[audience].title}
           </h2>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto">
-            Select the perfect plan for your business needs with flexible options for any call volume
+            {headlines[audience].description}
           </p>
         </div>
 
