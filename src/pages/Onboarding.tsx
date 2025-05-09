@@ -5,11 +5,12 @@ import Footer from "@/components/Footer";
 import Step1RoleSelection from "@/components/onboarding/Step1RoleSelection";
 import Step2ScenarioSelection from "@/components/onboarding/Step2ScenarioSelection";
 import Step3TrainingMethod from "@/components/onboarding/Step3TrainingMethod";
-import Step4FinalCTA from "@/components/onboarding/Step4FinalCTA";
+import Step4VoicePreview from "@/components/onboarding/Step4VoicePreview";
+import Step5FinalCTA from "@/components/onboarding/Step5FinalCTA";
 import ProgressIndicator from "@/components/onboarding/ProgressIndicator";
 import { salesScenarios, businessScenarios } from "@/components/onboarding/scenarioData";
 import { ScenarioProps } from "@/components/onboarding/types";
-import { Pause } from "lucide-react";
+import { useState as useStateInternal } from "react";
 
 const Onboarding = () => {
   const [selectedTab, setSelectedTab] = useState("sales");
@@ -17,7 +18,14 @@ const Onboarding = () => {
   const [selectedScenario, setSelectedScenario] = useState<ScenarioProps | null>(null);
   const [trainingMethod, setTrainingMethod] = useState<string | null>(null);
   const [websiteUrl, setWebsiteUrl] = useState("");
+  const [businessName, setBusinessName] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingState, setProcessingState] = useState("");
+  const [voicePreviews, setVoicePreviews] = useState<{greeting: string, message: string}>({
+    greeting: "Hello, I'm Callyn, your AI agent.",
+    message: "I can help qualify leads, handle calls, and book meetings on your calendar."
+  });
   
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
@@ -32,8 +40,67 @@ const Onboarding = () => {
     // No longer automatically advancing to Step 3
   };
 
+  // Simulate processing data and generating voice samples
+  const processTrainingData = () => {
+    setIsProcessing(true);
+    
+    // Different messages based on training method
+    const processingMessages = {
+      'google-business': [
+        "Analyzing your Google listing",
+        "Processing business info",
+        "Optimizing for AI"
+      ],
+      'website-url': [
+        "Crawling site",
+        "Extracting service/product text",
+        "Training voice"
+      ],
+      'upload-pdf': [
+        "Parsing PDF",
+        "Extracting value points",
+        "Generating AI voice"
+      ]
+    };
+    
+    const messages = trainingMethod ? processingMessages[trainingMethod as keyof typeof processingMessages] : [];
+    
+    // Simulate API processing with delays
+    let messageIndex = 0;
+    const processInterval = setInterval(() => {
+      if (messageIndex < messages.length) {
+        setProcessingState(messages[messageIndex]);
+        messageIndex++;
+      } else {
+        clearInterval(processInterval);
+        setIsProcessing(false);
+        
+        // Generate custom voice samples based on input data
+        let customGreeting = "Hello, I'm Callyn, your AI agent.";
+        let customMessage = "";
+        
+        if (trainingMethod === 'google-business' && businessName) {
+          customMessage = `I represent ${businessName} and I'm here to assist with customer inquiries and bookings.`;
+        } else if (trainingMethod === 'website-url' && websiteUrl) {
+          const domain = new URL(websiteUrl).hostname.replace('www.', '');
+          customMessage = `I'm the virtual representative for ${domain}, ready to handle calls and qualify leads.`;
+        } else if (trainingMethod === 'upload-pdf' && file) {
+          customMessage = `I've been trained on your sales materials and can help convert prospects into customers.`;
+        }
+        
+        setVoicePreviews({
+          greeting: customGreeting,
+          message: customMessage || "I can help qualify leads, handle calls, and book meetings on your calendar."
+        });
+        
+        // Move to voice preview step
+        handleNext();
+      }
+    }, 1500);
+  };
+
   // Total number of steps in the onboarding process
-  const totalSteps = 3;
+  const totalSteps = 5;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -82,15 +149,28 @@ const Onboarding = () => {
               setTrainingMethod={setTrainingMethod}
               websiteUrl={websiteUrl}
               setWebsiteUrl={setWebsiteUrl}
+              businessName={businessName}
+              setBusinessName={setBusinessName}
               file={file}
               setFile={setFile}
+              handleBack={handleBack}
+              handleNext={processTrainingData}
+              isProcessing={isProcessing}
+              processingState={processingState}
+            />
+          )}
+          
+          {/* Step 4: Voice Preview */}
+          {currentStep === 4 && (
+            <Step4VoicePreview 
+              voicePreviews={voicePreviews}
               handleBack={handleBack}
               handleNext={handleNext}
             />
           )}
           
           {/* Final CTA */}
-          {currentStep === 4 && <Step4FinalCTA />}
+          {currentStep === 5 && <Step5FinalCTA />}
         </div>
       </main>
       
