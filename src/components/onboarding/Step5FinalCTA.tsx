@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Google, Mail } from "lucide-react";
+import { Mail, LogIn } from "lucide-react";
 
 const Step5FinalCTA = () => {
   return (
@@ -20,7 +20,7 @@ const Step5FinalCTA = () => {
             asChild
           >
             <Link to="/signup">
-              <Google className="h-5 w-5" />
+              <LogIn className="h-5 w-5" />
               Sign up with Google
             </Link>
           </Button>
