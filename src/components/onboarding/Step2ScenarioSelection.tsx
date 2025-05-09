@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Play, AlertCircle } from "lucide-react";
+import { Play, Pause, AlertCircle } from "lucide-react";
 import ScenarioCard from "./ScenarioCard";
 import { ScenarioProps } from "./types";
 
