@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -104,22 +103,29 @@ const Step2ScenarioSelection = ({
         </div>
       </div>
       
-      <div className="mt-12 text-center">
-        <Button 
-          onClick={handleBack}
-          variant="outline"
-          className="rounded-full px-8 py-2 text-lg font-medium mr-4"
-        >
-          Back
-        </Button>
-        <Button 
-          onClick={handleNext}
-          variant="default"
-          className="rounded-full px-8 py-2 text-lg font-medium bg-callyn-blue hover:bg-callyn-blue/90"
-          disabled={!selectedScenario}
-        >
-          Create your own Callyn
-        </Button>
+      <div className="mt-12 text-center flex flex-col items-center">
+        {!selectedScenario && (
+          <p className="text-gray-600 mb-4">
+            Please select a scenario to continue
+          </p>
+        )}
+        <div>
+          <Button 
+            onClick={handleBack}
+            variant="outline"
+            className="rounded-full px-8 py-2 text-lg font-medium mr-4"
+          >
+            Back
+          </Button>
+          <Button 
+            onClick={handleNext}
+            variant="default"
+            className="rounded-full px-8 py-2 text-lg font-medium bg-callyn-blue hover:bg-callyn-blue/90 transition-all transform hover:scale-105"
+            disabled={!selectedScenario}
+          >
+            Create your own Callyn
+          </Button>
+        </div>
       </div>
     </div>
   );
