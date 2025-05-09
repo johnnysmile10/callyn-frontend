@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -12,8 +13,8 @@ const Hero = () => {
           Callyn handles your calls, answers, follows up, and books — in 20+ languages — so you can focus on closing and business growth.
         </p>
         <div className="flex flex-col items-center">
-          <Button className="rounded-full bg-white text-callyn-darkBlue hover:bg-gray-200 text-lg py-6 px-8">
-            Get Started for Free
+          <Button className="rounded-full bg-white text-callyn-darkBlue hover:bg-gray-200 text-lg py-6 px-8" asChild>
+            <Link to="/onboarding">Get Started for Free</Link>
           </Button>
           <p className="mt-4 text-gray-300 text-sm">
             First 45 minutes completely free. No credit card required.

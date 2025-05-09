@@ -13,6 +13,7 @@ import ComparisonColumns from "@/components/ComparisonColumns";
 import ComparisonZigZag from "@/components/ComparisonZigZag";
 import PricingTable from "@/components/PricingTable";
 import PricingAudienceTabs from "@/components/pricing/PricingAudienceTabs";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [audience, setAudience] = useState<"sales" | "business">("sales");
@@ -52,8 +53,8 @@ const Index = () => {
             Ready to start answering every call?
           </h2>
           <div className="flex flex-col items-center">
-            <Button className="rounded-full bg-callyn-blue hover:bg-callyn-darkBlue text-lg py-6 px-8">
-              Get Started for Free
+            <Button className="rounded-full bg-callyn-blue hover:bg-callyn-darkBlue text-lg py-6 px-8" asChild>
+              <Link to="/onboarding">Get Started for Free</Link>
             </Button>
             <p className="mt-4 text-gray-500">
               First 45 minutes completely free. No credit card required.
