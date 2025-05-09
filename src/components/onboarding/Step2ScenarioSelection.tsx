@@ -115,10 +115,10 @@ const Step2ScenarioSelection = ({
         <Button 
           onClick={handleNext}
           variant="default"
-          className="rounded-full px-8 py-2 text-lg font-medium"
+          className="rounded-full px-8 py-2 text-lg font-medium bg-callyn-blue hover:bg-callyn-blue/90"
           disabled={!selectedScenario}
         >
-          Continue
+          Create your own Callyn
         </Button>
       </div>
     </div>

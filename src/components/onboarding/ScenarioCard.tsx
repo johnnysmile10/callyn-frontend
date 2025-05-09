@@ -21,27 +21,27 @@ const ScenarioCard = ({ scenario, isSelected, onSelect, onPlayAudio }: ScenarioC
   };
 
   return (
-    <Card className={`h-full flex flex-col transition-all ${isSelected ? 'border-callyn-blue ring-2 ring-callyn-blue' : 'hover:border-callyn-blue'}`}>
+    <Card 
+      className={`h-full flex flex-col transition-all ${isSelected ? 'border-callyn-blue ring-2 ring-callyn-blue' : 'hover:border-callyn-blue'}`}
+      onClick={() => onSelect(scenario)}
+    >
       <CardHeader>
         <CardTitle>{scenario.title}</CardTitle>
       </CardHeader>
       <CardContent className="flex-grow">
         <p className="text-gray-600 italic">"{scenario.script}"</p>
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-center">
         <Button 
-          onClick={togglePlay}
+          onClick={(e) => {
+            e.stopPropagation();
+            togglePlay();
+          }}
           variant="outline"
           className="gap-2"
         >
           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           {isPlaying ? "Pause" : "Hear Callyn"}
-        </Button>
-        <Button 
-          variant={isSelected ? "default" : "secondary"}
-          onClick={() => onSelect(scenario)}
-        >
-          {isSelected ? "Selected" : "Select"}
         </Button>
       </CardFooter>
     </Card>
