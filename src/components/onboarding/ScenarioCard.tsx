@@ -5,17 +5,23 @@ import { Button } from "@/components/ui/button";
 import { Play, Pause } from "lucide-react";
 import { ScenarioProps } from "./types";
 
-const ScenarioCard = ({ scenario, onSelect }: { scenario: ScenarioProps; onSelect: () => void }) => {
+interface ScenarioCardProps {
+  scenario: ScenarioProps;
+  isSelected: boolean;
+  onSelect: (scenario: ScenarioProps) => void;
+  onPlayAudio: (scenario: ScenarioProps) => void;
+}
+
+const ScenarioCard = ({ scenario, isSelected, onSelect, onPlayAudio }: ScenarioCardProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const togglePlay = () => {
-    // In a real implementation, this would actually play/pause audio
     setIsPlaying(!isPlaying);
-    console.log(`${isPlaying ? "Paused" : "Playing"} scenario: ${scenario.title}`);
+    onPlayAudio(scenario);
   };
 
   return (
-    <Card className="h-full flex flex-col cursor-pointer transition-all hover:border-callyn-blue" onClick={onSelect}>
+    <Card className={`h-full flex flex-col transition-all ${isSelected ? 'border-callyn-blue ring-2 ring-callyn-blue' : 'hover:border-callyn-blue'}`}>
       <CardHeader>
         <CardTitle>{scenario.title}</CardTitle>
       </CardHeader>
@@ -24,15 +30,18 @@ const ScenarioCard = ({ scenario, onSelect }: { scenario: ScenarioProps; onSelec
       </CardContent>
       <CardFooter className="flex justify-between">
         <Button 
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent triggering the card's onClick
-            togglePlay();
-          }}
+          onClick={togglePlay}
           variant="outline"
           className="gap-2"
         >
           {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
           {isPlaying ? "Pause" : "Hear Callyn"}
+        </Button>
+        <Button 
+          variant={isSelected ? "default" : "secondary"}
+          onClick={() => onSelect(scenario)}
+        >
+          {isSelected ? "Selected" : "Select"}
         </Button>
       </CardFooter>
     </Card>

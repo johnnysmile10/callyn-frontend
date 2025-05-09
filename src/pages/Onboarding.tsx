@@ -9,6 +9,7 @@ import Step4FinalCTA from "@/components/onboarding/Step4FinalCTA";
 import ProgressIndicator from "@/components/onboarding/ProgressIndicator";
 import { salesScenarios, businessScenarios } from "@/components/onboarding/scenarioData";
 import { ScenarioProps } from "@/components/onboarding/types";
+import { Pause } from "lucide-react";
 
 const Onboarding = () => {
   const [selectedTab, setSelectedTab] = useState("sales");
@@ -28,7 +29,7 @@ const Onboarding = () => {
 
   const handleScenarioSelect = (scenario: ScenarioProps) => {
     setSelectedScenario(scenario);
-    setCurrentStep(3);
+    // No longer automatically advancing to Step 3
   };
 
   // Total number of steps in the onboarding process
@@ -69,6 +70,8 @@ const Onboarding = () => {
               businessScenarios={businessScenarios}
               handleScenarioSelect={handleScenarioSelect}
               handleBack={handleBack}
+              handleNext={handleNext}
+              selectedScenario={selectedScenario}
             />
           )}
           
