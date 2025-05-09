@@ -176,7 +176,7 @@ const Onboarding = () => {
                 className="rounded-full bg-callyn-blue hover:bg-callyn-darkBlue text-white px-10 py-6 text-lg font-medium"
                 asChild
               >
-                <Link to="/signup">Sign Up Now</Link>
+                <Link to="/signup">Get Started For Free</Link>
               </Button>
               <p className="mt-4 text-gray-500">
                 First 45 minutes completely free. No credit card required.
