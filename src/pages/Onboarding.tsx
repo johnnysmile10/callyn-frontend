@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Briefcase, Users, Play, Pause, Google, Link as LinkIcon, Upload, FilePdf } from "lucide-react";
+import { Briefcase, Users, Play, Pause, Link as LinkIcon, Upload, FileText, Building } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -259,7 +259,7 @@ const Onboarding = () => {
                       <RadioGroupItem value="google-business" id="google-business" className="mt-1" />
                       <div className="flex-grow">
                         <div className="flex items-center gap-2 mb-2">
-                          <Google className="h-5 w-5 text-callyn-blue" />
+                          <Building className="h-5 w-5 text-callyn-blue" />
                           <h3 className="font-medium">Google Business Profile</h3>
                         </div>
                         <p className="text-gray-600 text-sm">
@@ -309,7 +309,7 @@ const Onboarding = () => {
                       <RadioGroupItem value="upload-pdf" id="upload-pdf" className="mt-1" />
                       <div className="flex-grow">
                         <div className="flex items-center gap-2 mb-2">
-                          <FilePdf className="h-5 w-5 text-callyn-blue" />
+                          <FileText className="h-5 w-5 text-callyn-blue" />
                           <h3 className="font-medium">Upload a PDF</h3>
                         </div>
                         <p className="text-gray-600 text-sm mb-2">
