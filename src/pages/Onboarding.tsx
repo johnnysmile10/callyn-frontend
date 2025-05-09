@@ -140,30 +140,30 @@ const Onboarding = () => {
                   <p className="text-gray-600">For Business Owners & Managers</p>
                 )}
               </div>
+            
+              {/* Step 2: Pick Industry Scenario + Hear Voice */}
+              <div className="mt-16">
+                <h2 className="text-2xl font-bold text-callyn-darkBlue mb-6 text-center">
+                  STEP 2: Pick Industry Scenario + Hear Voice
+                </h2>
+                
+                <TabsContent value="sales" className="mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {salesScenarios.map((scenario, index) => (
+                      <ScenarioCard key={index} scenario={scenario} />
+                    ))}
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="business" className="mt-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {businessScenarios.map((scenario, index) => (
+                      <ScenarioCard key={index} scenario={scenario} />
+                    ))}
+                  </div>
+                </TabsContent>
+              </div>
             </Tabs>
-          </div>
-
-          {/* Step 2: Pick Industry Scenario + Hear Voice */}
-          <div>
-            <h2 className="text-2xl font-bold text-callyn-darkBlue mb-6 text-center">
-              STEP 2: Pick Industry Scenario + Hear Voice
-            </h2>
-            
-            <TabsContent value="sales" className="mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {salesScenarios.map((scenario, index) => (
-                  <ScenarioCard key={index} scenario={scenario} />
-                ))}
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="business" className="mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {businessScenarios.map((scenario, index) => (
-                  <ScenarioCard key={index} scenario={scenario} />
-                ))}
-              </div>
-            </TabsContent>
           </div>
           
           {/* Final CTA */}
