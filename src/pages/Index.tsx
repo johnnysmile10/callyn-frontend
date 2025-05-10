@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -16,8 +15,6 @@ import PricingAudienceTabs from "@/components/pricing/PricingAudienceTabs";
 import { Link } from "react-router-dom";
 
 const Index = () => {
-  const [audience, setAudience] = useState<"sales" | "business">("sales");
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -35,13 +32,13 @@ const Index = () => {
       
       <HowItWorks />
       
-      {/* Pricing Tabs and Table */}
+      {/* Pricing Tab and Table */}
       <section className="bg-gray-900 pt-16">
         <div className="container mx-auto">
-          <PricingAudienceTabs audience={audience} setAudience={setAudience} />
+          <PricingAudienceTabs />
         </div>
       </section>
-      <PricingTable audience={audience} />
+      <PricingTable />
       
       {/* Contact Form */}
       <ContactForm />
@@ -50,7 +47,7 @@ const Index = () => {
       <section className="bg-callyn-background py-16 px-4">
         <div className="container mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold text-callyn-darkBlue mb-8">
-            Ready to start answering every call?
+            Ready to close more deals with AI?
           </h2>
           <div className="flex flex-col items-center">
             <Button className="rounded-full bg-callyn-blue hover:bg-callyn-darkBlue text-lg py-6 px-8" asChild>

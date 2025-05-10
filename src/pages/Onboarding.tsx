@@ -8,12 +8,10 @@ import Step3TrainingMethod from "@/components/onboarding/Step3TrainingMethod";
 import Step4VoicePreview from "@/components/onboarding/Step4VoicePreview";
 import Step5FinalCTA from "@/components/onboarding/Step5FinalCTA";
 import ProgressIndicator from "@/components/onboarding/ProgressIndicator";
-import { salesScenarios, businessScenarios } from "@/components/onboarding/scenarioData";
+import { salesScenarios } from "@/components/onboarding/scenarioData";
 import { ScenarioProps } from "@/components/onboarding/types";
-import { useState as useStateInternal } from "react";
 
 const Onboarding = () => {
-  const [selectedTab, setSelectedTab] = useState("sales");
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedScenario, setSelectedScenario] = useState<ScenarioProps | null>(null);
   const [trainingMethod, setTrainingMethod] = useState<string | null>(null);
@@ -23,7 +21,7 @@ const Onboarding = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingState, setProcessingState] = useState("");
   const [voicePreviews, setVoicePreviews] = useState<{greeting: string, message: string}>({
-    greeting: "Hello, I'm Callyn, your AI agent.",
+    greeting: "Hello, I'm Callyn, your AI sales agent.",
     message: "I can help qualify leads, handle calls, and book meetings on your calendar."
   });
   
@@ -47,13 +45,13 @@ const Onboarding = () => {
     // Different messages based on training method
     const processingMessages = {
       'google-business': [
-        "Analyzing your Google listing",
-        "Processing business info",
+        "Analyzing your company info",
+        "Processing sales data",
         "Optimizing for AI"
       ],
       'website-url': [
         "Crawling site",
-        "Extracting service/product text",
+        "Extracting sales content",
         "Training voice"
       ],
       'upload-pdf': [
@@ -76,14 +74,14 @@ const Onboarding = () => {
         setIsProcessing(false);
         
         // Generate custom voice samples based on input data
-        let customGreeting = "Hello, I'm Callyn, your AI agent.";
+        let customGreeting = "Hello, I'm Callyn, your AI sales agent.";
         let customMessage = "";
         
         if (trainingMethod === 'google-business' && businessName) {
-          customMessage = `I represent ${businessName} and I'm here to assist with customer inquiries and bookings.`;
+          customMessage = `I represent ${businessName} and I'm here to qualify leads and book appointments for your sales team.`;
         } else if (trainingMethod === 'website-url' && websiteUrl) {
           const domain = new URL(websiteUrl).hostname.replace('www.', '');
-          customMessage = `I'm the virtual representative for ${domain}, ready to handle calls and qualify leads.`;
+          customMessage = `I'm the virtual sales representative for ${domain}, ready to handle calls and qualify leads.`;
         } else if (trainingMethod === 'upload-pdf' && file) {
           customMessage = `I've been trained on your sales materials and can help convert prospects into customers.`;
         }
@@ -110,21 +108,19 @@ const Onboarding = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-callyn-darkBlue mb-4">
-              Hear Callyn in Action
+              Create Your AI Sales Agent
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Select your role and choose an industry example to hear how Callyn can help your business.
+              Set up Callyn to qualify leads, handle objections, and book appointments exactly like you would.
             </p>
             
             {/* Progress indicator */}
             <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
           </div>
           
-          {/* Step 1: Choose Your Role */}
+          {/* Step 1: Welcome and Introduction */}
           {currentStep === 1 && (
             <Step1RoleSelection 
-              selectedTab={selectedTab}
-              setSelectedTab={setSelectedTab}
               handleNext={handleNext}
             />
           )}
@@ -132,9 +128,7 @@ const Onboarding = () => {
           {/* Step 2: Pick Industry Scenario */}
           {currentStep === 2 && (
             <Step2ScenarioSelection
-              selectedTab={selectedTab}
               salesScenarios={salesScenarios}
-              businessScenarios={businessScenarios}
               handleScenarioSelect={handleScenarioSelect}
               handleBack={handleBack}
               handleNext={handleNext}
@@ -142,7 +136,7 @@ const Onboarding = () => {
             />
           )}
           
-          {/* Step 3: Train Callyn with Your Business Info */}
+          {/* Step 3: Train Callyn with Your Sales Info */}
           {currentStep === 3 && (
             <Step3TrainingMethod
               trainingMethod={trainingMethod}

@@ -4,8 +4,8 @@ import { ScenarioProps } from "./types";
 // Sales plan scenarios
 export const salesScenarios: ScenarioProps[] = [
   {
-    title: "Telco",
-    script: "Hey, I'm Callyn, I'm calling on behalf of Telia Company. Can I ask what kind of phone service you and your company use?"
+    title: "Telco Sales",
+    script: "Hey, I'm Callyn, I'm calling on behalf of Telia Company. Can I ask what kind of phone service you and your team use?"
   },
   {
     title: "Solar Appointment Setter",
@@ -22,29 +22,17 @@ export const salesScenarios: ScenarioProps[] = [
   {
     title: "Insurance Qualifying",
     script: "Hey, I'm Callyn with Nordic Life. Just a quick question — are you currently paying more than $80/month for life insurance?"
-  }
-];
-
-// Business plan scenarios
-export const businessScenarios: ScenarioProps[] = [
-  {
-    title: "Barber / Salon",
-    script: "Hey, I'm Callyn, calling on behalf of John's Barber Shop. How can I help you today?"
   },
   {
-    title: "Plumber / Electrician",
-    script: "Hello, you've reached Bergen Plumbing. Would you like to book a service call or ask about availability?"
+    title: "SaaS Demo Booking",
+    script: "Hello, I'm Callyn with CloudSoft. I noticed you've been exploring our platform. Would you be interested in scheduling a quick demo to see how it can boost your team's productivity?"
   },
   {
-    title: "Restaurant / Takeout",
-    script: "Thanks for calling Napoli Pizza! Would you like to place an order or make a reservation?"
+    title: "Financial Services",
+    script: "Hi there, this is Callyn from TrueWealth Advisors. We're offering free investment portfolio reviews this month. Would you like me to schedule one for you?"
   },
   {
-    title: "Dental Clinic",
-    script: "Hi, this is Callyn from Oslo Dental. Are you calling to book an appointment or speak to someone?"
-  },
-  {
-    title: "Moving Company",
-    script: "Hey there, Callyn from Viking Movers. Are you planning a move soon? I can help get you a quote in under a minute."
+    title: "Home Services Lead Gen",
+    script: "Good day! I'm Callyn with Home Shield. We're currently offering free roof inspections in your neighborhood after the recent storms. Can I ask when your roof was last inspected?"
   }
 ];

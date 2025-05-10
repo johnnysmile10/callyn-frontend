@@ -53,7 +53,7 @@ const Step3TrainingMethod = ({
   return (
     <div className="mb-16">
       <h2 className="text-2xl font-bold text-callyn-darkBlue mb-6 text-center">
-        STEP 3: Train Callyn with Your Business Info
+        STEP 3: Train Callyn with Your Sales Content
       </h2>
       
       {isProcessing ? (
@@ -64,18 +64,18 @@ const Step3TrainingMethod = ({
           <h3 className="text-xl font-semibold mb-4">{processingState}</h3>
           <Progress value={Math.random() * 100} className="h-2 mb-8" />
           <p className="text-gray-600">
-            We're analyzing your data and creating your custom AI voice agent.
+            We're analyzing your sales data and creating your custom AI sales agent.
             This typically takes less than a minute.
           </p>
         </div>
       ) : (
         <div className="max-w-2xl mx-auto">
           <p className="text-center text-gray-600 mb-8">
-            Choose how you want to train your AI agent, even if you don't have a public website.
+            Choose how you want to train your AI sales agent, even if you don't have a public website.
           </p>
           
           <RadioGroup value={trainingMethod || ""} onValueChange={setTrainingMethod} className="grid gap-6">
-            {/* Google Business Profile Option */}
+            {/* Company Info Option */}
             <Label 
               htmlFor="google-business"
               className={`flex p-4 border ${trainingMethod === 'google-business' ? 'border-callyn-blue bg-callyn-blue/5' : 'border-gray-200'} rounded-lg cursor-pointer hover:border-callyn-blue hover:bg-callyn-blue/5 transition-all`}
@@ -85,17 +85,17 @@ const Step3TrainingMethod = ({
                 <div className="flex-grow">
                   <div className="flex items-center gap-2 mb-2">
                     <Building className="h-5 w-5 text-callyn-blue" />
-                    <h3 className="font-medium">Google Business Profile</h3>
+                    <h3 className="font-medium">Company Info</h3>
                   </div>
                   <p className="text-gray-600 text-sm">
-                    Search by business name and scan public Google data to train Callyn with your business information.
+                    Enter your sales organization name to help Callyn understand your industry and offerings.
                   </p>
                   
                   {trainingMethod === 'google-business' && (
                     <div className="mt-3">
                       <Input
                         type="text"
-                        placeholder="Enter your business name"
+                        placeholder="Enter your company name"
                         value={businessName}
                         onChange={(e) => setBusinessName(e.target.value)}
                         className="w-full"
@@ -116,17 +116,17 @@ const Step3TrainingMethod = ({
                 <div className="flex-grow">
                   <div className="flex items-center gap-2 mb-2">
                     <LinkIcon className="h-5 w-5 text-callyn-blue" />
-                    <h3 className="font-medium">Website URL</h3>
+                    <h3 className="font-medium">Sales Page URL</h3>
                   </div>
                   <p className="text-gray-600 text-sm mb-2">
-                    Enter your domain and we'll crawl your site to train Callyn with your business content.
+                    Enter your sales page URL and we'll analyze it to train Callyn with your value proposition and offerings.
                   </p>
                   
                   {trainingMethod === 'website-url' && (
                     <div className="mt-3">
                       <Input
                         type="url"
-                        placeholder="https://www.yourbusiness.com"
+                        placeholder="https://www.yourcompany.com/sales"
                         value={websiteUrl}
                         onChange={(e) => setWebsiteUrl(e.target.value)}
                         className="w-full"
@@ -147,10 +147,10 @@ const Step3TrainingMethod = ({
                 <div className="flex-grow">
                   <div className="flex items-center gap-2 mb-2">
                     <FileText className="h-5 w-5 text-callyn-blue" />
-                    <h3 className="font-medium">Upload a PDF</h3>
+                    <h3 className="font-medium">Upload Sales Material</h3>
                   </div>
                   <p className="text-gray-600 text-sm mb-2">
-                    Upload a pitch deck, sales script, lead gen doc, or product PDF to train Callyn with your content.
+                    Upload a sales script, pitch deck, objection handlers, or product PDF to train Callyn with your exact messaging.
                   </p>
                   
                   {trainingMethod === 'upload-pdf' && (

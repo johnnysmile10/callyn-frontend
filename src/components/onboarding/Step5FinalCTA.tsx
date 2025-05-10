@@ -8,10 +8,10 @@ const Step5FinalCTA = () => {
     <div className="mt-8 text-center max-w-md mx-auto">
       <div className="bg-white rounded-lg p-8 shadow-sm border mb-8">
         <h2 className="text-2xl font-bold text-callyn-darkBlue mb-6">
-          Your AI Agent Is Ready!
+          Your AI Sales Agent Is Ready!
         </h2>
         <p className="text-gray-600 mb-8">
-          Sign up to create your Callyn agent and start handling calls, qualifying leads, and booking meetings automatically.
+          Sign up to create your Callyn agent and start handling calls, qualifying leads, and booking meetings automatically so you can focus on closing deals.
         </p>
         
         <div className="space-y-4">

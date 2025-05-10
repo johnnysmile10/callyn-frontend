@@ -8,47 +8,47 @@ const ComparisonTable = () => {
   const voicemailData = [
     {
       voicemail: "Missed calls go to voicemail.",
-      callyn: "Every call is answered instantly, 24/7."
+      callyn: "Every sales call is answered instantly, 24/7."
     },
     {
       voicemail: "80% of voicemails get ignored or hung up on.",
-      callyn: "Human-sounding AI keeps callers engaged — no one hangs up."
+      callyn: "Human-sounding AI keeps prospects engaged — no one hangs up."
     },
     {
       voicemail: "Voicemails rarely include useful info.",
-      callyn: "Callyn captures names, numbers, reasons for calling, and more."
+      callyn: "Callyn captures contact details, buying intent, and key qualifying info."
     },
     {
       voicemail: "Missed ad calls = wasted marketing budget.",
-      callyn: "Every ad click becomes a qualified lead — even after hours."
+      callyn: "Every lead becomes a qualified opportunity — even after hours."
     },
     {
       voicemail: "You still have to follow up manually.",
-      callyn: "Callyn follows up via SMS and books meetings for you."
+      callyn: "Callyn follows up via SMS and books sales meetings for you."
     }
   ];
 
   const answeringServiceData = [
     {
-      traditional: "Low-quality calls from agents who don't know your business.",
-      callyn: "Callyn is trained on your Google profile, website, and scripts. She knows your business inside and out."
+      traditional: "Generic call scripts that don't match your sales pitch.",
+      callyn: "Callyn is trained on your exact sales scripts and objection handlers. She speaks exactly like you would."
     },
     {
-      traditional: "Inconsistent caller experience from humans who forget or fumble.",
-      callyn: "Callyn delivers consistent, professional, and polite responses — 24/7."
+      traditional: "Inconsistent qualification from inexperienced agents.",
+      callyn: "Callyn delivers consistent, professional qualification — using your exact criteria 24/7."
     },
     {
-      traditional: "Wasting money on ads because calls are missed or poorly handled.",
+      traditional: "Wasting commission potential when leads are missed or poorly qualified.",
       callyn: "Every single lead is answered, qualified, and followed up. Instantly."
     },
     {
-      traditional: "You miss calls when you're busy, out on a job, or on another line.",
-      callyn: "Callyn handles multiple calls at once — even after hours or on weekends."
+      traditional: "You miss calls when you're with other clients or on another line.",
+      callyn: "Callyn handles multiple sales calls at once — even after hours or on weekends."
     }
   ];
 
   const currentData = activeTab === "voicemail" ? voicemailData : answeringServiceData;
-  const leftColumnTitle = activeTab === "voicemail" ? "Voicemail" : "Traditional Call Handling";
+  const leftColumnTitle = activeTab === "voicemail" ? "Voicemail" : "Traditional Lead Handling";
 
   return (
     <section className="bg-callyn-darkBlue py-16 md:py-24 px-4">
@@ -57,7 +57,7 @@ const ComparisonTable = () => {
           Let's Compare...
         </h2>
         <p className="text-xl md:text-2xl text-gray-300 text-center mb-12">
-          See how Callyn compares to traditional solutions.
+          See how Callyn compares to other sales solutions.
         </p>
 
         <div className="flex justify-center mb-8">
@@ -72,7 +72,7 @@ const ComparisonTable = () => {
               className={`px-6 py-3 rounded-full ${activeTab === "answering" ? "bg-callyn-blue text-white" : "text-white/80"} focus:outline-none transition-colors`}
               onClick={() => setActiveTab("answering")}
             >
-              Answering Service
+              Sales Assistants
             </button>
           </div>
         </div>
@@ -83,7 +83,7 @@ const ComparisonTable = () => {
               {leftColumnTitle}
             </div>
             <div className="bg-callyn-darkBlue text-white p-4 text-center font-bold text-xl">
-              Callyn AI Voice Agent
+              Callyn AI Sales Agent
             </div>
           </div>
 

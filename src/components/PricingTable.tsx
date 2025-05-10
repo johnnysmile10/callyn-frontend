@@ -4,14 +4,10 @@ import PricingCard from "./pricing/PricingCard";
 import AddOnsSection from "./pricing/AddOnsSection";
 import HybridModeExplainer from "./pricing/HybridModeExplainer";
 
-interface PricingTableProps {
-  audience: "sales" | "business";
-}
-
-const PricingTable: FC<PricingTableProps> = ({ audience }) => {
+const PricingTable: FC = () => {
   const pricingPlans = [
     {
-      name: "Basic",
+      name: "Solo Closer",
       price: "$49",
       minutes: "250",
       features: {
@@ -24,11 +20,11 @@ const PricingTable: FC<PricingTableProps> = ({ audience }) => {
         prioritySupport: false,
         hybridMode: false
       },
-      audience: audience === "sales" ? "Solo closers" : "Small businesses",
+      audience: "Solo sales reps",
       popular: false,
     },
     {
-      name: "Starter",
+      name: "Appointment Setter",
       price: "$97",
       minutes: "500",
       features: {
@@ -41,11 +37,11 @@ const PricingTable: FC<PricingTableProps> = ({ audience }) => {
         prioritySupport: false,
         hybridMode: true
       },
-      audience: audience === "sales" ? "Growing sales teams" : "Growing businesses",
+      audience: "Growing sales teams",
       popular: true,
     },
     {
-      name: "Pro",
+      name: "Pro Closer",
       price: "$197",
       minutes: "1,500",
       features: {
@@ -58,11 +54,11 @@ const PricingTable: FC<PricingTableProps> = ({ audience }) => {
         prioritySupport: true,
         hybridMode: true
       },
-      audience: audience === "sales" ? "Established closers" : "Established businesses",
+      audience: "Established sales pros",
       popular: false,
     },
     {
-      name: "Closer",
+      name: "Sales Elite",
       price: "$497",
       minutes: "3,000",
       features: {
@@ -75,7 +71,7 @@ const PricingTable: FC<PricingTableProps> = ({ audience }) => {
         prioritySupport: true,
         hybridMode: true
       },
-      audience: audience === "sales" ? "High-volume sales pros" : "High-volume sales teams",
+      audience: "High-volume sales teams",
       popular: false,
     },
   ];
@@ -86,26 +82,15 @@ const PricingTable: FC<PricingTableProps> = ({ audience }) => {
     { minutes: "2,000", price: "$179" },
   ];
 
-  const headlines = {
-    sales: {
-      title: "Choose your plan",
-      description: "Callyn helps you follow up, qualify, and book 24/7 — so you never miss a close."
-    },
-    business: {
-      title: "Choose your plan",
-      description: "Callyn turns missed calls into meetings, day or night. Maximize your ad ROI and improve customer service reliability."
-    }
-  };
-
   return (
     <section className="py-16 md:py-24 px-4 bg-gray-900">
       <div className="container mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">
-            {headlines[audience].title}
+            Choose your plan
           </h2>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto">
-            {headlines[audience].description}
+            Callyn helps you follow up, qualify, and book 24/7 — so you never miss a close.
           </p>
         </div>
 

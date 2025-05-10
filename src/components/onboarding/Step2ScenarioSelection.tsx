@@ -7,9 +7,7 @@ import ScenarioCard from "./ScenarioCard";
 import { ScenarioProps } from "./types";
 
 interface Step2Props {
-  selectedTab: string;
   salesScenarios: ScenarioProps[];
-  businessScenarios: ScenarioProps[];
   handleScenarioSelect: (scenario: ScenarioProps) => void;
   handleBack: () => void;
   handleNext: () => void;
@@ -17,9 +15,7 @@ interface Step2Props {
 }
 
 const Step2ScenarioSelection = ({
-  selectedTab,
   salesScenarios,
-  businessScenarios,
   handleScenarioSelect,
   handleBack,
   handleNext,
@@ -45,18 +41,17 @@ const Step2ScenarioSelection = ({
     console.log(`Playing custom script: ${customScript}`);
   };
 
-  const scenariosToDisplay = selectedTab === "sales" ? salesScenarios : businessScenarios;
   const wordCount = customScript.trim().split(/\s+/).length;
 
   return (
     <div className="mb-16">
       <h2 className="text-2xl font-bold text-callyn-darkBlue mb-6 text-center">
-        STEP 2: Pick Industry Scenario + Hear Voice
+        STEP 2: Pick Your Sales Script + Hear Voice
       </h2>
       
       <div className="mt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {scenariosToDisplay.map((scenario, index) => (
+          {salesScenarios.map((scenario, index) => (
             <ScenarioCard 
               key={index} 
               scenario={scenario}
@@ -71,7 +66,7 @@ const Step2ScenarioSelection = ({
       <div className="mt-8 max-w-2xl mx-auto">
         <div className="mb-2">
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Want to try your own script? Paste it here (max 50 words):
+            Want to try your own sales script? Paste it here (max 50 words):
           </label>
           <div className="flex items-start gap-2">
             <Textarea 
@@ -118,7 +113,7 @@ const Step2ScenarioSelection = ({
             variant="default"
             className="rounded-full px-8 py-2 text-lg font-medium bg-callyn-blue hover:bg-callyn-blue/90 transition-all transform hover:scale-105"
           >
-            Create your own Callyn
+            Create your Callyn sales agent
           </Button>
         </div>
       </div>

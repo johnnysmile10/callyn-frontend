@@ -1,46 +1,31 @@
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Users, Briefcase } from "lucide-react";
+import { Users } from "lucide-react";
 
 interface Step1Props {
-  selectedTab: string;
-  setSelectedTab: (tab: string) => void;
   handleNext: () => void;
 }
 
-const Step1RoleSelection = ({ selectedTab, setSelectedTab, handleNext }: Step1Props) => {
+const Step1RoleSelection = ({ handleNext }: Step1Props) => {
   return (
     <div className="mb-16">
       <h2 className="text-2xl font-bold text-callyn-darkBlue mb-6 text-center">
-        STEP 1: Choose Your Role
+        STEP 1: Let's Get Your Sales Agent Set Up
       </h2>
-      <Tabs 
-        defaultValue="sales" 
-        value={selectedTab}
-        onValueChange={setSelectedTab}
-        className="w-full max-w-2xl mx-auto"
-      >
-        <TabsList className="grid grid-cols-2 w-full">
-          <TabsTrigger value="sales" className="flex gap-2 py-4">
-            <Users className="h-5 w-5" />
-            <span>Sales Plan</span>
-          </TabsTrigger>
-          <TabsTrigger value="business" className="flex gap-2 py-4">
-            <Briefcase className="h-5 w-5" />
-            <span>Business Plan</span>
-          </TabsTrigger>
-        </TabsList>
-
-        <div className="mt-4 text-center">
-          {selectedTab === "sales" ? (
-            <p className="text-gray-600">For Salespeople, Closers & Appointment Setters</p>
-          ) : (
-            <p className="text-gray-600">For Business Owners & Managers</p>
-          )}
+      
+      <div className="max-w-2xl mx-auto text-center bg-white p-8 rounded-lg shadow-sm border">
+        <div className="flex justify-center mb-6">
+          <div className="w-16 h-16 bg-callyn-blue/10 rounded-full flex items-center justify-center">
+            <Users className="h-8 w-8 text-callyn-blue" />
+          </div>
         </div>
         
-        <div className="mt-12 text-center">
+        <h3 className="text-xl font-semibold mb-4">Sales Agent</h3>
+        <p className="text-gray-600 mb-8">
+          Perfect for closers, appointment setters, and commission-based reps who want to maximize their outreach and never miss a lead.
+        </p>
+        
+        <div className="mt-8">
           <Button 
             onClick={handleNext}
             className="rounded-full bg-callyn-blue hover:bg-callyn-darkBlue text-white px-8 py-2 text-lg font-medium"
@@ -48,7 +33,7 @@ const Step1RoleSelection = ({ selectedTab, setSelectedTab, handleNext }: Step1Pr
             Next Step
           </Button>
         </div>
-      </Tabs>
+      </div>
     </div>
   );
 };
