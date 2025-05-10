@@ -6,7 +6,11 @@ import {
   Users, 
   BarChart, 
   Settings, 
-  LogOut
+  LogOut,
+  FileText,
+  Bell,
+  Calendar,
+  Zap
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -24,7 +28,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/context/AuthContext";
 
-const DashboardSidebar = () => {
+interface DashboardSidebarProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
+
+const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   
@@ -37,27 +46,32 @@ const DashboardSidebar = () => {
     {
       name: "Dashboard",
       icon: LayoutDashboard,
-      path: "/dashboard",
+      id: "overview",
     },
     {
       name: "Calls & Activity",
       icon: Phone,
-      path: "/dashboard/calls",
+      id: "calls",
     },
     {
       name: "Leads",
       icon: Users,
-      path: "/dashboard/leads",
+      id: "leads",
     },
     {
-      name: "Performance",
-      icon: BarChart,
-      path: "/dashboard/performance",
+      name: "Sales Tools",
+      icon: FileText,
+      id: "sales-tools",
     },
     {
-      name: "Settings",
+      name: "Agent Settings",
       icon: Settings,
-      path: "/dashboard/settings",
+      id: "agent-settings",
+    },
+    {
+      name: "Analytics",
+      icon: BarChart,
+      id: "insights",
     },
   ];
   
@@ -90,14 +104,12 @@ const DashboardSidebar = () => {
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton 
-                    asChild 
-                    isActive={location.pathname === item.path}
+                    onClick={() => setActiveTab(item.id)}
+                    isActive={activeTab === item.id}
                     tooltip={item.name}
                   >
-                    <a href={item.path}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.name}</span>
-                    </a>
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.name}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
