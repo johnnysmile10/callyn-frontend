@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from "react";
 import { Search, Calendar, Phone, Clock, Target, AlertTriangle, MessageSquare } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -120,12 +119,14 @@ const calculateStats = (calls) => {
   const callsWithDuration = calls.filter(call => call.duration && call.duration !== "0:00");
   let avgDuration = "0:00";
   if (callsWithDuration.length > 0) {
-    const totalMinutes = callsWithDuration.reduce((acc, call) => {
+    const totalSeconds = callsWithDuration.reduce((acc, call) => {
       const [mins, secs] = call.duration.split(":");
       return acc + (parseInt(mins) * 60 + parseInt(secs));
     }, 0);
-    const avgSeconds = Math.round(totalMinutes / callsWithDuration.length);
-    avgDuration = `${Math.floor(avgSeconds / 60)}:${String(avgSeconds % 60).padStart(2, '0')}`;
+    const avgSeconds = Math.round(totalSeconds / callsWithDuration.length);
+    const avgMinutes = Math.floor(avgSeconds / 60);
+    const remainingSeconds = avgSeconds % 60;
+    avgDuration = `${avgMinutes}:${String(remainingSeconds).padStart(2, '0')}`;
   }
   
   // Find top objection
