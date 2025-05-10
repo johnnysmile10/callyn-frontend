@@ -101,4 +101,5 @@ export type CallData = {
   notes: string | null;
   bookingLink: string | null;
   transcript: string | null;
+  customMessage?: string; // Added optional customMessage property
 };

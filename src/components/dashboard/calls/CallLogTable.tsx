@@ -25,8 +25,11 @@ const CallLogTable = ({ filteredCalls }: CallLogTableProps) => {
   };
   
   // Handle action buttons
-  const handleFollowUp = (call: CallData) => {
+  const handleFollowUp = (call: CallData, message?: string) => {
     console.log(`Sending follow-up SMS to ${call.name} at ${call.phoneNumber}`);
+    if (message) {
+      console.log(`Message: ${message}`);
+    }
     // In a real app, this would trigger an SMS sending function
   };
   
@@ -131,7 +134,7 @@ const CallLogTable = ({ filteredCalls }: CallLogTableProps) => {
                                 key={template.id} 
                                 onClick={() => {
                                   const personalizedMessage = template.message.replace("{{name}}", call.name);
-                                  handleFollowUp({...call, customMessage: personalizedMessage});
+                                  handleFollowUp(call, personalizedMessage);
                                 }}
                                 className="flex flex-col items-start p-2 cursor-pointer"
                               >
