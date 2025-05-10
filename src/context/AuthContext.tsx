@@ -6,6 +6,7 @@ interface User {
   id?: string;
   email: string;
   name?: string;
+  photoURL?: string;
 }
 
 interface OnboardingData {
@@ -50,7 +51,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const googleLogin = async () => {
     // In a real app, you would implement Google OAuth
     // For demo purposes, simulate successful login with a Google account
-    const mockGoogleUser = { email: 'demo@gmail.com', name: 'Demo User' };
+    const mockGoogleUser = { 
+      email: 'demo@gmail.com', 
+      name: 'Demo User',
+      photoURL: 'https://ui-avatars.com/api/?name=Demo+User&background=random'
+    };
     setUser(mockGoogleUser);
     localStorage.setItem('user', JSON.stringify(mockGoogleUser));
   };
@@ -58,7 +63,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const signup = async (email: string, password: string, name: string) => {
     // In a real app, you would create a new user in your backend
     // For demo purposes, simulate successful signup
-    const newUser = { email, name };
+    const newUser = { 
+      email, 
+      name,
+      photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`
+    };
     setUser(newUser);
     localStorage.setItem('user', JSON.stringify(newUser));
   };
