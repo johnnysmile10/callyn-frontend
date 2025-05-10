@@ -3,6 +3,7 @@ import { Phone } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 // Sample data - In a real app, this would be fetched from an API
@@ -53,6 +54,9 @@ const DashboardCallActivity = ({ timeFilter = "today" }) => {
           <CardTitle>Recent Call Activity</CardTitle>
           <CardDescription>Your call history and results</CardDescription>
         </div>
+        <Button variant="outline" size="sm" onClick={() => window.location.hash = '/dashboard/calls'}>
+          View All
+        </Button>
       </CardHeader>
       <CardContent>
         <div className="mb-4">

@@ -7,6 +7,7 @@ import DashboardOverview from "@/components/dashboard/DashboardOverview";
 import DashboardSalesTools from "@/components/dashboard/DashboardSalesTools";
 import DashboardAgentSettings from "@/components/dashboard/DashboardAgentSettings";
 import DashboardInsights from "@/components/dashboard/DashboardInsights";
+import DashboardCallsAndActivity from "@/components/dashboard/DashboardCallsAndActivity";
 import { useAuth } from "@/context/AuthContext";
 
 const Dashboard = () => {
@@ -27,6 +28,8 @@ const Dashboard = () => {
     switch (activeTab) {
       case "overview":
         return <DashboardOverview />;
+      case "calls":
+        return <DashboardCallsAndActivity />;
       case "sales-tools":
         return <DashboardSalesTools />;
       case "agent-settings":
