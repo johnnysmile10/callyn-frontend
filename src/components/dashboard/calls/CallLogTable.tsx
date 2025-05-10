@@ -1,11 +1,17 @@
 
 import { useState } from "react";
-import { Phone, MessageSquare, AlertTriangle, Calendar, Target } from "lucide-react";
+import { Phone, MessageSquare, AlertTriangle, Calendar, Target, ChevronDown, ChevronUp } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CallData } from "./mockCallData";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 type CallLogTableProps = {
   filteredCalls: CallData[];
@@ -38,12 +44,24 @@ const CallLogTable = ({ filteredCalls }: CallLogTableProps) => {
     console.log(`Marking call with ${call.name} as converted`);
     // In a real app, this would update the call status
   };
+
+  // Follow-up templates
+  const followUpTemplates = [
+    { id: 1, title: "Quick Check-in", message: "Hey {{name}}, just circling back — when's a good time to chat?" },
+    { id: 2, title: "Value Proposition", message: "Hi {{name}}, if you're still considering, here's why others switch to us: [VALUE PROP]. When works to discuss?" },
+    { id: 3, title: "Limited Time Offer", message: "{{name}}, we have a special offer this week that might interest you. Let me know if you want to hear more!" }
+  ];
   
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Call Log</CardTitle>
-        <CardDescription>Complete history of all call activity</CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle>Call Log</CardTitle>
+          <CardDescription>Complete history of all call activity</CardDescription>
+        </div>
+        <Button variant="outline" className="flex items-center gap-1">
+          <span>+ Add Manual Outcome</span>
+        </Button>
       </CardHeader>
       <CardContent>
         <Table>
@@ -62,7 +80,13 @@ const CallLogTable = ({ filteredCalls }: CallLogTableProps) => {
               filteredCalls.map((call) => (
                 <>
                   <TableRow key={call.id} className="cursor-pointer" onClick={() => toggleExpandRow(call.id)}>
-                    <TableCell>{call.name}</TableCell>
+                    <TableCell className="flex items-center gap-2">
+                      {expandedRowId === call.id ? 
+                        <ChevronUp className="h-4 w-4 text-muted-foreground" /> : 
+                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                      }
+                      {call.name}
+                    </TableCell>
                     <TableCell>
                       <a href={`tel:${call.phoneNumber}`} onClick={(e) => e.stopPropagation()} className="flex items-center hover:text-primary">
                         <Phone className="mr-1 h-3 w-3" />{call.phoneNumber}
@@ -71,11 +95,11 @@ const CallLogTable = ({ filteredCalls }: CallLogTableProps) => {
                     <TableCell>{call.dateTime}</TableCell>
                     <TableCell>
                       <Badge className={
-                        call.outcome === "Booked" ? "bg-green-100 text-green-800 hover:bg-green-200 hover:text-green-800" :
-                        call.outcome === "No Answer" ? "bg-gray-100 text-gray-800 hover:bg-gray-200 hover:text-gray-800" :
+                        call.outcome === "Booked" ? "bg-[#F2FCE2] text-green-800 hover:bg-green-100 hover:text-green-800" :
+                        call.outcome === "No Answer" ? "bg-[#F1F1F1] text-gray-800 hover:bg-gray-200 hover:text-gray-800" :
                         call.outcome === "Not Interested" ? "bg-red-100 text-red-800 hover:bg-red-200 hover:text-red-800" :
-                        call.outcome === "Callback" ? "bg-blue-100 text-blue-800 hover:bg-blue-200 hover:text-blue-800" :
-                        "bg-yellow-100 text-yellow-800 hover:bg-yellow-200 hover:text-yellow-800"
+                        call.outcome === "Callback" ? "bg-[#D3E4FD] text-blue-800 hover:bg-blue-100 hover:text-blue-800" :
+                        "bg-[#FEF7CD] text-yellow-800 hover:bg-yellow-100 hover:text-yellow-800" // Voicemail
                       }>
                         {call.outcome}
                       </Badge>
@@ -89,14 +113,36 @@ const CallLogTable = ({ filteredCalls }: CallLogTableProps) => {
                     <TableCell>{call.duration}</TableCell>
                     <TableCell>
                       <div className="flex space-x-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          onClick={(e) => { e.stopPropagation(); handleFollowUp(call); }}
-                        >
-                          <MessageSquare className="h-3 w-3" />
-                          <span className="sr-only md:not-sr-only md:ml-2">Follow Up</span>
-                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={(e) => { e.stopPropagation(); }}
+                            >
+                              <MessageSquare className="h-3 w-3" />
+                              <span className="sr-only md:not-sr-only md:ml-2">Follow Up</span>
+                              <ChevronDown className="ml-1 h-3 w-3" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-60">
+                            {followUpTemplates.map(template => (
+                              <DropdownMenuItem 
+                                key={template.id} 
+                                onClick={() => {
+                                  const personalizedMessage = template.message.replace("{{name}}", call.name);
+                                  handleFollowUp({...call, customMessage: personalizedMessage});
+                                }}
+                                className="flex flex-col items-start p-2 cursor-pointer"
+                              >
+                                <div className="font-medium text-sm">{template.title}</div>
+                                <div className="text-xs text-muted-foreground mt-1">
+                                  {template.message.replace("{{name}}", call.name)}
+                                </div>
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                         <Button 
                           variant="outline" 
                           size="sm" 
@@ -119,8 +165,10 @@ const CallLogTable = ({ filteredCalls }: CallLogTableProps) => {
                             {call.transcript && (
                               <div className="mt-3">
                                 <h4 className="text-sm font-medium mb-2">Transcript Preview</h4>
-                                <p className="text-sm text-muted-foreground line-clamp-2">{call.transcript}</p>
-                                <Button variant="link" className="p-0 h-auto text-xs mt-1">View full transcript</Button>
+                                <div className="bg-background p-3 rounded-md border">
+                                  <p className="text-sm text-muted-foreground line-clamp-3">{call.transcript}</p>
+                                  <Button variant="link" className="p-0 h-auto text-xs mt-2">View full transcript</Button>
+                                </div>
                               </div>
                             )}
                           </div>

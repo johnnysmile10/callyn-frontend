@@ -6,12 +6,14 @@ import CallsStatsBar from "./calls/CallsStatsBar";
 import CallsFilterBar from "./calls/CallsFilterBar";
 import CallLogTable from "./calls/CallLogTable";
 import ObjectionInsights from "./calls/ObjectionInsights";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const DashboardCallsAndActivity = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [outcomeFilter, setOutcomeFilter] = useState("all");
   const [timeFilter, setTimeFilter] = useState("all");
-  const [sortOrder, setSortOrder] = useState("newest");
+  const [sortOrder, setSortOrder] = useState("bookedFirst"); // Default to booked first
   
   // Apply filters and sort
   const filteredCalls = useMemo(() => 
@@ -53,7 +55,10 @@ const DashboardCallsAndActivity = () => {
         
         {/* Objection Intelligence Widget */}
         <div className="lg:col-span-1">
-          <ObjectionInsights topObjection={stats.topObjection} />
+          <ObjectionInsights 
+            topObjection={stats.topObjection} 
+            objectionPercentage={stats.objectionPercentage} 
+          />
         </div>
       </div>
     </div>

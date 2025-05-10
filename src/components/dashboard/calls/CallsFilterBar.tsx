@@ -84,11 +84,13 @@ const CallsFilterBar = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="min-w-[140px]">
-              {sortOrder === "newest" ? "Newest First" :
+              {sortOrder === "bookedFirst" ? "Booked First" :
+               sortOrder === "newest" ? "Newest First" :
                sortOrder === "oldest" ? "Oldest First" : "Longest Calls"}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setSortOrder("bookedFirst")}>Booked First</DropdownMenuItem>
             <DropdownMenuItem onClick={() => setSortOrder("newest")}>Newest First</DropdownMenuItem>
             <DropdownMenuItem onClick={() => setSortOrder("oldest")}>Oldest First</DropdownMenuItem>
             <DropdownMenuItem onClick={() => setSortOrder("duration")}>Longest Calls</DropdownMenuItem>

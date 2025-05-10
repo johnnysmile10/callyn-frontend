@@ -22,20 +22,30 @@ export const calculateStats = (calls: CallData[]) => {
     avgDuration = `${avgMinutes}:${String(remainingSeconds).padStart(2, '0')}`;
   }
   
-  // Find top objection
-  const objections = calls
+  // Find top objection with percentage
+  const objectionsArray = calls
     .filter(call => call.objection)
     .map(call => call.objection);
   
   let topObjection = "None identified";
-  if (objections.length > 0) {
-    const objectionCounts = objections.reduce((acc, obj) => {
-      acc[obj as string] = (acc[obj as string] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+  let objectionPercentage = 0;
+  
+  if (objectionsArray.length > 0) {
+    const objectionCounts: Record<string, number> = {};
     
-    topObjection = Object.entries(objectionCounts)
-      .sort((a, b) => b[1] - a[1])[0][0];
+    objectionsArray.forEach(obj => {
+      if (obj) {
+        objectionCounts[obj] = (objectionCounts[obj] || 0) + 1;
+      }
+    });
+    
+    const sortedObjections = Object.entries(objectionCounts)
+      .sort((a, b) => b[1] - a[1]);
+    
+    if (sortedObjections.length > 0) {
+      topObjection = sortedObjections[0][0];
+      objectionPercentage = Math.round((sortedObjections[0][1] / objectionsArray.length) * 100);
+    }
   }
   
   return {
@@ -43,7 +53,8 @@ export const calculateStats = (calls: CallData[]) => {
     bookedCalls,
     conversionRate,
     avgDuration,
-    topObjection
+    topObjection,
+    objectionPercentage
   };
 };
 
@@ -85,8 +96,17 @@ export const filterAndSortCalls = (
     return matchesSearch && matchesOutcome && matchesTime;
   }).sort((a, b) => {
     // Sort logic
-    if (sortOrder === "newest") {
-      // Simple sort for demo - in real app would use proper date objects
+    if (sortOrder === "bookedFirst") {
+      // First sort by booked status
+      if (a.outcome === "Booked" && b.outcome !== "Booked") {
+        return -1;
+      }
+      if (a.outcome !== "Booked" && b.outcome === "Booked") {
+        return 1;
+      }
+      // Then by date (newest first as secondary sort)
+      return calls.indexOf(a) - calls.indexOf(b);
+    } else if (sortOrder === "newest") {
       return calls.indexOf(a) - calls.indexOf(b);
     } else if (sortOrder === "oldest") {
       return calls.indexOf(b) - calls.indexOf(a);

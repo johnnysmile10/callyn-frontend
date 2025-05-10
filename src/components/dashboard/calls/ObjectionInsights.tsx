@@ -5,9 +5,10 @@ import { getRebuttalSuggestion } from "./callUtils";
 
 type ObjectionInsightsProps = {
   topObjection: string;
+  objectionPercentage: number;
 };
 
-const ObjectionInsights = ({ topObjection }: ObjectionInsightsProps) => {
+const ObjectionInsights = ({ topObjection, objectionPercentage }: ObjectionInsightsProps) => {
   const rebuttalSuggestion = getRebuttalSuggestion(topObjection);
   
   return (
@@ -21,7 +22,11 @@ const ObjectionInsights = ({ topObjection }: ObjectionInsightsProps) => {
           <div>
             <h4 className="font-medium text-sm mb-1">Most common objection:</h4>
             <div className="px-3 py-2 bg-background rounded-md">
-              "{topObjection !== "None identified" ? topObjection : "No objections recorded yet"}"
+              {topObjection !== "None identified" ? (
+                <>"{topObjection}" <span className="text-sm text-muted-foreground">({objectionPercentage}% of rejections)</span></>
+              ) : (
+                "No objections recorded yet"
+              )}
             </div>
           </div>
           
