@@ -17,6 +17,7 @@ export interface PricingPlan {
   features: PlanFeatures;
   audience: string;
   popular: boolean;
+  isCustomPlan?: boolean;
 }
 
 export interface AddOn {

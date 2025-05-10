@@ -2,6 +2,7 @@
 import { Check, Diamond, X, HelpCircle } from "lucide-react";
 import { PlanFeatures } from "./types";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 interface PricingCardProps {
   plan: {
@@ -11,6 +12,7 @@ interface PricingCardProps {
     features: PlanFeatures;
     audience: string;
     popular: boolean;
+    isCustomPlan?: boolean;
   };
 }
 
@@ -33,6 +35,30 @@ const PricingCard = ({ plan }: PricingCardProps) => {
     apiAccess: "Sync leads, outcomes, and updates to your CRM"
   };
 
+  // Custom Plan Card
+  if (plan.isCustomPlan) {
+    return (
+      <div className={`flex flex-col ${plan.popular ? "border-l-4 border-callyn-blue pl-2" : ""}`}>
+        <div className="flex items-center gap-2 mb-3">
+          <Diamond className="w-4 h-4 text-callyn-blue" />
+          <h3 className="text-xl font-bold text-white">{plan.name}</h3>
+          {plan.popular && <span className="text-xs font-medium bg-callyn-blue text-white px-2 py-1 rounded-full">Most Popular</span>}
+        </div>
+        
+        <div className="mb-8">
+          <p className="text-lg font-medium text-white">{plan.audience}</p>
+        </div>
+        
+        <div className="mt-auto">
+          <Button className="w-full bg-callyn-blue hover:bg-blue-700 text-white">
+            Contact Sales
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Regular Plan Cards
   return (
     <div className={`flex flex-col ${plan.popular ? "border-l-4 border-callyn-blue pl-2" : ""}`}>
       <div className="flex items-center gap-2 mb-3">

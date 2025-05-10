@@ -3,6 +3,7 @@ import { FC } from "react";
 import PricingCard from "./pricing/PricingCard";
 import AddOnsSection from "./pricing/AddOnsSection";
 import HybridModeExplainer from "./pricing/HybridModeExplainer";
+import { Button } from "./ui/button";
 
 const PricingTable: FC = () => {
   const pricingPlans = [
@@ -32,7 +33,7 @@ const PricingTable: FC = () => {
         customScriptSupport: true,
         textTranscripts: true,
         calendarIntegration: true,
-        smartRouting: false,
+        smartRouting: true,
         apiAccess: false,
         prioritySupport: false,
         hybridMode: true
@@ -58,9 +59,9 @@ const PricingTable: FC = () => {
       popular: false,
     },
     {
-      name: "Sales Elite",
-      price: "$497",
-      minutes: "3,000",
+      name: "Custom Plan",
+      price: "custom",
+      minutes: "custom",
       features: {
         inboundCalls: true,
         customScriptSupport: true,
@@ -71,8 +72,9 @@ const PricingTable: FC = () => {
         prioritySupport: true,
         hybridMode: true
       },
-      audience: "Best for full teams needing API + support",
+      audience: "Let's build a plan around your sales team's needs",
       popular: false,
+      isCustomPlan: true,
     },
   ];
 
@@ -103,7 +105,7 @@ const PricingTable: FC = () => {
         
         {/* Upgrade/Cancel Anytime text */}
         <div className="text-center mt-8 text-gray-400">
-          <p>Upgrade or cancel anytime. No long-term contracts.</p>
+          <p>Upgrade or cancel anytime. No contracts.</p>
         </div>
         
         {/* Hybrid Mode Explainer */}
