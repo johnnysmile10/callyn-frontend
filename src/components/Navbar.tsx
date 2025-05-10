@@ -1,19 +1,27 @@
 
 import { Button } from "@/components/ui/button";
 import { Phone } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
 const Navbar = () => {
+  const { isAuthenticated, logout } = useAuth();
+
   return (
     <nav className="bg-white py-4 px-6 md:px-10 flex justify-between items-center shadow-sm">
       <div className="flex items-center">
-        <span className="text-3xl font-bold text-callyn-darkBlue">CALLYN</span>
+        <Link to="/" className="text-3xl font-bold text-callyn-darkBlue">CALLYN</Link>
       </div>
 
       <div className="hidden md:flex items-center space-x-8">
-        <a href="#" className="text-gray-700 hover:text-callyn-blue">Features</a>
-        <a href="#" className="text-gray-700 hover:text-callyn-blue">Solutions</a>
-        <a href="#" className="text-gray-700 hover:text-callyn-blue">Pricing</a>
-        <a href="#" className="text-gray-700 hover:text-callyn-blue">Login</a>
+        <Link to="/#features" className="text-gray-700 hover:text-callyn-blue">Features</Link>
+        <Link to="/#solutions" className="text-gray-700 hover:text-callyn-blue">Solutions</Link>
+        <Link to="/#pricing" className="text-gray-700 hover:text-callyn-blue">Pricing</Link>
+        {isAuthenticated ? (
+          <button onClick={logout} className="text-gray-700 hover:text-callyn-blue">Logout</button>
+        ) : (
+          <Link to="/login" className="text-gray-700 hover:text-callyn-blue">Login</Link>
+        )}
       </div>
         
       <div className="hidden md:flex items-center gap-4">
@@ -21,9 +29,15 @@ const Navbar = () => {
           <Phone size={16} className="mr-2" />
           <span>Contact Sales</span>
         </Button>
-        <Button className="rounded-full bg-callyn-darkBlue hover:bg-callyn-blue text-white">
-          Get Started
-        </Button>
+        {isAuthenticated ? (
+          <Button asChild className="rounded-full bg-callyn-darkBlue hover:bg-callyn-blue text-white">
+            <Link to="/dashboard">Dashboard</Link>
+          </Button>
+        ) : (
+          <Button asChild className="rounded-full bg-callyn-darkBlue hover:bg-callyn-blue text-white">
+            <Link to="/onboarding">Get Started</Link>
+          </Button>
+        )}
       </div>
       
       <button className="md:hidden text-gray-700">

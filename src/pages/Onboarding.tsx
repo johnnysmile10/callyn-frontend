@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Step1RoleSelection from "@/components/onboarding/Step1RoleSelection";
@@ -10,6 +11,7 @@ import Step5FinalCTA from "@/components/onboarding/Step5FinalCTA";
 import ProgressIndicator from "@/components/onboarding/ProgressIndicator";
 import { salesScenarios } from "@/components/onboarding/scenarioData";
 import { ScenarioProps } from "@/components/onboarding/types";
+import { useAuth } from "@/context/AuthContext";
 
 const Onboarding = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -25,6 +27,9 @@ const Onboarding = () => {
     message: "I can help qualify leads, handle calls, and book meetings on your calendar."
   });
   
+  const { setOnboardingData } = useAuth();
+  const navigate = useNavigate();
+  
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -37,6 +42,20 @@ const Onboarding = () => {
     setSelectedScenario(scenario);
     // No longer automatically advancing to Step 3
   };
+
+  // Save onboarding data when reaching the final step
+  useEffect(() => {
+    if (currentStep === 5) {
+      setOnboardingData({
+        selectedScenario,
+        trainingMethod,
+        businessName: businessName || undefined,
+        websiteUrl: websiteUrl || undefined,
+        uploadedFile: file,
+        voicePreview: voicePreviews
+      });
+    }
+  }, [currentStep, selectedScenario, trainingMethod, businessName, websiteUrl, file, voicePreviews, setOnboardingData]);
 
   // Simulate processing data and generating voice samples
   const processTrainingData = () => {
