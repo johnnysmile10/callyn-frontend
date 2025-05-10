@@ -202,8 +202,8 @@ const DashboardCallsAndActivity = () => {
       } else if (sortOrder === "oldest") {
         return mockCallData.calls.indexOf(b) - mockCallData.calls.indexOf(a);
       } else if (sortOrder === "duration") {
-        const durationA = a.duration ? parseInt(a.duration.replace(':', '')) : 0;
-        const durationB = b.duration ? parseInt(b.duration.replace(':', '')) : 0;
+        const durationA = a.duration ? parseInt(a.duration.replace(':', ''), 10) : 0;
+        const durationB = b.duration ? parseInt(b.duration.replace(':', ''), 10) : 0;
         return durationB - durationA;
       }
       return 0;
