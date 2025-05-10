@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useMemo } from "react";
 import { Search, Calendar, Phone, Clock, Target, AlertTriangle, MessageSquare } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -121,8 +122,9 @@ const calculateStats = (calls) => {
   if (callsWithDuration.length > 0) {
     const totalSeconds = callsWithDuration.reduce((acc, call) => {
       const [mins, secs] = call.duration.split(":");
-      return acc + (parseInt(mins) * 60 + parseInt(secs));
+      return acc + (parseInt(mins, 10) * 60 + parseInt(secs, 10));
     }, 0);
+    
     const avgSeconds = Math.round(totalSeconds / callsWithDuration.length);
     const avgMinutes = Math.floor(avgSeconds / 60);
     const remainingSeconds = avgSeconds % 60;
