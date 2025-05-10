@@ -20,7 +20,7 @@ const PricingTable: FC = () => {
         prioritySupport: false,
         hybridMode: false
       },
-      audience: "Solo sales reps",
+      audience: "Best for solo sales reps testing Callyn",
       popular: false,
     },
     {
@@ -37,7 +37,7 @@ const PricingTable: FC = () => {
         prioritySupport: false,
         hybridMode: true
       },
-      audience: "Growing sales teams",
+      audience: "Best for growing sales teams",
       popular: true,
     },
     {
@@ -54,7 +54,7 @@ const PricingTable: FC = () => {
         prioritySupport: true,
         hybridMode: true
       },
-      audience: "Established sales pros",
+      audience: "Best for high-volume individual closers",
       popular: false,
     },
     {
@@ -71,7 +71,7 @@ const PricingTable: FC = () => {
         prioritySupport: true,
         hybridMode: true
       },
-      audience: "High-volume sales teams",
+      audience: "Best for full teams needing API + support",
       popular: false,
     },
   ];
@@ -90,7 +90,7 @@ const PricingTable: FC = () => {
             Choose your plan
           </h2>
           <p className="text-lg text-gray-400 max-w-3xl mx-auto">
-            Callyn helps you follow up, qualify, and book 24/7 — so you never miss a close.
+            Callyn helps you follow up, qualify, and book 24/7 — so you never miss a close. Every plan includes AI voice calls, SMS follow-ups, and transcripts. Choose your volume and tools.
           </p>
         </div>
 
@@ -99,6 +99,11 @@ const PricingTable: FC = () => {
           {pricingPlans.map((plan, index) => (
             <PricingCard key={index} plan={plan} />
           ))}
+        </div>
+        
+        {/* Upgrade/Cancel Anytime text */}
+        <div className="text-center mt-8 text-gray-400">
+          <p>Upgrade or cancel anytime. No long-term contracts.</p>
         </div>
         
         {/* Hybrid Mode Explainer */}

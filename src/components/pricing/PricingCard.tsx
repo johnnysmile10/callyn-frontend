@@ -1,6 +1,7 @@
 
-import { Check, Diamond, X } from "lucide-react";
+import { Check, Diamond, X, HelpCircle } from "lucide-react";
 import { PlanFeatures } from "./types";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface PricingCardProps {
   plan: {
@@ -14,6 +15,7 @@ interface PricingCardProps {
 }
 
 const PricingCard = ({ plan }: PricingCardProps) => {
+  // Feature labels and tooltips configuration
   const featureLabels = {
     inboundCalls: "AI Voice Calls & SMS Follow-Ups",
     customScriptSupport: "Custom Script Support",
@@ -23,6 +25,12 @@ const PricingCard = ({ plan }: PricingCardProps) => {
     apiAccess: "API Access",
     prioritySupport: "Priority Support",
     hybridMode: "Hybrid Mode (Jump In Live)"
+  };
+
+  const tooltips = {
+    hybridMode: "Jump in live during an AI call",
+    smartRouting: "Send calls to right rep based on lead status",
+    apiAccess: "Sync leads, outcomes, and updates to your CRM"
   };
 
   return (
@@ -44,20 +52,38 @@ const PricingCard = ({ plan }: PricingCardProps) => {
       </div>
       
       <div className="space-y-3 mb-6">
-        {Object.entries(plan.features).map(([key, value]) => (
-          <div key={key} className="flex items-center gap-2">
-            {value ? (
-              <Check className="w-5 h-5 text-green-500" />
-            ) : (
-              <X className="w-5 h-5 text-red-500" />
-            )}
-            <span className="text-gray-300 text-sm">{featureLabels[key as keyof typeof featureLabels]}</span>
-          </div>
-        ))}
+        <TooltipProvider>
+          {Object.entries(plan.features).map(([key, value]) => (
+            <div key={key} className="flex items-center gap-2">
+              {value ? (
+                <Check className="w-5 h-5 text-green-500" />
+              ) : (
+                <X className="w-5 h-5 text-red-500" />
+              )}
+              
+              {/* Add tooltip for specific features */}
+              {tooltips[key as keyof typeof tooltips] ? (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="flex items-center gap-1 cursor-help">
+                      <span className="text-gray-300 text-sm">{featureLabels[key as keyof typeof featureLabels]}</span>
+                      <HelpCircle className="w-3 h-3 text-gray-400" />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{tooltips[key as keyof typeof tooltips]}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ) : (
+                <span className="text-gray-300 text-sm">{featureLabels[key as keyof typeof featureLabels]}</span>
+              )}
+            </div>
+          ))}
+        </TooltipProvider>
       </div>
       
       <div className="mt-auto">
-        <p className="text-sm text-gray-400">Best for: <span className="font-medium text-gray-300">{plan.audience}</span></p>
+        <p className="text-sm text-gray-400">{plan.audience}</p>
       </div>
     </div>
   );
