@@ -7,9 +7,100 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { TimePickerInput } from "./TimePickerInput";
-import { Mic, Calendar, Bell, Code, CreditCard } from "lucide-react";
+import { Mic, Calendar, Bell, Code, CreditCard, Check, X, HelpCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const DashboardAgentSettings = () => {
+  const pricingPlans = [
+    {
+      name: "Solo Closer",
+      price: "$49",
+      minutes: "250",
+      features: {
+        inboundCalls: true,
+        customScriptSupport: true,
+        textTranscripts: true,
+        calendarIntegration: false,
+        smartRouting: false,
+        apiAccess: false,
+        prioritySupport: false,
+        hybridMode: false
+      },
+      audience: "Best for solo sales reps testing Callyn",
+      popular: false,
+    },
+    {
+      name: "Appointment Setter",
+      price: "$97",
+      minutes: "500",
+      features: {
+        inboundCalls: true,
+        customScriptSupport: true,
+        textTranscripts: true,
+        calendarIntegration: true,
+        smartRouting: true,
+        apiAccess: false,
+        prioritySupport: false,
+        hybridMode: true
+      },
+      audience: "Best for growing sales teams",
+      popular: true,
+    },
+    {
+      name: "Pro Closer",
+      price: "$197",
+      minutes: "1,500",
+      features: {
+        inboundCalls: true,
+        customScriptSupport: true,
+        textTranscripts: true,
+        calendarIntegration: true,
+        smartRouting: true,
+        apiAccess: false,
+        prioritySupport: true,
+        hybridMode: true
+      },
+      audience: "Best for high-volume individual closers",
+      popular: false,
+    },
+    {
+      name: "Custom Plan",
+      price: "custom",
+      minutes: "custom",
+      features: {
+        inboundCalls: true,
+        customScriptSupport: true,
+        textTranscripts: true,
+        calendarIntegration: true,
+        smartRouting: true,
+        apiAccess: true,
+        prioritySupport: true,
+        hybridMode: true
+      },
+      audience: "Let's build a plan around your sales team's needs",
+      popular: false,
+      isCustomPlan: true,
+    },
+  ];
+
+  // Feature labels and tooltips configuration
+  const featureLabels = {
+    inboundCalls: "AI Voice Calls & SMS Follow-Ups",
+    customScriptSupport: "Custom Script Support",
+    textTranscripts: "Call Transcripts",
+    calendarIntegration: "Calendar Integration",
+    smartRouting: "Smart Call Routing",
+    apiAccess: "API Access",
+    prioritySupport: "Priority Support",
+    hybridMode: "Hybrid Mode (Jump In Live)"
+  };
+
+  const tooltips = {
+    hybridMode: "Jump in live during an AI call",
+    smartRouting: "Send calls to right rep based on lead status",
+    apiAccess: "Sync leads, outcomes, and updates to your CRM"
+  };
+  
   return (
     <div className="space-y-8">
       <div>
@@ -274,60 +365,105 @@ const DashboardAgentSettings = () => {
               
               <div className="space-y-4">
                 <h3 className="font-medium">Available Plans</h3>
-                <div className="grid gap-4 md:grid-cols-3">
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-lg">Starter</CardTitle>
-                      <CardDescription>
-                        For small businesses getting started
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pb-3">
-                      <p className="text-2xl font-bold mb-2">$49/mo</p>
-                      <ul className="text-sm space-y-1">
-                        <li>200 minutes per month</li>
-                        <li>Basic reporting</li>
-                        <li>Email notifications</li>
-                      </ul>
-                    </CardContent>
-                  </Card>
+                <div className="bg-gray-900 rounded-lg p-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {pricingPlans.map((plan, index) => (
+                      <div
+                        key={index}
+                        className={`flex flex-col ${plan.popular ? "border-l-4 border-callyn-blue pl-2" : ""}`}
+                      >
+                        {plan.isCustomPlan ? (
+                          // Custom Plan Card
+                          <>
+                            <div className="flex items-center gap-2 mb-3">
+                              <h3 className="text-xl font-bold text-white">{plan.name}</h3>
+                              {plan.popular && (
+                                <span className="text-xs font-medium bg-callyn-blue text-white px-2 py-1 rounded-full">
+                                  Most Popular
+                                </span>
+                              )}
+                            </div>
+                          
+                            <div className="mb-8">
+                              <p className="text-lg font-medium text-white">{plan.audience}</p>
+                            </div>
+                          
+                            <div className="mt-auto">
+                              <Button className="w-full bg-callyn-blue hover:bg-blue-700 text-white">
+                                Contact Sales
+                              </Button>
+                            </div>
+                          </>
+                        ) : (
+                          // Regular Plan Cards
+                          <>
+                            <div className="flex items-center gap-2 mb-3">
+                              <h3 className="text-xl font-bold text-white">{plan.name}</h3>
+                              {plan.popular && (
+                                <span className="text-xs font-medium bg-callyn-blue text-white px-2 py-1 rounded-full">
+                                  Most Popular
+                                </span>
+                              )}
+                            </div>
+                          
+                            <div className="mb-4">
+                              <span className="text-3xl font-bold text-white">{plan.price}</span>
+                              <span className="text-gray-400">/mo</span>
+                            </div>
+                          
+                            <div className="mb-4">
+                              <span className="text-xl font-semibold text-white">{plan.minutes} mins</span>
+                              <p className="text-gray-400 text-sm">Included</p>
+                            </div>
+                          
+                            <div className="space-y-3 mb-6">
+                              <TooltipProvider>
+                                {Object.entries(plan.features).map(([key, value]) => (
+                                  <div key={key} className="flex items-center gap-2">
+                                    {value ? (
+                                      <Check className="w-5 h-5 text-green-500" />
+                                    ) : (
+                                      <X className="w-5 h-5 text-red-500" />
+                                    )}
+                                    
+                                    {/* Add tooltip for specific features */}
+                                    {tooltips[key as keyof typeof tooltips] ? (
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <div className="flex items-center gap-1 cursor-help">
+                                            <span className="text-gray-300 text-sm">
+                                              {featureLabels[key as keyof typeof featureLabels]}
+                                            </span>
+                                            <HelpCircle className="w-3 h-3 text-gray-400" />
+                                          </div>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p>{tooltips[key as keyof typeof tooltips]}</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    ) : (
+                                      <span className="text-gray-300 text-sm">
+                                        {featureLabels[key as keyof typeof featureLabels]}
+                                      </span>
+                                    )}
+                                  </div>
+                                ))}
+                              </TooltipProvider>
+                            </div>
+                          
+                            <div className="mt-auto">
+                              <p className="text-sm text-gray-400">{plan.audience}</p>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                   
-                  <Card className="border-callyn-blue">
-                    <CardHeader className="pb-3 bg-callyn-blue/10 rounded-t-lg">
-                      <CardTitle className="text-lg">Professional</CardTitle>
-                      <CardDescription>
-                        For growing sales teams
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pb-3">
-                      <p className="text-2xl font-bold mb-2">$99/mo</p>
-                      <ul className="text-sm space-y-1">
-                        <li>500 minutes per month</li>
-                        <li>Advanced reporting</li>
-                        <li>Email + SMS notifications</li>
-                        <li>Calendar integration</li>
-                      </ul>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader className="pb-3">
-                      <CardTitle className="text-lg">Enterprise</CardTitle>
-                      <CardDescription>
-                        For large sales organizations
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pb-3">
-                      <p className="text-2xl font-bold mb-2">$199/mo</p>
-                      <ul className="text-sm space-y-1">
-                        <li>1200 minutes per month</li>
-                        <li>Full analytics suite</li>
-                        <li>All notification options</li>
-                        <li>API access</li>
-                        <li>Dedicated support</li>
-                      </ul>
-                    </CardContent>
-                  </Card>
+                  {/* Upgrade/Cancel Anytime text */}
+                  <div className="text-center mt-6 text-gray-400">
+                    <p>Upgrade or cancel anytime. No contracts.</p>
+                  </div>
                 </div>
               </div>
             </CardContent>
