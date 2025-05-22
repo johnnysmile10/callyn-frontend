@@ -1,21 +1,33 @@
-
 import { Phone, User, Calendar, TrendingUp, Play, Pause, Clock, CalendarCheck } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import DashboardCallActivity from "./DashboardCallActivity";
 import DashboardUpcomingCalls from "./DashboardUpcomingCalls";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const DashboardOverview = () => {
+interface DashboardOverviewProps {
+  campaignActive?: boolean;
+  onCampaignToggle?: (active: boolean) => void;
+}
+
+const DashboardOverview = ({ campaignActive = false, onCampaignToggle }: DashboardOverviewProps) => {
   const { user, onboardingData } = useAuth();
-  const [campaignActive, setCampaignActive] = useState(false);
+  const [localCampaignActive, setLocalCampaignActive] = useState(campaignActive);
   const [timeFilter, setTimeFilter] = useState("today");
   
+  useEffect(() => {
+    setLocalCampaignActive(campaignActive);
+  }, [campaignActive]);
+  
   const toggleCampaign = () => {
-    setCampaignActive(!campaignActive);
+    const newState = !localCampaignActive;
+    setLocalCampaignActive(newState);
+    if (onCampaignToggle) {
+      onCampaignToggle(newState);
+    }
   };
 
   // In a real app, these would come from an API and would change based on timeFilter
@@ -87,9 +99,9 @@ const DashboardOverview = () => {
       {/* Quick action panel */}
       <Card className="bg-gradient-to-r from-callyn-darkBlue to-callyn-blue text-white">
         <CardHeader className="pb-2">
-          <CardTitle>Your AI Sales Assistant is {campaignActive ? "Active" : "Ready"}</CardTitle>
+          <CardTitle>Your AI Sales Assistant is {localCampaignActive ? "Active" : "Ready"}</CardTitle>
           <CardDescription className="text-white text-opacity-80">
-            {campaignActive 
+            {localCampaignActive 
               ? "Callyn is currently making calls on your behalf" 
               : onboardingData?.businessName 
                 ? `Trained for ${onboardingData.businessName}` 
@@ -99,12 +111,12 @@ const DashboardOverview = () => {
         <CardContent>
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
             <Button 
-              variant={campaignActive ? "destructive" : "secondary"} 
+              variant={localCampaignActive ? "destructive" : "secondary"} 
               size="lg" 
               className="gap-2"
               onClick={toggleCampaign}
             >
-              {campaignActive ? (
+              {localCampaignActive ? (
                 <>
                   <Pause className="h-4 w-4" />
                   Stop Call Campaign
@@ -117,7 +129,7 @@ const DashboardOverview = () => {
               )}
             </Button>
             <span className="text-sm opacity-85">
-              {!campaignActive 
+              {!localCampaignActive 
                 ? "First 45 minutes free. No credit card required." 
                 : "Let Callyn qualify your leads while you focus on closing."}
             </span>

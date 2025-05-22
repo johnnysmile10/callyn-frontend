@@ -8,12 +8,14 @@ import DashboardSalesTools from "@/components/dashboard/DashboardSalesTools";
 import DashboardAgentSettings from "@/components/dashboard/DashboardAgentSettings";
 import DashboardInsights from "@/components/dashboard/DashboardInsights";
 import DashboardCallsAndActivity from "@/components/dashboard/DashboardCallsAndActivity";
+import CallControlBar from "@/components/dashboard/CallControlBar";
 import { useAuth } from "@/context/AuthContext";
 
 const Dashboard = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>("overview");
+  const [campaignActive, setCampaignActive] = useState(false);
   
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -27,7 +29,7 @@ const Dashboard = () => {
   const renderActiveTab = () => {
     switch (activeTab) {
       case "overview":
-        return <DashboardOverview />;
+        return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;
       case "calls":
         return <DashboardCallsAndActivity />;
       case "sales-tools":
@@ -37,7 +39,7 @@ const Dashboard = () => {
       case "insights":
         return <DashboardInsights />;
       default:
-        return <DashboardOverview />;
+        return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;
     }
   };
 
@@ -50,6 +52,7 @@ const Dashboard = () => {
             {renderActiveTab()}
           </div>
         </div>
+        <CallControlBar isActive={campaignActive} />
       </div>
     </SidebarProvider>
   );
