@@ -10,7 +10,7 @@ const Hero = () => {
           AI That Calls, Qualifies & Closes — in <span className="text-yellow-400 font-extrabold">20+ Languages</span>
         </h1>
         <p className="text-xl md:text-2xl text-gray-200 mb-8 mx-auto max-w-3xl">
-          Let Callyn speak your exact pitch, overcome objections, and book meetings — whether your lead speaks English, Spanish, or Norwegian. 🌍 Sell globally. Close locally. Scale while you sleep.
+          Let Callyn speak your exact pitch, overcome objections, and book meetings — Callyn handles the pitch. You handle the profits.
         </p>
         <div className="flex flex-col items-center">
           <Button className="rounded-full bg-white text-callyn-darkBlue hover:bg-gray-200 text-lg py-6 px-8" asChild>
