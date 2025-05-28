@@ -1,9 +1,11 @@
-import { Phone, User, Calendar, TrendingUp, Play, Pause, Clock, CalendarCheck } from "lucide-react";
+
+import { Phone, User, Calendar, TrendingUp, Play, Pause, Clock, CalendarCheck, Plus } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import DashboardCallActivity from "./DashboardCallActivity";
 import DashboardUpcomingCalls from "./DashboardUpcomingCalls";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -15,6 +17,7 @@ interface DashboardOverviewProps {
 
 const DashboardOverview = ({ campaignActive = false, onCampaignToggle }: DashboardOverviewProps) => {
   const { user, onboardingData } = useAuth();
+  const navigate = useNavigate();
   const [localCampaignActive, setLocalCampaignActive] = useState(campaignActive);
   const [timeFilter, setTimeFilter] = useState("today");
   
@@ -30,13 +33,15 @@ const DashboardOverview = ({ campaignActive = false, onCampaignToggle }: Dashboa
     }
   };
 
+  const handleCreateAgent = () => {
+    navigate("/create-agent");
+  };
+
   // In a real app, these would come from an API and would change based on timeFilter
   const minutesUsed = 15;
   const totalMinutes = 45;
   const minutesPercentage = (minutesUsed / totalMinutes) * 100;
   
-  // Sample data for metrics based on time filter
-  // In a real app, this would be fetched from an API based on the timeFilter
   const metricsData = {
     today: {
       totalCalls: 5,
@@ -64,7 +69,6 @@ const DashboardOverview = ({ campaignActive = false, onCampaignToggle }: Dashboa
     }
   };
   
-  // Select the metrics based on current filter
   const currentMetrics = metricsData[timeFilter === "today" ? "today" : timeFilter === "week" ? "week" : "all"];
   
   const handleTimeFilterChange = (value) => {
@@ -73,6 +77,7 @@ const DashboardOverview = ({ campaignActive = false, onCampaignToggle }: Dashboa
   
   return (
     <div className="space-y-8">
+      {/* Header with Create Agent button */}
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
@@ -81,18 +86,27 @@ const DashboardOverview = ({ campaignActive = false, onCampaignToggle }: Dashboa
             Here's what's happening with your Callyn AI sales assistant.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">View period:</span>
-          <Select value={timeFilter} onValueChange={handleTimeFilterChange}>
-            <SelectTrigger className="w-32">
-              <SelectValue placeholder="Select period" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="today">Today</SelectItem>
-              <SelectItem value="week">This Week</SelectItem>
-              <SelectItem value="all">All Time</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="flex items-center gap-4">
+          <Button 
+            onClick={handleCreateAgent}
+            className="bg-callyn-blue hover:bg-callyn-darkBlue text-white gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Create Agent
+          </Button>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">View period:</span>
+            <Select value={timeFilter} onValueChange={handleTimeFilterChange}>
+              <SelectTrigger className="w-32">
+                <SelectValue placeholder="Select period" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="week">This Week</SelectItem>
+                <SelectItem value="all">All Time</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
       
