@@ -33,10 +33,26 @@ class FinetunerApiService {
 
   setApiKey(key: string) {
     this.apiKey = key;
+    // Store API key for future use
+    localStorage.setItem('finetuner_api_key', key);
+  }
+
+  getApiKey(): string | null {
+    if (this.apiKey) return this.apiKey;
+    
+    // Try to load from localStorage
+    const savedKey = localStorage.getItem('finetuner_api_key');
+    if (savedKey) {
+      this.apiKey = savedKey;
+      return savedKey;
+    }
+    
+    return null;
   }
 
   private async makeRequest(endpoint: string, options: RequestInit = {}) {
-    if (!this.apiKey) {
+    const apiKey = this.getApiKey();
+    if (!apiKey) {
       throw new Error('API key not set. Please configure your Fine-tuner.ai API key.');
     }
 
@@ -44,7 +60,7 @@ class FinetunerApiService {
       ...options,
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this.apiKey}`,
+        'Authorization': `Bearer ${apiKey}`,
         ...options.headers,
       },
     });
@@ -92,6 +108,36 @@ class FinetunerApiService {
       method: 'POST',
       body: JSON.stringify({ content }),
     });
+  }
+
+  async deleteAgent(agentId: string): Promise<FinetunerResponse> {
+    return this.makeRequest(`/agents/${agentId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Utility method to create user-specific agent name
+  generateAgentName(userEmail?: string): string {
+    const email = userEmail || localStorage.getItem('user_email') || 'user';
+    return `${email} - AI Agent`;
+  }
+
+  // Check if user has an existing agent
+  async getUserAgent(): Promise<FinetunerAgent | null> {
+    try {
+      const agents = await this.listAgents();
+      const userEmail = localStorage.getItem('user_email') || 'user';
+      
+      // Look for an agent with the user's email in the name
+      const userAgent = agents.find(agent => 
+        agent.name.includes(userEmail) || agent.name.includes('AI Agent')
+      );
+      
+      return userAgent || null;
+    } catch (error) {
+      console.error('Error fetching user agent:', error);
+      return null;
+    }
   }
 }
 

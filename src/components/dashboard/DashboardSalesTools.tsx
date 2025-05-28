@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
+import PersonalAgentManager from "./PersonalAgentManager";
 import FinetunerIntegration from "./FinetunerIntegration";
 import { 
   Upload, 
@@ -22,7 +23,8 @@ import {
   AlertCircle,
   ArrowRight,
   Clock,
-  CheckCircle
+  CheckCircle,
+  Bot
 } from "lucide-react";
 
 // Script template data
@@ -216,17 +218,20 @@ const DashboardSalesTools = () => {
       <div>
         <h2 className="text-3xl font-bold tracking-tight">Sales Tools</h2>
         <p className="text-muted-foreground">
-          Customize how Callyn talks to your leads and prospects
+          Create and manage your AI agent, customize scripts, and upload leads
         </p>
       </div>
+      
+      {/* New Personal Agent Manager Section */}
+      <PersonalAgentManager />
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Script Editor</CardTitle>
+              <CardTitle>Advanced Script Editor</CardTitle>
               <CardDescription>
-                Customize how Callyn will talk to your prospects
+                Advanced script customization and Fine-tuner.ai integration
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -444,7 +449,7 @@ const DashboardSalesTools = () => {
             <CardHeader>
               <CardTitle>Lead List</CardTitle>
               <CardDescription>
-                Upload your leads for Callyn to call
+                Upload your leads for your AI agent to call
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
