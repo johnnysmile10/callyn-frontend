@@ -78,7 +78,11 @@ const FinetunerIntegration = ({
       const requestData = {
         prompt,
         agent_name: agentName,
-        voice_settings: voiceSettings,
+        voice_settings: voiceSettings ? {
+          voice_id: voiceSettings.voiceId, // Map voiceId to voice_id
+          tone: voiceSettings.tone,
+          language: voiceSettings.language,
+        } : undefined,
         knowledge_base_update: true,
       };
 
