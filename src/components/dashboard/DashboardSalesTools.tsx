@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,12 +9,10 @@ import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { useForm } from "react-hook-form";
+import FinetunerIntegration from "./FinetunerIntegration";
 import { 
   Upload, 
-  Edit, 
   Check, 
   Zap, 
   FileText, 
@@ -195,6 +192,25 @@ const DashboardSalesTools = () => {
     });
   };
   
+  // Enhanced script generation with Fine-tuner integration
+  const handleFinetunerScriptGenerated = (generatedScript: string) => {
+    setGeneratedScript(generatedScript);
+    setShowPreview(true);
+    toast({
+      title: "Script Generated via Fine-tuner.ai",
+      description: "Your AI-optimized script is ready for review."
+    });
+  };
+
+  // Get current voice settings for Fine-tuner integration
+  const getCurrentVoiceSettings = () => {
+    return {
+      voiceId: "default", // This would come from your voice selection
+      tone: getToneLabel(),
+      language: "en"
+    };
+  };
+  
   return (
     <div className="space-y-8">
       <div>
@@ -205,7 +221,7 @@ const DashboardSalesTools = () => {
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Script Editor</CardTitle>
@@ -215,10 +231,12 @@ const DashboardSalesTools = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <Tabs defaultValue="custom" className="w-full">
-                <TabsList className="grid grid-cols-2">
+                <TabsList className="grid grid-cols-3">
                   <TabsTrigger value="custom">Custom Script</TabsTrigger>
                   <TabsTrigger value="ai">AI Generated</TabsTrigger>
+                  <TabsTrigger value="finetuner">Fine-tuner.ai</TabsTrigger>
                 </TabsList>
+                
                 <TabsContent value="custom" className="space-y-4">
                   <Textarea 
                     className="min-h-[200px] font-mono"
@@ -230,6 +248,7 @@ const DashboardSalesTools = () => {
                     <Button onClick={handleSaveScript}>Save Script</Button>
                   </div>
                 </TabsContent>
+                
                 <TabsContent value="ai" className="space-y-6">
                   {!showPreview ? (
                     <>
@@ -354,6 +373,14 @@ const DashboardSalesTools = () => {
                     </div>
                   )}
                 </TabsContent>
+                
+                <TabsContent value="finetuner" className="space-y-4">
+                  <FinetunerIntegration 
+                    onScriptGenerated={handleFinetunerScriptGenerated}
+                    currentScript={script}
+                    voiceSettings={getCurrentVoiceSettings()}
+                  />
+                </TabsContent>
               </Tabs>
               
               <div className="space-y-4">
@@ -396,6 +423,9 @@ const DashboardSalesTools = () => {
                               </Button>
                               <Button variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-100">
                                 Create matching follow-up SMS
+                              </Button>
+                              <Button variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-100">
+                                Update Fine-tuner.ai agent
                               </Button>
                             </div>
                           </div>
