@@ -2,7 +2,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Clock, AlertCircle, Zap, Play, Pause } from "lucide-react";
+import { CheckCircle, Clock, AlertCircle, Zap, Play, Pause, FileText, Settings, Phone } from "lucide-react";
 import PersonalAgentManager from "../PersonalAgentManager";
 
 const AgentOverview = () => {
