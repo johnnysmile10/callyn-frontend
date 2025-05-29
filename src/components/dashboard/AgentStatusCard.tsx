@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle, Clock, AlertCircle, Edit, Save, X, Zap, Trash2 } from "lucide-react";
+import { CheckCircle, Clock, AlertCircle, Edit, Save, X, Zap, Trash2, Play } from "lucide-react";
 import { format } from "date-fns";
 
 interface UserAgent {
@@ -20,10 +20,10 @@ interface UserAgent {
 interface AgentStatusCardProps {
   agent: UserAgent;
   onScriptUpdate: (script: string) => void;
-  onRecreateAgent: () => void;
+  onDeleteAgent: () => void;
 }
 
-const AgentStatusCard = ({ agent, onScriptUpdate, onRecreateAgent }: AgentStatusCardProps) => {
+const AgentStatusCard = ({ agent, onScriptUpdate, onDeleteAgent }: AgentStatusCardProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedScript, setEditedScript] = useState(agent.script || "");
 
@@ -78,8 +78,7 @@ const AgentStatusCard = ({ agent, onScriptUpdate, onRecreateAgent }: AgentStatus
 
   const handleDeleteAgent = () => {
     if (confirm("Are you sure you want to delete this agent? This action cannot be undone.")) {
-      localStorage.removeItem('user_agent');
-      onRecreateAgent();
+      onDeleteAgent();
     }
   };
 
@@ -97,7 +96,7 @@ const AgentStatusCard = ({ agent, onScriptUpdate, onRecreateAgent }: AgentStatus
                 </Badge>
               </CardTitle>
               <CardDescription>
-                Agent ID: {agent.id.slice(0, 8)}...
+                Agent ID: {agent.id.slice(-8)}
                 {agent.lastUpdated && (
                   <span className="ml-2">
                     • Updated {format(new Date(agent.lastUpdated), "MMM d, h:mm a")}
@@ -123,16 +122,6 @@ const AgentStatusCard = ({ agent, onScriptUpdate, onRecreateAgent }: AgentStatus
       </CardHeader>
       
       <CardContent className="space-y-4">
-        {agent.status === "training" && (
-          <Alert className="border-yellow-200 bg-yellow-50">
-            <Clock className="h-4 w-4 text-yellow-600" />
-            <AlertDescription className="text-yellow-800">
-              Your AI agent is being trained with your script. This usually takes 2-5 minutes.
-              You'll be able to start calling leads once training is complete.
-            </AlertDescription>
-          </Alert>
-        )}
-
         {agent.status === "ready" && (
           <Alert className="border-green-200 bg-green-50">
             <CheckCircle className="h-4 w-4 text-green-600" />
@@ -185,7 +174,8 @@ const AgentStatusCard = ({ agent, onScriptUpdate, onRecreateAgent }: AgentStatus
                   Test Agent (Coming Soon)
                 </Button>
                 <Button variant="outline" size="sm" className="w-full justify-start">
-                  📞 Start Campaign
+                  <Play className="mr-2 h-4 w-4" />
+                  Start Campaign
                 </Button>
               </div>
             </Card>
