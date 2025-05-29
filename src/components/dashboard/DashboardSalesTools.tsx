@@ -231,15 +231,14 @@ const DashboardSalesTools = () => {
             <CardHeader>
               <CardTitle>Advanced Script Editor</CardTitle>
               <CardDescription>
-                Advanced script customization and Fine-tuner.ai integration
+                Advanced script customization and AI generation
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <Tabs defaultValue="custom" className="w-full">
-                <TabsList className="grid grid-cols-3">
+                <TabsList className="grid grid-cols-2">
                   <TabsTrigger value="custom">Custom Script</TabsTrigger>
                   <TabsTrigger value="ai">AI Generated</TabsTrigger>
-                  <TabsTrigger value="finetuner">Fine-tuner.ai</TabsTrigger>
                 </TabsList>
                 
                 <TabsContent value="custom" className="space-y-4">
@@ -377,14 +376,6 @@ const DashboardSalesTools = () => {
                       </div>
                     </div>
                   )}
-                </TabsContent>
-                
-                <TabsContent value="finetuner" className="space-y-4">
-                  <FinetunerIntegration 
-                    onScriptGenerated={handleFinetunerScriptGenerated}
-                    currentScript={script}
-                    voiceSettings={getCurrentVoiceSettings()}
-                  />
                 </TabsContent>
               </Tabs>
               

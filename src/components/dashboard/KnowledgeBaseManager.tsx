@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -51,8 +50,7 @@ const KnowledgeBaseManager = ({ agentId, onKnowledgeUpdated }: KnowledgeBaseMana
     
     setIsLoading(true);
     try {
-      // In a real implementation, this would fetch from Fine-tuner.ai
-      // For now, we'll use local storage as a mock
+      // Load from local storage
       const stored = localStorage.getItem(`knowledge_base_${agentId}`);
       if (stored) {
         setEntries(JSON.parse(stored));
@@ -91,22 +89,10 @@ const KnowledgeBaseManager = ({ agentId, onKnowledgeUpdated }: KnowledgeBaseMana
     saveToLocal(updatedEntries);
     setNewEntryContent("");
 
-    // Sync with Fine-tuner.ai
-    if (agentId) {
-      try {
-        await finetunerApi.updateKnowledgeBase(agentId, newEntryContent);
-        toast({
-          title: "Entry Added",
-          description: "Knowledge base entry added and synced with Fine-tuner.ai",
-        });
-      } catch (error) {
-        toast({
-          title: "Sync Warning",
-          description: "Entry saved locally but failed to sync with Fine-tuner.ai",
-          variant: "destructive",
-        });
-      }
-    }
+    toast({
+      title: "Entry Added",
+      description: "Knowledge base entry added successfully",
+    });
 
     onKnowledgeUpdated?.();
   };
@@ -123,22 +109,10 @@ const KnowledgeBaseManager = ({ agentId, onKnowledgeUpdated }: KnowledgeBaseMana
     setEditingId(null);
     setEditContent("");
 
-    // Sync with Fine-tuner.ai
-    if (agentId) {
-      try {
-        await finetunerApi.updateKnowledgeBase(agentId, editContent);
-        toast({
-          title: "Entry Updated",
-          description: "Knowledge base entry updated and synced",
-        });
-      } catch (error) {
-        toast({
-          title: "Sync Warning",
-          description: "Entry updated locally but failed to sync",
-          variant: "destructive",
-        });
-      }
-    }
+    toast({
+      title: "Entry Updated",
+      description: "Knowledge base entry updated successfully",
+    });
 
     onKnowledgeUpdated?.();
   };
@@ -184,7 +158,7 @@ const KnowledgeBaseManager = ({ agentId, onKnowledgeUpdated }: KnowledgeBaseMana
           Knowledge Base Manager
         </CardTitle>
         <CardDescription>
-          Manage your agent's knowledge base and sync with Fine-tuner.ai
+          Manage your agent's knowledge base entries
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
