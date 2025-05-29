@@ -1,43 +1,12 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Clock, AlertCircle, Zap, Play, Pause, FileText, Settings, Phone } from "lucide-react";
+import { CheckCircle, Clock, Phone } from "lucide-react";
 import PersonalAgentManager from "../PersonalAgentManager";
 
 const AgentOverview = () => {
   return (
     <div className="space-y-6">
-      {/* Quick Actions Bar */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Quick Actions</CardTitle>
-          <CardDescription>
-            Common agent management tasks
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-3">
-            <Button variant="default" className="flex items-center gap-2">
-              <Play className="h-4 w-4" />
-              Start Campaign
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <Zap className="h-4 w-4" />
-              Test Agent
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Edit Script
-            </Button>
-            <Button variant="outline" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Voice Settings
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Agent Status & Management */}
       <PersonalAgentManager />
 
