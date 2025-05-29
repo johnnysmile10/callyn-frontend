@@ -8,7 +8,8 @@ import {
   Settings, 
   LogOut,
   FileText,
-  Bot
+  Bot,
+  Zap
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -50,6 +51,11 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Agent",
       icon: Bot,
       id: "agent",
+    },
+    {
+      name: "Actions",
+      icon: Zap,
+      id: "actions",
     },
     {
       name: "Calls & Activity",

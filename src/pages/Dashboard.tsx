@@ -5,6 +5,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
 import DashboardAgent from "@/components/dashboard/DashboardAgent";
+import DashboardActions from "@/components/dashboard/DashboardActions";
 import DashboardSalesTools from "@/components/dashboard/DashboardSalesTools";
 import DashboardAgentSettings from "@/components/dashboard/DashboardAgentSettings";
 import DashboardInsights from "@/components/dashboard/DashboardInsights";
@@ -33,6 +34,8 @@ const Dashboard = () => {
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;
       case "agent":
         return <DashboardAgent />;
+      case "actions":
+        return <DashboardActions />;
       case "calls":
         return <DashboardCallsAndActivity />;
       case "sales-tools":
