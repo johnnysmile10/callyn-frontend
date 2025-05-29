@@ -11,7 +11,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import PersonalAgentManager from "./PersonalAgentManager";
-import FinetunerIntegration from "./FinetunerIntegration";
 import { 
   Upload, 
   Check, 
@@ -192,25 +191,6 @@ const DashboardSalesTools = () => {
       title: "File uploaded successfully",
       description: `${randomCount} leads detected in ${file.name}`,
     });
-  };
-  
-  // Enhanced script generation with Fine-tuner integration
-  const handleFinetunerScriptGenerated = (generatedScript: string) => {
-    setGeneratedScript(generatedScript);
-    setShowPreview(true);
-    toast({
-      title: "Script Generated via Fine-tuner.ai",
-      description: "Your AI-optimized script is ready for review."
-    });
-  };
-
-  // Get current voice settings for Fine-tuner integration
-  const getCurrentVoiceSettings = () => {
-    return {
-      voiceId: "default", // This would come from your voice selection
-      tone: getToneLabel(),
-      language: "en"
-    };
   };
   
   return (
