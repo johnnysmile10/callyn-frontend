@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,11 @@ import {
   Upload
 } from "lucide-react";
 
+interface ObjectionResponse {
+  objection: string;
+  response: string;
+}
+
 interface ScriptVersion {
   id: string;
   version: string;
@@ -33,14 +39,9 @@ interface ScriptVersion {
   content: {
     greeting: string;
     mainPrompt: string;
-    objectionHandling: string[];
+    objectionHandling: ObjectionResponse[];
     tone: string;
   };
-}
-
-interface ObjectionResponse {
-  objection: string;
-  response: string;
 }
 
 const AgentPromptScript = () => {
