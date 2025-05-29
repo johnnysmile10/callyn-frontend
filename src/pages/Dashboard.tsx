@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
+import DashboardAgent from "@/components/dashboard/DashboardAgent";
 import DashboardSalesTools from "@/components/dashboard/DashboardSalesTools";
 import DashboardAgentSettings from "@/components/dashboard/DashboardAgentSettings";
 import DashboardInsights from "@/components/dashboard/DashboardInsights";
@@ -30,6 +31,8 @@ const Dashboard = () => {
     switch (activeTab) {
       case "overview":
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;
+      case "agent":
+        return <DashboardAgent />;
       case "calls":
         return <DashboardCallsAndActivity />;
       case "sales-tools":
