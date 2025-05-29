@@ -2,10 +2,11 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bot, FileText, Settings } from "lucide-react";
+import { Bot, FileText, Settings, TestTube } from "lucide-react";
 import AgentOverview from "./agent/AgentOverview";
 import AgentPromptScript from "./agent/AgentPromptScript";
 import AgentSettings from "./agent/AgentSettings";
+import TestAgentPanel from "./agent/TestAgentPanel";
 
 const DashboardAgent = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -25,23 +26,31 @@ const DashboardAgent = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <Bot className="h-4 w-4" />
             Overview
           </TabsTrigger>
+          <TabsTrigger value="test-agent" className="flex items-center gap-2">
+            <TestTube className="h-4 w-4" />
+            Test Agent
+          </TabsTrigger>
           <TabsTrigger value="prompt-script" className="flex items-center gap-2">
             <FileText className="h-4 w-4" />
-            Prompt & Script
+            Script Editor
           </TabsTrigger>
           <TabsTrigger value="settings" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
-            Settings
+            Voice Settings
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
           <AgentOverview />
+        </TabsContent>
+
+        <TabsContent value="test-agent" className="space-y-6">
+          <TestAgentPanel />
         </TabsContent>
 
         <TabsContent value="prompt-script" className="space-y-6">
