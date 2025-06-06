@@ -4,12 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
-import DashboardAgent from "@/components/dashboard/DashboardAgent";
+import DashboardAgentBuilder from "@/components/dashboard/DashboardAgentBuilder";
 import DashboardActions from "@/components/dashboard/DashboardActions";
-import DashboardSalesTools from "@/components/dashboard/DashboardSalesTools";
-import DashboardAgentSettings from "@/components/dashboard/DashboardAgentSettings";
-import DashboardInsights from "@/components/dashboard/DashboardInsights";
-import DashboardCallsAndActivity from "@/components/dashboard/DashboardCallsAndActivity";
+import DashboardCampaignManager from "@/components/dashboard/DashboardCampaignManager";
 import CallControlBar from "@/components/dashboard/CallControlBar";
 import { useAuth } from "@/context/AuthContext";
 
@@ -32,18 +29,23 @@ const Dashboard = () => {
     switch (activeTab) {
       case "overview":
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;
-      case "agent":
-        return <DashboardAgent />;
+      
+      // Agent Builder sections
+      case "agent-setup":
+      case "script-voice":
+      case "test-preview":
+        return <DashboardAgentBuilder />;
+      
+      // Campaign Manager sections  
+      case "lead-lists":
+      case "campaigns":
+      case "analytics":
+        return <DashboardCampaignManager />;
+      
+      // Legacy actions route (now part of Agent Builder)
       case "actions":
         return <DashboardActions />;
-      case "calls":
-        return <DashboardCallsAndActivity />;
-      case "sales-tools":
-        return <DashboardSalesTools />;
-      case "agent-settings":
-        return <DashboardAgentSettings />;
-      case "insights":
-        return <DashboardInsights />;
+      
       default:
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;
     }

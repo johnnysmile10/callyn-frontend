@@ -2,14 +2,15 @@
 import { useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
-  Phone, 
-  Users, 
-  BarChart, 
+  Bot, 
+  Zap, 
   Settings, 
   LogOut,
   FileText,
-  Bot,
-  Zap
+  BarChart,
+  PlayCircle,
+  Users,
+  Calendar
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -41,42 +42,53 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
     navigate("/");
   };
   
-  const menuItems = [
+  const mainMenuItems = [
     {
-      name: "Dashboard",
+      name: "Overview",
       icon: LayoutDashboard,
       id: "overview",
-    },
+    }
+  ];
+
+  const agentBuilderItems = [
     {
-      name: "Agent",
+      name: "My Agent",
       icon: Bot,
-      id: "agent",
+      id: "agent-setup",
     },
     {
-      name: "Actions",
+      name: "Script & Voice",
+      icon: FileText,
+      id: "script-voice",
+    },
+    {
+      name: "Actions & Integrations",
       icon: Zap,
       id: "actions",
     },
     {
-      name: "Calls & Activity",
-      icon: Phone,
-      id: "calls",
-    },
+      name: "Test & Preview",
+      icon: PlayCircle,
+      id: "test-preview",
+    }
+  ];
+
+  const campaignManagerItems = [
     {
-      name: "Leads",
+      name: "Lead Lists",
       icon: Users,
-      id: "leads",
+      id: "lead-lists",
     },
     {
-      name: "Sales Tools",
-      icon: FileText,
-      id: "sales-tools",
+      name: "Campaigns",
+      icon: Calendar,
+      id: "campaigns",
     },
     {
-      name: "Analytics",
+      name: "Call Analytics",
       icon: BarChart,
-      id: "insights",
-    },
+      id: "analytics",
+    }
   ];
   
   return (
@@ -102,10 +114,49 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
+              {mainMenuItems.map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton 
+                    onClick={() => setActiveTab(item.id)}
+                    isActive={activeTab === item.id}
+                    tooltip={item.name}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.name}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Agent Builder</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {agentBuilderItems.map((item) => (
+                <SidebarMenuItem key={item.name}>
+                  <SidebarMenuButton 
+                    onClick={() => setActiveTab(item.id)}
+                    isActive={activeTab === item.id}
+                    tooltip={item.name}
+                  >
+                    <item.icon className="h-4 w-4" />
+                    <span>{item.name}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Campaign Manager</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {campaignManagerItems.map((item) => (
                 <SidebarMenuItem key={item.name}>
                   <SidebarMenuButton 
                     onClick={() => setActiveTab(item.id)}
