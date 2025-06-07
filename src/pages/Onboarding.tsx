@@ -3,31 +3,21 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import Step1RoleSelection from "@/components/onboarding/Step1RoleSelection";
-import Step2ScenarioSelection from "@/components/onboarding/Step2ScenarioSelection";
-import Step3TrainingMethod from "@/components/onboarding/Step3TrainingMethod";
-import Step4VoicePreview from "@/components/onboarding/Step4VoicePreview";
-import Step5FinalCTA from "@/components/onboarding/Step5FinalCTA";
+import NewStep1Welcome from "@/components/onboarding/NewStep1Welcome";
+import NewStep2BusinessSetup from "@/components/onboarding/NewStep2BusinessSetup";
+import NewStep3QuickScript from "@/components/onboarding/NewStep3QuickScript";
+import NewStep4VoicePersonality from "@/components/onboarding/NewStep4VoicePersonality";
+import NewStep5LaunchReady from "@/components/onboarding/NewStep5LaunchReady";
 import ProgressIndicator from "@/components/onboarding/ProgressIndicator";
-import { salesScenarios } from "@/components/onboarding/scenarioData";
-import { ScenarioProps } from "@/components/onboarding/types";
 import { useAuth } from "@/context/AuthContext";
 
 const Onboarding = () => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedScenario, setSelectedScenario] = useState<ScenarioProps | null>(null);
-  const [trainingMethod, setTrainingMethod] = useState<string | null>(null);
-  const [websiteUrl, setWebsiteUrl] = useState("");
-  const [businessName, setBusinessName] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [onboardingData, setOnboardingData] = useState<any>({});
   const [isProcessing, setIsProcessing] = useState(false);
   const [processingState, setProcessingState] = useState("");
-  const [voicePreviews, setVoicePreviews] = useState<{greeting: string, message: string}>({
-    greeting: "Hello, I'm Callyn, your AI sales agent.",
-    message: "I can help qualify leads, handle calls, and book meetings on your calendar."
-  });
   
-  const { setOnboardingData } = useAuth();
+  const { setOnboardingData: setAuthOnboardingData } = useAuth();
   const navigate = useNavigate();
   
   const handleNext = () => {
@@ -38,51 +28,36 @@ const Onboarding = () => {
     setCurrentStep(currentStep - 1);
   };
 
-  const handleScenarioSelect = (scenario: ScenarioProps) => {
-    setSelectedScenario(scenario);
-    // No longer automatically advancing to Step 3
+  const handleDataUpdate = (stepData: any) => {
+    setOnboardingData(prev => ({ ...prev, ...stepData }));
   };
 
-  // Save onboarding data when reaching the final step
-  useEffect(() => {
-    if (currentStep === 5) {
-      setOnboardingData({
-        selectedScenario,
-        trainingMethod,
-        businessName: businessName || undefined,
-        websiteUrl: websiteUrl || undefined,
-        uploadedFile: file,
-        voicePreview: voicePreviews
-      });
-    }
-  }, [currentStep, selectedScenario, trainingMethod, businessName, websiteUrl, file, voicePreviews, setOnboardingData]);
-
-  // Simulate processing data and generating voice samples
-  const processTrainingData = () => {
+  // Handle script processing
+  const handleScriptProcessing = async (scriptData: any) => {
     setIsProcessing(true);
+    handleDataUpdate(scriptData);
     
-    // Different messages based on training method
+    // Simulate processing based on script method
     const processingMessages = {
-      'google-business': [
-        "Analyzing your company info",
-        "Processing sales data",
-        "Optimizing for AI"
+      'website': [
+        "Scanning your website...",
+        "Extracting key selling points...",
+        "Creating personalized scripts..."
       ],
-      'website-url': [
-        "Crawling site",
-        "Extracting sales content",
-        "Training voice"
+      'upload': [
+        "Processing your document...",
+        "Analyzing sales content...",
+        "Generating talking points..."
       ],
-      'upload-pdf': [
-        "Parsing PDF",
-        "Extracting value points",
-        "Generating AI voice"
+      'manual': [
+        "Processing your input...",
+        "Optimizing script structure...",
+        "Preparing voice training..."
       ]
     };
     
-    const messages = trainingMethod ? processingMessages[trainingMethod as keyof typeof processingMessages] : [];
+    const messages = processingMessages[scriptData.scriptMethod as keyof typeof processingMessages] || [];
     
-    // Simulate API processing with delays
     let messageIndex = 0;
     const processInterval = setInterval(() => {
       if (messageIndex < messages.length) {
@@ -91,32 +66,18 @@ const Onboarding = () => {
       } else {
         clearInterval(processInterval);
         setIsProcessing(false);
-        
-        // Generate custom voice samples based on input data
-        let customGreeting = "Hello, I'm Callyn, your AI sales agent.";
-        let customMessage = "";
-        
-        if (trainingMethod === 'google-business' && businessName) {
-          customMessage = `I represent ${businessName} and I'm here to qualify leads and book appointments for your sales team.`;
-        } else if (trainingMethod === 'website-url' && websiteUrl) {
-          const domain = new URL(websiteUrl).hostname.replace('www.', '');
-          customMessage = `I'm the virtual sales representative for ${domain}, ready to handle calls and qualify leads.`;
-        } else if (trainingMethod === 'upload-pdf' && file) {
-          customMessage = `I've been trained on your sales materials and can help convert prospects into customers.`;
-        }
-        
-        setVoicePreviews({
-          greeting: customGreeting,
-          message: customMessage || "I can help qualify leads, handle calls, and book meetings on your calendar."
-        });
-        
-        // Move to voice preview step
         handleNext();
       }
-    }, 1500);
+    }, 1200);
   };
 
-  // Total number of steps in the onboarding process
+  // Save onboarding data when reaching the final step
+  useEffect(() => {
+    if (currentStep === 5) {
+      setAuthOnboardingData(onboardingData);
+    }
+  }, [currentStep, onboardingData, setAuthOnboardingData]);
+
   const totalSteps = 5;
 
   return (
@@ -125,65 +86,60 @@ const Onboarding = () => {
       
       <main className="flex-grow py-16 px-4 bg-gray-50">
         <div className="container mx-auto max-w-6xl">
+          {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-callyn-darkBlue mb-4">
-              Create Your AI Sales Agent
+              Your AI Sales Agent in 5 Simple Steps
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Set up Callyn to qualify leads, handle objections, and book appointments exactly like you would.
+              Callyn learns your business and starts working in minutes. No technical skills required.
             </p>
             
             {/* Progress indicator */}
             <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
           </div>
           
-          {/* Step 1: Welcome and Introduction */}
+          {/* Step 1: Welcome & Motivation */}
           {currentStep === 1 && (
-            <Step1RoleSelection 
-              handleNext={handleNext}
-            />
+            <NewStep1Welcome handleNext={handleNext} />
           )}
           
-          {/* Step 2: Pick Industry Scenario */}
+          {/* Step 2: Business Setup */}
           {currentStep === 2 && (
-            <Step2ScenarioSelection
-              salesScenarios={salesScenarios}
-              handleScenarioSelect={handleScenarioSelect}
-              handleBack={handleBack}
+            <NewStep2BusinessSetup
               handleNext={handleNext}
-              selectedScenario={selectedScenario}
+              handleBack={handleBack}
+              onDataUpdate={handleDataUpdate}
+              initialData={onboardingData}
             />
           )}
           
-          {/* Step 3: Train Callyn with Your Sales Info */}
+          {/* Step 3: Quick Script Setup */}
           {currentStep === 3 && (
-            <Step3TrainingMethod
-              trainingMethod={trainingMethod}
-              setTrainingMethod={setTrainingMethod}
-              websiteUrl={websiteUrl}
-              setWebsiteUrl={setWebsiteUrl}
-              businessName={businessName}
-              setBusinessName={setBusinessName}
-              file={file}
-              setFile={setFile}
+            <NewStep3QuickScript
+              handleNext={handleScriptProcessing}
               handleBack={handleBack}
-              handleNext={processTrainingData}
+              onDataUpdate={handleDataUpdate}
+              initialData={onboardingData}
               isProcessing={isProcessing}
               processingState={processingState}
             />
           )}
           
-          {/* Step 4: Voice Preview */}
+          {/* Step 4: Voice & Personality */}
           {currentStep === 4 && (
-            <Step4VoicePreview 
-              voicePreviews={voicePreviews}
-              handleBack={handleBack}
+            <NewStep4VoicePersonality
               handleNext={handleNext}
+              handleBack={handleBack}
+              onDataUpdate={handleDataUpdate}
+              initialData={onboardingData}
             />
           )}
           
-          {/* Final CTA */}
-          {currentStep === 5 && <Step5FinalCTA />}
+          {/* Step 5: Launch Ready */}
+          {currentStep === 5 && (
+            <NewStep5LaunchReady onboardingData={onboardingData} />
+          )}
         </div>
       </main>
       

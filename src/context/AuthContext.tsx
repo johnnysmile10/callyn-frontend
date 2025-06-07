@@ -10,11 +10,32 @@ interface User {
 }
 
 interface OnboardingData {
-  selectedScenario: ScenarioProps | null;
-  trainingMethod: string | null;
+  // Step 1 data
+  timeframe?: string;
+  
+  // Step 2 data  
   businessName?: string;
+  industry?: string;
+  targetAudience?: string;
+  mainGoal?: string;
+  
+  // Step 3 data
+  scriptMethod?: string;
   websiteUrl?: string;
   uploadedFile?: File | null;
+  customScript?: string;
+  
+  // Step 4 data
+  selectedVoice?: string;
+  personality?: string;
+  speakingSpeed?: number;
+  enthusiasm?: number;
+  useSmallTalk?: boolean;
+  handleObjections?: boolean;
+  
+  // Legacy data for backward compatibility
+  selectedScenario?: ScenarioProps | null;
+  trainingMethod?: string | null;
   voicePreview?: {
     greeting: string;
     message: string;
