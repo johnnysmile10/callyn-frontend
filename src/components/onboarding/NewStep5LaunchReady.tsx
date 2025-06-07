@@ -156,7 +156,7 @@ const NewStep5LaunchReady = ({ onboardingData }: NewStep5LaunchReadyProps) => {
                 <div className="text-sm text-gray-600">Always available</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-purple-600">< 30s</div>
+                <div className="text-2xl font-bold text-purple-600">&lt; 30s</div>
                 <div className="text-sm text-gray-600">Response time</div>
               </div>
               <div>
