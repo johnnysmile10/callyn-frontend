@@ -5,28 +5,42 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle, Clock, Zap, Shield, Bot, ArrowRight, Play } from "lucide-react";
-import GuidedSetupFlow from "./GuidedSetupFlow";
+import AgentProfileStep from "./steps/AgentProfileStep";
+import ScriptStarterStep from "./steps/ScriptStarterStep";
+import BehaviorSettingsStep from "./steps/BehaviorSettingsStep";
+import VoiceTestStep from "./steps/VoiceTestStep";
+import FinalReviewStep from "./steps/FinalReviewStep";
 import TrustBuildingFeatures from "./TrustBuildingFeatures";
-import InstantPreviewCall from "./InstantPreviewCall";
 
 const AgentSetupTab = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
-  const [showPreview, setShowPreview] = useState(false);
+  const [agentData, setAgentData] = useState({
+    profile: {},
+    script: {},
+    behavior: {},
+    voice: {},
+    final: {}
+  });
 
   const steps = [
-    { id: 1, title: "Agent Profile", description: "Set up your AI agent's identity and personality" },
-    { id: 2, title: "Script & Voice", description: "Create conversation flows and select voice" },
-    { id: 3, title: "Test & Preview", description: "Try your agent with a sample call" },
-    { id: 4, title: "Go Live", description: "Deploy your agent and start calling leads" }
+    { id: 1, title: "Agent Profile", description: "Define your AI agent's identity and role", component: AgentProfileStep },
+    { id: 2, title: "Script Starter", description: "Quick script templates and customization", component: ScriptStarterStep },
+    { id: 3, title: "Behavior & Intelligence", description: "Configure AI personality and responses", component: BehaviorSettingsStep },
+    { id: 4, title: "Voice Test Zone", description: "Select voice and test your agent live", component: VoiceTestStep },
+    { id: 5, title: "Final Review + Launch", description: "Review settings and deploy your agent", component: FinalReviewStep }
   ];
 
   const progressPercentage = (completedSteps.length / steps.length) * 100;
 
-  const handleStepComplete = (stepId: number) => {
+  const handleStepComplete = (stepId: number, data: any) => {
     if (!completedSteps.includes(stepId)) {
       setCompletedSteps([...completedSteps, stepId]);
     }
+    
+    // Update agent data
+    const stepKey = ['profile', 'script', 'behavior', 'voice', 'final'][stepId - 1];
+    setAgentData(prev => ({ ...prev, [stepKey]: data }));
     
     // Auto-advance to next step
     if (stepId < steps.length) {
@@ -34,8 +48,15 @@ const AgentSetupTab = () => {
     }
   };
 
+  const handleStepChange = (stepId: number) => {
+    setCurrentStep(stepId);
+  };
+
   const isStepCompleted = (stepId: number) => completedSteps.includes(stepId);
   const isStepCurrent = (stepId: number) => currentStep === stepId;
+  const isStepAccessible = (stepId: number) => stepId <= currentStep || isStepCompleted(stepId);
+
+  const CurrentStepComponent = steps[currentStep - 1]?.component;
 
   return (
     <div className="space-y-8">
@@ -53,6 +74,9 @@ const AgentSetupTab = () => {
           and converts leads 24/7. No technical skills required.
         </p>
       </div>
+
+      {/* Trust Building Features */}
+      <TrustBuildingFeatures />
 
       {/* Progress Overview */}
       <Card>
@@ -75,7 +99,7 @@ const AgentSetupTab = () => {
         <CardContent>
           <Progress value={progressPercentage} className="mb-6" />
           
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {steps.map((step) => (
               <div
                 key={step.id}
@@ -84,9 +108,11 @@ const AgentSetupTab = () => {
                     ? "border-blue-500 bg-blue-50"
                     : isStepCompleted(step.id)
                     ? "border-green-500 bg-green-50"
-                    : "border-gray-200 bg-gray-50"
+                    : isStepAccessible(step.id)
+                    ? "border-gray-200 bg-gray-50 hover:border-gray-300"
+                    : "border-gray-100 bg-gray-25 opacity-50 cursor-not-allowed"
                 }`}
-                onClick={() => setCurrentStep(step.id)}
+                onClick={() => isStepAccessible(step.id) && handleStepChange(step.id)}
               >
                 <div className="flex items-center gap-2 mb-2">
                   {isStepCompleted(step.id) ? (
@@ -94,7 +120,9 @@ const AgentSetupTab = () => {
                   ) : isStepCurrent(step.id) ? (
                     <Clock className="h-5 w-5 text-blue-600" />
                   ) : (
-                    <div className="h-5 w-5 rounded-full border-2 border-gray-300" />
+                    <div className={`h-5 w-5 rounded-full border-2 ${
+                      isStepAccessible(step.id) ? "border-gray-300" : "border-gray-200"
+                    }`} />
                   )}
                   <span className="font-medium text-sm">{step.title}</span>
                 </div>
@@ -105,25 +133,16 @@ const AgentSetupTab = () => {
         </CardContent>
       </Card>
 
-      {/* Trust Building Features */}
-      <TrustBuildingFeatures />
-
-      {/* Guided Setup Flow */}
-      <GuidedSetupFlow 
-        currentStep={currentStep}
-        onStepComplete={handleStepComplete}
-        completedSteps={completedSteps}
-      />
-
-      {/* Instant Preview Call */}
-      {(currentStep >= 3 || completedSteps.includes(2)) && (
-        <InstantPreviewCall 
-          show={showPreview}
-          onToggle={setShowPreview}
+      {/* Current Step Content */}
+      {CurrentStepComponent && (
+        <CurrentStepComponent 
+          onComplete={(data: any) => handleStepComplete(currentStep, data)}
+          initialData={agentData}
+          isCompleted={isStepCompleted(currentStep)}
         />
       )}
 
-      {/* Smart CTA */}
+      {/* Final Success State */}
       {completedSteps.length === steps.length && (
         <Card className="border-green-200 bg-green-50">
           <CardContent className="text-center py-8">
