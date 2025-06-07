@@ -32,7 +32,6 @@ const Dashboard = () => {
       
       // Agent Builder sections
       case "agent-setup":
-      case "agent-settings":
       case "test-preview":
         return <DashboardAgentBuilder />;
       

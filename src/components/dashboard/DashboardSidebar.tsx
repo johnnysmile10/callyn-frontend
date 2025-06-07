@@ -1,10 +1,8 @@
-
 import { useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Bot, 
   Zap, 
-  Settings, 
   LogOut,
   BarChart,
   PlayCircle,
@@ -59,11 +57,6 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Actions & Integrations",
       icon: Zap,
       id: "actions",
-    },
-    {
-      name: "Agent Settings",
-      icon: Settings,
-      id: "agent-settings",
     },
     {
       name: "Test & Preview",

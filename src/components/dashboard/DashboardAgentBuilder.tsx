@@ -1,9 +1,8 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bot, Settings, PlayCircle } from "lucide-react";
+import { Bot, PlayCircle } from "lucide-react";
 import AgentSetupTab from "./agent/AgentSetupTab";
-import AgentSettings from "./agent/AgentSettings";
 import TestAgentPanel from "./agent/TestAgentPanel";
 
 const DashboardAgentBuilder = () => {
@@ -24,14 +23,10 @@ const DashboardAgentBuilder = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="agent-setup" className="flex items-center gap-2">
             <Bot className="h-4 w-4" />
             Agent Setup
-          </TabsTrigger>
-          <TabsTrigger value="settings" className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
-            Settings
           </TabsTrigger>
           <TabsTrigger value="test" className="flex items-center gap-2">
             <PlayCircle className="h-4 w-4" />
@@ -41,10 +36,6 @@ const DashboardAgentBuilder = () => {
 
         <TabsContent value="agent-setup" className="space-y-6">
           <AgentSetupTab />
-        </TabsContent>
-
-        <TabsContent value="settings" className="space-y-6">
-          <AgentSettings />
         </TabsContent>
 
         <TabsContent value="test" className="space-y-6">
