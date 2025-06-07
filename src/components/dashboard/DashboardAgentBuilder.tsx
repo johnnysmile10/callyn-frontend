@@ -1,14 +1,13 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bot, FileText, Settings, PlayCircle } from "lucide-react";
-import PersonalAgentManager from "./PersonalAgentManager";
-import AgentPromptScript from "./agent/AgentPromptScript";
+import { Bot, Settings, PlayCircle } from "lucide-react";
+import AgentSetupTab from "./agent/AgentSetupTab";
 import AgentSettings from "./agent/AgentSettings";
 import TestAgentPanel from "./agent/TestAgentPanel";
 
 const DashboardAgentBuilder = () => {
-  const [activeTab, setActiveTab] = useState("setup");
+  const [activeTab, setActiveTab] = useState("agent-setup");
 
   return (
     <div className="space-y-6">
@@ -25,14 +24,10 @@ const DashboardAgentBuilder = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="setup" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="agent-setup" className="flex items-center gap-2">
             <Bot className="h-4 w-4" />
-            Setup
-          </TabsTrigger>
-          <TabsTrigger value="script" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Script & Voice
+            Agent Setup
           </TabsTrigger>
           <TabsTrigger value="settings" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
@@ -44,12 +39,8 @@ const DashboardAgentBuilder = () => {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="setup" className="space-y-6">
-          <PersonalAgentManager />
-        </TabsContent>
-
-        <TabsContent value="script" className="space-y-6">
-          <AgentPromptScript />
+        <TabsContent value="agent-setup" className="space-y-6">
+          <AgentSetupTab />
         </TabsContent>
 
         <TabsContent value="settings" className="space-y-6">

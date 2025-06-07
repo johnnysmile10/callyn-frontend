@@ -6,7 +6,6 @@ import {
   Zap, 
   Settings, 
   LogOut,
-  FileText,
   BarChart,
   PlayCircle,
   Users,
@@ -52,19 +51,19 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
 
   const agentBuilderItems = [
     {
-      name: "My Agent",
+      name: "Agent Setup",
       icon: Bot,
       id: "agent-setup",
-    },
-    {
-      name: "Script & Voice",
-      icon: FileText,
-      id: "script-voice",
     },
     {
       name: "Actions & Integrations",
       icon: Zap,
       id: "actions",
+    },
+    {
+      name: "Agent Settings",
+      icon: Settings,
+      id: "agent-settings",
     },
     {
       name: "Test & Preview",
