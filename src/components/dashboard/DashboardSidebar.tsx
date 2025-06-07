@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -5,7 +6,6 @@ import {
   Zap, 
   LogOut,
   BarChart,
-  PlayCircle,
   Users,
   Calendar
 } from "lucide-react";
@@ -57,11 +57,6 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Actions & Integrations",
       icon: Zap,
       id: "actions",
-    },
-    {
-      name: "Test & Preview",
-      icon: PlayCircle,
-      id: "test-preview",
     }
   ];
 
