@@ -33,9 +33,8 @@ const Onboarding = () => {
   };
 
   // Handle script processing
-  const handleScriptProcessing = async (scriptData: any) => {
+  const handleScriptProcessing = async () => {
     setIsProcessing(true);
-    handleDataUpdate(scriptData);
     
     // Simulate processing based on script method
     const processingMessages = {
@@ -56,7 +55,7 @@ const Onboarding = () => {
       ]
     };
     
-    const messages = processingMessages[scriptData.scriptMethod as keyof typeof processingMessages] || [];
+    const messages = processingMessages[onboardingData.scriptMethod as keyof typeof processingMessages] || [];
     
     let messageIndex = 0;
     const processInterval = setInterval(() => {
