@@ -30,7 +30,7 @@ export const useOutreachFlow = () => {
     }
   };
 
-  const getCurrentStepData = (currentStep: number) => {
+  const getCurrentStepData = (currentStep: number): TargetAudience | LeadRecord[] => {
     switch (currentStep) {
       case 1:
         return outreachData?.targetAudience || {
@@ -42,11 +42,17 @@ export const useOutreachFlow = () => {
       case 2:
         return outreachData?.leadList || [];
       default:
-        return {};
+        // Return a default TargetAudience for other steps
+        return {
+          industry: [],
+          companySize: [],
+          jobTitles: [],
+          location: []
+        };
     }
   };
 
-  const handleStepDataUpdate = (currentStep: number, data: any) => {
+  const handleStepDataUpdate = (currentStep: number, data: TargetAudience | LeadRecord[]) => {
     switch (currentStep) {
       case 1:
         updateOutreachData({ targetAudience: data as TargetAudience });
