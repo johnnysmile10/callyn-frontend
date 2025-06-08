@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -8,7 +7,8 @@ import {
   BarChart,
   Users,
   Calendar,
-  Eye
+  Eye,
+  PhoneCall
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -45,6 +45,11 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Overview",
       icon: LayoutDashboard,
       id: "overview",
+    },
+    {
+      name: "Call Log",
+      icon: PhoneCall,
+      id: "call-log",
     }
   ];
 

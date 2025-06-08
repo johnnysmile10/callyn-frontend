@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -7,6 +8,7 @@ import DashboardAgentBuilder from "@/components/dashboard/DashboardAgentBuilder"
 import DashboardActions from "@/components/dashboard/DashboardActions";
 import DashboardCampaignManager from "@/components/dashboard/DashboardCampaignManager";
 import CallControlBar from "@/components/dashboard/CallControlBar";
+import CallLogView from "@/components/dashboard/CallLogView";
 import { useAuth } from "@/context/AuthContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -41,6 +43,9 @@ const Dashboard = () => {
     switch (activeTab) {
       case "overview":
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;
+      
+      case "call-log":
+        return <CallLogView />;
       
       // Agent Builder sections
       case "agent-setup":
