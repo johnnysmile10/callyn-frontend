@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -12,6 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Rocket, ArrowRight } from "lucide-react";
+import CallynOutreachSystem from "@/components/dashboard/CallynOutreachSystem";
 
 const Dashboard = () => {
   const { isAuthenticated, userAgent, hasCompletedSetup } = useAuth();
@@ -46,15 +46,19 @@ const Dashboard = () => {
       case "agent-setup":
         return <DashboardAgentBuilder />;
       
+      // Outreach System (replaces actions)
+      case "outreach-system":
+        return <CallynOutreachSystem />;
+      
       // Campaign Manager sections  
       case "lead-lists":
       case "campaigns":
       case "analytics":
         return <DashboardCampaignManager />;
       
-      // Legacy actions route (now part of Agent Builder)
+      // Legacy actions route (now redirects to outreach-system)
       case "actions":
-        return <DashboardActions />;
+        return <CallynOutreachSystem />;
       
       default:
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;

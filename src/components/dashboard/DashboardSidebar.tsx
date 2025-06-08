@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Bot, 
-  Zap, 
+  Target, 
   LogOut,
   BarChart,
   Users,
@@ -55,9 +55,9 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       id: "agent-setup",
     },
     {
-      name: "Actions & Integrations",
-      icon: Zap,
-      id: "actions",
+      name: "Outreach System",
+      icon: Target,
+      id: "outreach-system",
     }
   ];
 
