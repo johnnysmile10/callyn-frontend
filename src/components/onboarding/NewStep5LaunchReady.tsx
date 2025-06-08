@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Rocket, Phone, Clock, Settings, ArrowRight } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 interface NewStep5LaunchReadyProps {
   onboardingData: any;
@@ -12,16 +13,42 @@ interface NewStep5LaunchReadyProps {
 
 const NewStep5LaunchReady = ({ onboardingData }: NewStep5LaunchReadyProps) => {
   const [isLaunching, setIsLaunching] = useState(false);
+  const [launchStage, setLaunchStage] = useState("");
   const navigate = useNavigate();
+  const { createUserAgent } = useAuth();
 
   const handleLaunch = async () => {
     setIsLaunching(true);
     
-    // Simulate agent creation process
-    setTimeout(() => {
+    try {
+      // Stage 1: Configuring voice settings
+      setLaunchStage("Configuring voice settings...");
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Stage 2: Processing business knowledge  
+      setLaunchStage("Processing your business knowledge...");
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Stage 3: Setting up call routing
+      setLaunchStage("Setting up call routing...");
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Stage 4: Creating the agent
+      setLaunchStage("Creating your AI agent...");
+      await createUserAgent(onboardingData);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Stage 5: Finalizing deployment
+      setLaunchStage("Finalizing agent deployment...");
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       setIsLaunching(false);
       navigate("/dashboard");
-    }, 3000);
+    } catch (error) {
+      console.error('Error creating agent:', error);
+      setIsLaunching(false);
+      // In a real app, you'd show an error message
+    }
   };
 
   const setupItems = [
@@ -59,10 +86,7 @@ const NewStep5LaunchReady = ({ onboardingData }: NewStep5LaunchReadyProps) => {
               🚀 Launching Your AI Agent...
             </h3>
             <div className="space-y-2 text-gray-600 max-w-md mx-auto">
-              <p>✅ Configuring voice settings</p>
-              <p>✅ Processing your business knowledge</p>
-              <p>✅ Setting up call routing</p>
-              <p className="text-blue-600 font-medium">🔄 Finalizing agent deployment...</p>
+              <p className="text-blue-600 font-medium">{launchStage}</p>
             </div>
             <div className="bg-blue-50 rounded-lg p-4 max-w-md mx-auto mt-6">
               <p className="text-sm text-blue-800">

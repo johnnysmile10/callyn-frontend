@@ -9,9 +9,12 @@ import DashboardActions from "@/components/dashboard/DashboardActions";
 import DashboardCampaignManager from "@/components/dashboard/DashboardCampaignManager";
 import CallControlBar from "@/components/dashboard/CallControlBar";
 import { useAuth } from "@/context/AuthContext";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Rocket, ArrowRight } from "lucide-react";
 
 const Dashboard = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, userAgent, hasCompletedSetup } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [campaignActive, setCampaignActive] = useState(false);
@@ -20,8 +23,16 @@ const Dashboard = () => {
     // Redirect to login if not authenticated
     if (!isAuthenticated) {
       navigate("/login");
+      return;
     }
-  }, [isAuthenticated, navigate]);
+
+    // Check if user needs to complete onboarding
+    // Only redirect if they have NO agent AND haven't completed setup
+    if (!userAgent && !hasCompletedSetup()) {
+      // Show a welcome message but don't auto-redirect
+      console.log("User needs to complete setup, but allowing them to stay on dashboard");
+    }
+  }, [isAuthenticated, userAgent, hasCompletedSetup, navigate]);
 
   if (!isAuthenticated) return null;
 
@@ -55,6 +66,27 @@ const Dashboard = () => {
         <DashboardSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="flex-1 overflow-auto">
           <div className="container mx-auto py-8 px-4">
+            {/* Welcome Banner for New Users */}
+            {!userAgent && !hasCompletedSetup() && (
+              <div className="mb-8">
+                <Alert className="bg-blue-50 border-blue-200">
+                  <Rocket className="h-4 w-4 text-blue-600" />
+                  <AlertTitle className="text-blue-800">Welcome to Callyn!</AlertTitle>
+                  <AlertDescription className="text-blue-700 flex items-center justify-between">
+                    <span>Complete your setup to create your first AI calling agent.</span>
+                    <Button 
+                      onClick={() => navigate('/onboarding')} 
+                      size="sm" 
+                      className="bg-blue-600 hover:bg-blue-700 text-white ml-4"
+                    >
+                      Complete Setup
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
+            
             {renderActiveTab()}
           </div>
         </div>

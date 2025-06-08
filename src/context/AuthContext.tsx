@@ -42,15 +42,38 @@ interface OnboardingData {
   };
 }
 
+interface UserAgent {
+  id: string;
+  name: string;
+  status: 'active' | 'inactive' | 'training';
+  createdAt: string;
+  configuration: {
+    voice: string;
+    personality: string;
+    script: string;
+    businessInfo: {
+      name: string;
+      industry: string;
+      targetAudience: string;
+      mainGoal: string;
+    };
+  };
+}
+
 interface AuthContextType {
   user: User | null;
   onboardingData: OnboardingData | null;
+  userAgent: UserAgent | null;
+  setupCompleted: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   googleLogin: () => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
   setOnboardingData: (data: OnboardingData) => void;
+  createUserAgent: (onboardingData: OnboardingData) => Promise<UserAgent>;
+  hasCompletedSetup: () => boolean;
+  markSetupCompleted: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,6 +81,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [onboardingData, setOnboardingData] = useState<OnboardingData | null>(null);
+  const [userAgent, setUserAgent] = useState<UserAgent | null>(null);
+  const [setupCompleted, setSetupCompleted] = useState(false);
 
   const isAuthenticated = !!user;
 
@@ -95,12 +120,62 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logout = () => {
     setUser(null);
+    setUserAgent(null);
+    setOnboardingData(null);
+    setSetupCompleted(false);
     localStorage.removeItem('user');
+    localStorage.removeItem('user_agent');
+    localStorage.removeItem('onboarding_data');
+    localStorage.removeItem('setup_completed');
   };
 
-  // Check for existing session on mount
+  const createUserAgent = async (data: OnboardingData): Promise<UserAgent> => {
+    // Simulate agent creation process
+    const newAgent: UserAgent = {
+      id: `agent_${Date.now()}`,
+      name: data.businessName || 'My AI Agent',
+      status: 'active',
+      createdAt: new Date().toISOString(),
+      configuration: {
+        voice: data.selectedVoice || 'Aria',
+        personality: data.personality || 'professional',
+        script: data.customScript || 'Default sales script',
+        businessInfo: {
+          name: data.businessName || '',
+          industry: data.industry || '',
+          targetAudience: data.targetAudience || '',
+          mainGoal: data.mainGoal || ''
+        }
+      }
+    };
+
+    // Store agent data
+    setUserAgent(newAgent);
+    localStorage.setItem('user_agent', JSON.stringify(newAgent));
+    
+    // Mark setup as completed
+    markSetupCompleted();
+    
+    console.log('Agent created successfully:', newAgent);
+    return newAgent;
+  };
+
+  const hasCompletedSetup = (): boolean => {
+    return setupCompleted && !!userAgent;
+  };
+
+  const markSetupCompleted = () => {
+    setSetupCompleted(true);
+    localStorage.setItem('setup_completed', 'true');
+  };
+
+  // Check for existing session and data on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
+    const storedAgent = localStorage.getItem('user_agent');
+    const storedOnboardingData = localStorage.getItem('onboarding_data');
+    const storedSetupCompleted = localStorage.getItem('setup_completed');
+
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
@@ -109,19 +184,52 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         localStorage.removeItem('user');
       }
     }
+
+    if (storedAgent) {
+      try {
+        setUserAgent(JSON.parse(storedAgent));
+      } catch (error) {
+        console.error('Error parsing stored agent:', error);
+        localStorage.removeItem('user_agent');
+      }
+    }
+
+    if (storedOnboardingData) {
+      try {
+        setOnboardingData(JSON.parse(storedOnboardingData));
+      } catch (error) {
+        console.error('Error parsing stored onboarding data:', error);
+        localStorage.removeItem('onboarding_data');
+      }
+    }
+
+    if (storedSetupCompleted === 'true') {
+      setSetupCompleted(true);
+    }
   }, []);
+
+  // Enhanced setOnboardingData to also persist to localStorage
+  const handleSetOnboardingData = (data: OnboardingData) => {
+    setOnboardingData(data);
+    localStorage.setItem('onboarding_data', JSON.stringify(data));
+  };
 
   return (
     <AuthContext.Provider
       value={{
         user,
         onboardingData,
+        userAgent,
+        setupCompleted,
         isAuthenticated,
         login,
         googleLogin,
         signup,
         logout,
-        setOnboardingData,
+        setOnboardingData: handleSetOnboardingData,
+        createUserAgent,
+        hasCompletedSetup,
+        markSetupCompleted,
       }}
     >
       {children}

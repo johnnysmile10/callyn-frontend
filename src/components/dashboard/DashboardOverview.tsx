@@ -17,6 +17,7 @@ import {
   Play,
   Settings
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 interface DashboardOverviewProps {
   onCampaignToggle: (active: boolean) => void;
@@ -24,11 +25,11 @@ interface DashboardOverviewProps {
 }
 
 const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOverviewProps) => {
-  const [hasAgent, setHasAgent] = useState(() => {
-    return localStorage.getItem('user_agent') !== null;
-  });
-
+  const { userAgent, hasCompletedSetup } = useAuth();
   const [hasLeads, setHasLeads] = useState(false);
+
+  const hasAgent = !!userAgent;
+  const setupComplete = hasCompletedSetup();
 
   const handleStartCampaign = () => {
     onCampaignToggle(!campaignActive);
@@ -43,8 +44,21 @@ const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOvervi
         </p>
       </div>
 
-      {/* Quick Setup Cards */}
-      {(!hasAgent || !hasLeads) && (
+      {/* Agent Status Banner */}
+      {hasAgent && (
+        <Alert className="bg-green-50 border-green-200">
+          <CheckCircle className="h-4 w-4 text-green-600" />
+          <AlertTitle className="text-green-800">
+            🎉 {userAgent.name} is Active and Ready!
+          </AlertTitle>
+          <AlertDescription className="text-green-700">
+            Your AI agent was created on {new Date(userAgent.createdAt).toLocaleDateString()} and is ready to handle calls.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Quick Setup Cards - Only show if setup not complete */}
+      {!setupComplete && (
         <div className="grid gap-6 md:grid-cols-2">
           {!hasAgent && (
             <Card className="border-blue-200 bg-blue-50/50">
@@ -60,11 +74,13 @@ const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOvervi
               <CardContent>
                 <div className="space-y-3">
                   <div className="text-sm text-blue-800">
-                    Get started by creating your AI agent with a custom script
+                    Complete the onboarding process to create your AI agent
                   </div>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    <Bot className="mr-2 h-4 w-4" />
-                    Create AI Agent
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
+                    <a href="/onboarding">
+                      <Bot className="mr-2 h-4 w-4" />
+                      Complete Setup
+                    </a>
                   </Button>
                 </div>
               </CardContent>
@@ -108,7 +124,7 @@ const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOvervi
           <CardContent>
             <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground">
-              No calls made yet
+              {hasAgent ? "Ready to start calling" : "Agent setup required"}
             </p>
           </CardContent>
         </Card>
@@ -162,7 +178,7 @@ const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOvervi
               Agent Builder
             </CardTitle>
             <CardDescription>
-              Create and customize your AI calling agent
+              {hasAgent ? "Manage and customize your AI agent" : "Create and customize your AI calling agent"}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -170,21 +186,37 @@ const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOvervi
               <div className="flex items-center gap-2 text-sm">
                 <CheckCircle className={`h-4 w-4 ${hasAgent ? 'text-green-600' : 'text-gray-400'}`} />
                 <span className={hasAgent ? 'text-green-600' : 'text-gray-600'}>
-                  AI Agent {hasAgent ? 'Created' : 'Pending'}
+                  AI Agent {hasAgent ? 'Active' : 'Pending'}
                 </span>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Clock className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-600">Script Configuration</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm">
-                <Clock className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-600">Voice Settings</span>
-              </div>
+              {hasAgent && (
+                <>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <span className="text-green-600">Script Configured</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <span className="text-green-600">Voice Settings</span>
+                  </div>
+                </>
+              )}
+              {!hasAgent && (
+                <>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Clock className="h-4 w-4 text-gray-400" />
+                    <span className="text-gray-600">Script Configuration</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <Clock className="h-4 w-4 text-gray-400" />
+                    <span className="text-gray-600">Voice Settings</span>
+                  </div>
+                </>
+              )}
             </div>
             <Button variant="outline" className="w-full">
               <Settings className="mr-2 h-4 w-4" />
-              Configure Agent
+              {hasAgent ? 'Manage Agent' : 'Create Agent'}
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </CardContent>
