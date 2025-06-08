@@ -58,26 +58,32 @@ const CallLogView = () => {
 
   // Convert mock data to our enhanced format
   const calls: CallRecord[] = useMemo(() => 
-    mockCallData.calls.map(call => ({
-      id: call.id,
-      timestamp: call.timestamp,
-      contactName: call.contact,
-      contactPhone: call.phone,
-      contactCompany: call.company,
-      duration: call.duration,
-      outcome: call.outcome as CallRecord['outcome'],
-      campaign: call.campaign,
-      agent: "Callyn AI Agent",
-      cost: Math.round(call.duration * 0.02 * 100) / 100, // $0.02 per minute
-      recording: call.recording,
-      transcript: call.transcript,
-      notes: call.notes,
-      tags: call.tags || [],
-      leadScore: Math.floor(Math.random() * 100),
-      followUpDate: call.outcome === 'booked' ? new Date(Date.now() + 86400000).toISOString() : undefined,
-      sentiment: call.outcome === 'booked' || call.outcome === 'interested' ? 'positive' : 
-                call.outcome === 'not-interested' ? 'negative' : 'neutral'
-    })), []
+    mockCallData.calls.map(call => {
+      // Parse duration from string format (e.g., "2:30" to seconds)
+      const durationParts = call.duration.split(':');
+      const durationInSeconds = parseInt(durationParts[0]) * 60 + parseInt(durationParts[1]);
+      
+      return {
+        id: call.id.toString(),
+        timestamp: call.dateTime,
+        contactName: call.name,
+        contactPhone: call.phoneNumber,
+        contactCompany: undefined, // Not available in mock data
+        duration: durationInSeconds,
+        outcome: call.outcome as CallRecord['outcome'],
+        campaign: undefined, // Not available in mock data
+        agent: "Callyn AI Agent",
+        cost: Math.round(durationInSeconds * 0.02 * 100) / 100, // $0.02 per minute
+        recording: undefined, // Not available in mock data
+        transcript: call.transcript,
+        notes: call.notes,
+        tags: [], // Not available in mock data
+        leadScore: Math.floor(Math.random() * 100),
+        followUpDate: call.outcome === 'booked' ? new Date(Date.now() + 86400000).toISOString() : undefined,
+        sentiment: call.outcome === 'booked' || call.outcome === 'interested' ? 'positive' : 
+                  call.outcome === 'not-interested' ? 'negative' : 'neutral'
+      };
+    }), []
   );
 
   // Advanced filtering
