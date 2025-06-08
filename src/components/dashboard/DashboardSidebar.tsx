@@ -7,7 +7,8 @@ import {
   LogOut,
   BarChart,
   Users,
-  Calendar
+  Calendar,
+  Eye
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -31,7 +32,7 @@ interface DashboardSidebarProps {
 }
 
 const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) => {
-  const { user, logout } = useAuth();
+  const { user, logout, userAgent } = useAuth();
   const navigate = useNavigate();
   
   const handleLogout = () => {
@@ -49,8 +50,8 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
 
   const agentBuilderItems = [
     {
-      name: "Agent Setup",
-      icon: Bot,
+      name: userAgent ? "Agent Overview" : "Create Agent",
+      icon: userAgent ? Eye : Bot,
       id: "agent-setup",
     },
     {

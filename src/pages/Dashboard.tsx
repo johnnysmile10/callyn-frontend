@@ -16,7 +16,10 @@ import { Rocket, ArrowRight } from "lucide-react";
 const Dashboard = () => {
   const { isAuthenticated, userAgent, hasCompletedSetup } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<string>("overview");
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    // Default to agent-setup if no agent exists, otherwise overview
+    return userAgent ? "overview" : "agent-setup";
+  });
   const [campaignActive, setCampaignActive] = useState(false);
   
   useEffect(() => {
@@ -26,13 +29,11 @@ const Dashboard = () => {
       return;
     }
 
-    // Check if user needs to complete onboarding
-    // Only redirect if they have NO agent AND haven't completed setup
-    if (!userAgent && !hasCompletedSetup()) {
-      // Show a welcome message but don't auto-redirect
-      console.log("User needs to complete setup, but allowing them to stay on dashboard");
+    // Update active tab based on agent status if needed
+    if (!userAgent && activeTab === "overview") {
+      setActiveTab("agent-setup");
     }
-  }, [isAuthenticated, userAgent, hasCompletedSetup, navigate]);
+  }, [isAuthenticated, userAgent, navigate, activeTab]);
 
   if (!isAuthenticated) return null;
 

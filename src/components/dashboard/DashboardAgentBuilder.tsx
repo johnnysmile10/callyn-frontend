@@ -1,11 +1,12 @@
 
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bot } from "lucide-react";
+import { Bot, Eye, Settings } from "lucide-react";
+import AgentOverview from "./agent/AgentOverview";
 import AgentSetupTab from "./agent/AgentSetupTab";
 
 const DashboardAgentBuilder = () => {
-  const [activeTab, setActiveTab] = useState("agent-setup");
+  const [activeTab, setActiveTab] = useState("overview");
 
   return (
     <div className="space-y-6">
@@ -22,12 +23,20 @@ const DashboardAgentBuilder = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-1">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="overview" className="flex items-center gap-2">
+            <Eye className="h-4 w-4" />
+            Agent Overview
+          </TabsTrigger>
           <TabsTrigger value="agent-setup" className="flex items-center gap-2">
-            <Bot className="h-4 w-4" />
+            <Settings className="h-4 w-4" />
             Agent Setup
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="overview" className="space-y-6">
+          <AgentOverview />
+        </TabsContent>
 
         <TabsContent value="agent-setup" className="space-y-6">
           <AgentSetupTab />
