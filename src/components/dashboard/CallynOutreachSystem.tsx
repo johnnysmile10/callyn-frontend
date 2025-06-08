@@ -7,84 +7,168 @@ import { Progress } from "@/components/ui/progress";
 import { 
   Target, 
   Users, 
-  Phone, 
   MessageSquare, 
   Calendar, 
-  Zap,
-  CheckCircle,
-  ArrowRight,
+  Phone, 
   Rocket,
+  CheckCircle,
   Building2
 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import Step1TargetAudience from "./outreach/steps/Step1TargetAudience";
+import Step2LeadList from "./outreach/steps/Step2LeadList";
+import StepNavigation from "./outreach/steps/StepNavigation";
 import OutreachIntegrations from "./outreach/OutreachIntegrations";
+import { OutreachData, TargetAudience, LeadRecord } from "./outreach/types";
+import { useToast } from "@/hooks/use-toast";
 
 const CallynOutreachSystem = () => {
-  const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const { user, outreachData, setOutreachData } = useAuth();
+  const { toast } = useToast();
+  const [currentStep, setCurrentStep] = useState(1);
   
-  const outreachSteps = [
+  const steps = [
     {
       id: 1,
-      title: "Define Your Target Audience",
-      description: "Set up your ideal customer profile and targeting criteria",
+      title: "Define Target Audience",
+      description: "Set up your ideal customer profile",
       icon: Target,
-      status: "pending" as const,
-      estimatedTime: "5 min"
+      component: Step1TargetAudience
     },
     {
       id: 2,
-      title: "Build Your Lead List",
+      title: "Build Lead List", 
       description: "Import or create your prospect database",
       icon: Users,
-      status: "pending" as const,
-      estimatedTime: "10 min"
+      component: Step2LeadList
     },
     {
       id: 3,
-      title: "Craft Your Outreach Script",
-      description: "Design compelling conversation flows and messaging",
+      title: "Craft Outreach Script",
+      description: "Design compelling conversation flows",
       icon: MessageSquare,
-      status: "pending" as const,
-      estimatedTime: "15 min"
+      component: null // Will implement in next iteration
     },
     {
       id: 4,
       title: "Set Call Scheduling",
-      description: "Configure availability and booking preferences",
+      description: "Configure availability and booking",
       icon: Calendar,
-      status: "pending" as const,
-      estimatedTime: "5 min"
+      component: null // Will implement in next iteration
     },
     {
       id: 5,
-      title: "Test Your Agent",
-      description: "Run test calls to ensure optimal performance",
+      title: "Test Your Setup",
+      description: "Run test calls for optimization",
       icon: Phone,
-      status: "pending" as const,
-      estimatedTime: "10 min"
+      component: null // Will implement in next iteration
     },
     {
       id: 6,
       title: "Launch Campaign",
-      description: "Go live with your AI-powered outreach campaign",
+      description: "Go live with AI-powered outreach",
       icon: Rocket,
-      status: "pending" as const,
-      estimatedTime: "2 min"
+      component: null // Will implement in next iteration
     }
   ];
 
-  const progressPercentage = (completedSteps.length / outreachSteps.length) * 100;
+  const progressPercentage = ((currentStep - 1) / steps.length) * 100;
 
-  const handleStepClick = (stepId: number) => {
-    // This would navigate to the appropriate configuration page/modal
-    console.log(`Navigate to step ${stepId} configuration`);
+  const updateOutreachData = (updates: Partial<OutreachData>) => {
+    const newData = { ...outreachData, ...updates };
+    setOutreachData(newData);
   };
 
-  const getStepStatus = (stepId: number) => {
-    if (completedSteps.includes(stepId)) return "completed";
-    if (stepId === Math.min(...outreachSteps.map(s => s.id).filter(id => !completedSteps.includes(id)))) {
-      return "current";
+  const canProceedFromStep = (stepId: number): boolean => {
+    switch (stepId) {
+      case 1:
+        return !!(outreachData?.targetAudience?.industry?.length && 
+                 outreachData?.targetAudience?.companySize?.length);
+      case 2:
+        return !!(outreachData?.leadList?.length && outreachData.leadList.length > 0);
+      case 3:
+        return !!(outreachData?.script?.greeting);
+      case 4:
+        return !!(outreachData?.scheduling?.timezone);
+      case 5:
+        return !!(outreachData?.testResults?.callCount);
+      case 6:
+        return true;
+      default:
+        return false;
     }
-    return "pending";
+  };
+
+  const handleNext = () => {
+    if (currentStep < steps.length) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleLaunchCampaign = () => {
+    toast({
+      title: "Campaign Launched!",
+      description: "Your AI outreach campaign is now live and making calls.",
+    });
+    console.log("Launching campaign with data:", outreachData);
+  };
+
+  const getCurrentStepData = () => {
+    switch (currentStep) {
+      case 1:
+        return outreachData?.targetAudience || {
+          industry: [],
+          companySize: [],
+          jobTitles: [],
+          location: []
+        };
+      case 2:
+        return outreachData?.leadList || [];
+      default:
+        return {};
+    }
+  };
+
+  const handleStepDataUpdate = (data: any) => {
+    switch (currentStep) {
+      case 1:
+        updateOutreachData({ targetAudience: data as TargetAudience });
+        break;
+      case 2:
+        updateOutreachData({ leadList: data as LeadRecord[] });
+        break;
+    }
+  };
+
+  const renderCurrentStep = () => {
+    const step = steps[currentStep - 1];
+    const Component = step.component;
+    
+    if (!Component) {
+      return (
+        <Card>
+          <CardContent className="text-center py-12">
+            <step.icon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-2">{step.title}</h3>
+            <p className="text-gray-600 mb-6">{step.description}</p>
+            <p className="text-sm text-gray-500">This step will be implemented in the next update.</p>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return (
+      <Component 
+        data={getCurrentStepData()}
+        onUpdate={handleStepDataUpdate}
+      />
+    );
   };
 
   return (
@@ -109,94 +193,49 @@ const CallynOutreachSystem = () => {
             <div>
               <div className="flex justify-between text-sm text-blue-700 mb-2">
                 <span>Setup Progress</span>
-                <span>{completedSteps.length} of {outreachSteps.length} completed</span>
+                <span>{currentStep - 1} of {steps.length} completed</span>
               </div>
               <Progress value={progressPercentage} className="h-2" />
             </div>
-            {progressPercentage === 100 && (
-              <div className="flex items-center gap-2 text-green-700">
-                <CheckCircle className="h-4 w-4" />
-                <span className="text-sm font-medium">Ready to launch your outreach campaign!</span>
-              </div>
-            )}
           </div>
         </CardContent>
       </Card>
 
-      {/* Setup Steps */}
+      {/* Step Progress Indicator */}
       <Card>
-        <CardHeader>
-          <CardTitle>Setup Steps</CardTitle>
-          <CardDescription>
-            Follow these steps to configure your outreach campaign
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {outreachSteps.map((step, index) => {
-              const status = getStepStatus(step.id);
-              const isCompleted = status === "completed";
-              const isCurrent = status === "current";
+        <CardContent className="pt-6">
+          <div className="flex justify-between items-center mb-6">
+            {steps.map((step, index) => {
+              const isCompleted = currentStep > step.id;
+              const isCurrent = currentStep === step.id;
               
               return (
-                <div key={step.id} className="relative">
-                  {index < outreachSteps.length - 1 && (
-                    <div className={`absolute left-6 top-12 w-0.5 h-8 ${
+                <div key={step.id} className="flex flex-col items-center">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    isCompleted 
+                      ? 'bg-green-100 text-green-600' 
+                      : isCurrent 
+                        ? 'bg-blue-100 text-blue-600' 
+                        : 'bg-gray-100 text-gray-400'
+                  }`}>
+                    {isCompleted ? (
+                      <CheckCircle className="h-5 w-5" />
+                    ) : (
+                      <step.icon className="h-5 w-5" />
+                    )}
+                  </div>
+                  <div className="mt-2 text-center">
+                    <div className={`text-sm font-medium ${
+                      isCurrent ? 'text-blue-900' : isCompleted ? 'text-green-900' : 'text-gray-500'
+                    }`}>
+                      {step.title}
+                    </div>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div className={`hidden md:block absolute h-0.5 w-16 mt-5 ml-16 ${
                       isCompleted ? 'bg-green-200' : 'bg-gray-200'
                     }`} />
                   )}
-                  
-                  <div className={`flex items-center gap-4 p-4 rounded-lg border transition-colors ${
-                    isCurrent 
-                      ? 'bg-blue-50 border-blue-200' 
-                      : isCompleted 
-                        ? 'bg-green-50 border-green-200' 
-                        : 'bg-gray-50 border-gray-200 hover:bg-gray-100'
-                  }`}>
-                    <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                      isCompleted 
-                        ? 'bg-green-100' 
-                        : isCurrent 
-                          ? 'bg-blue-100' 
-                          : 'bg-gray-100'
-                    }`}>
-                      {isCompleted ? (
-                        <CheckCircle className="h-6 w-6 text-green-600" />
-                      ) : (
-                        <step.icon className={`h-6 w-6 ${
-                          isCurrent ? 'text-blue-600' : 'text-gray-600'
-                        }`} />
-                      )}
-                    </div>
-                    
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className={`font-medium ${
-                          isCurrent ? 'text-blue-900' : isCompleted ? 'text-green-900' : 'text-gray-900'
-                        }`}>
-                          {step.title}
-                        </h3>
-                        <Badge variant={isCompleted ? "default" : "secondary"} className="text-xs">
-                          {step.estimatedTime}
-                        </Badge>
-                      </div>
-                      <p className={`text-sm ${
-                        isCurrent ? 'text-blue-700' : isCompleted ? 'text-green-700' : 'text-gray-600'
-                      }`}>
-                        {step.description}
-                      </p>
-                    </div>
-                    
-                    <Button
-                      variant={isCurrent ? "default" : isCompleted ? "outline" : "secondary"}
-                      size="sm"
-                      onClick={() => handleStepClick(step.id)}
-                      className="ml-4"
-                    >
-                      {isCompleted ? "Edit" : isCurrent ? "Start" : "Configure"}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </div>
                 </div>
               );
             })}
@@ -204,38 +243,23 @@ const CallynOutreachSystem = () => {
         </CardContent>
       </Card>
 
+      {/* Current Step Content */}
+      <div className="space-y-6">
+        {renderCurrentStep()}
+        
+        <StepNavigation
+          currentStep={currentStep}
+          totalSteps={steps.length}
+          onPrevious={handlePrevious}
+          onNext={handleNext}
+          onComplete={handleLaunchCampaign}
+          canProceed={canProceedFromStep(currentStep)}
+          isLastStep={currentStep === steps.length}
+        />
+      </div>
+
       {/* Integrations Panel */}
       <OutreachIntegrations />
-
-      {/* Launch Section */}
-      {progressPercentage === 100 && (
-        <Card className="bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
-          <CardHeader>
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <Rocket className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <CardTitle className="text-green-900">Ready to Launch</CardTitle>
-                <CardDescription className="text-green-700">
-                  Your outreach system is configured and ready to go live
-                </CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="flex gap-3">
-              <Button className="bg-green-600 hover:bg-green-700">
-                <Rocket className="mr-2 h-4 w-4" />
-                Launch Campaign
-              </Button>
-              <Button variant="outline">
-                Schedule Launch
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 };

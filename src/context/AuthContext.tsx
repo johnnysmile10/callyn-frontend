@@ -1,6 +1,6 @@
-
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { ScenarioProps } from '@/components/onboarding/types';
+import { OutreachData } from '@/components/dashboard/outreach/types';
 
 interface User {
   id?: string;
@@ -64,6 +64,7 @@ interface AuthContextType {
   user: User | null;
   onboardingData: OnboardingData | null;
   userAgent: UserAgent | null;
+  outreachData: OutreachData | null;
   setupCompleted: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -71,6 +72,7 @@ interface AuthContextType {
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
   setOnboardingData: (data: OnboardingData) => void;
+  setOutreachData: (data: OutreachData) => void;
   createUserAgent: (onboardingData: OnboardingData) => Promise<UserAgent>;
   hasCompletedSetup: () => boolean;
   markSetupCompleted: () => void;
@@ -82,21 +84,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [onboardingData, setOnboardingData] = useState<OnboardingData | null>(null);
   const [userAgent, setUserAgent] = useState<UserAgent | null>(null);
+  const [outreachData, setOutreachData] = useState<OutreachData | null>(null);
   const [setupCompleted, setSetupCompleted] = useState(false);
 
   const isAuthenticated = !!user;
 
   const login = async (email: string, password: string) => {
-    // In a real app, you would validate credentials against a backend
-    // For demo purposes, simulate successful login
     setUser({ email });
-    // Store user info in localStorage for persistence
     localStorage.setItem('user', JSON.stringify({ email }));
   };
 
   const googleLogin = async () => {
-    // In a real app, you would implement Google OAuth
-    // For demo purposes, simulate successful login with a Google account
     const mockGoogleUser = { 
       email: 'demo@gmail.com', 
       name: 'Demo User',
@@ -107,8 +105,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const signup = async (email: string, password: string, name: string) => {
-    // In a real app, you would create a new user in your backend
-    // For demo purposes, simulate successful signup
     const newUser = { 
       email, 
       name,
@@ -122,15 +118,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUser(null);
     setUserAgent(null);
     setOnboardingData(null);
+    setOutreachData(null);
     setSetupCompleted(false);
     localStorage.removeItem('user');
     localStorage.removeItem('user_agent');
     localStorage.removeItem('onboarding_data');
+    localStorage.removeItem('outreach_data');
     localStorage.removeItem('setup_completed');
   };
 
   const createUserAgent = async (data: OnboardingData): Promise<UserAgent> => {
-    // Simulate agent creation process
     const newAgent: UserAgent = {
       id: `agent_${Date.now()}`,
       name: data.businessName || 'My AI Agent',
@@ -149,12 +146,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     };
 
-    // Store agent data
     setUserAgent(newAgent);
     localStorage.setItem('user_agent', JSON.stringify(newAgent));
-    
-    // Mark setup as completed
-    markSetupCompleted();
+    setSetupCompleted(true);
+    localStorage.setItem('setup_completed', 'true');
     
     console.log('Agent created successfully:', newAgent);
     return newAgent;
@@ -169,11 +164,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.setItem('setup_completed', 'true');
   };
 
-  // Check for existing session and data on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedAgent = localStorage.getItem('user_agent');
     const storedOnboardingData = localStorage.getItem('onboarding_data');
+    const storedOutreachData = localStorage.getItem('outreach_data');
     const storedSetupCompleted = localStorage.getItem('setup_completed');
 
     if (storedUser) {
@@ -203,15 +198,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     }
 
+    if (storedOutreachData) {
+      try {
+        setOutreachData(JSON.parse(storedOutreachData));
+      } catch (error) {
+        console.error('Error parsing stored outreach data:', error);
+        localStorage.removeItem('outreach_data');
+      }
+    }
+
     if (storedSetupCompleted === 'true') {
       setSetupCompleted(true);
     }
   }, []);
 
-  // Enhanced setOnboardingData to also persist to localStorage
   const handleSetOnboardingData = (data: OnboardingData) => {
     setOnboardingData(data);
     localStorage.setItem('onboarding_data', JSON.stringify(data));
+  };
+
+  const handleSetOutreachData = (data: OutreachData) => {
+    setOutreachData(data);
+    localStorage.setItem('outreach_data', JSON.stringify(data));
   };
 
   return (
@@ -220,6 +228,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         user,
         onboardingData,
         userAgent,
+        outreachData,
         setupCompleted,
         isAuthenticated,
         login,
@@ -227,6 +236,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         signup,
         logout,
         setOnboardingData: handleSetOnboardingData,
+        setOutreachData: handleSetOutreachData,
         createUserAgent,
         hasCompletedSetup,
         markSetupCompleted,
