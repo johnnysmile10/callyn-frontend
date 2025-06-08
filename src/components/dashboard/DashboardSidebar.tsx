@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -45,11 +46,6 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Overview",
       icon: LayoutDashboard,
       id: "overview",
-    },
-    {
-      name: "Call Log",
-      icon: PhoneCall,
-      id: "call-log",
     }
   ];
 
@@ -71,6 +67,11 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Lead Lists",
       icon: Users,
       id: "lead-lists",
+    },
+    {
+      name: "Call Log",
+      icon: PhoneCall,
+      id: "call-log",
     },
     {
       name: "Campaigns",
