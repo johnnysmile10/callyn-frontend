@@ -11,6 +11,7 @@ import CallControlBar from "@/components/dashboard/CallControlBar";
 import CallLogView from "@/components/dashboard/CallLogView";
 import YourAgentSection from "@/components/dashboard/agent/YourAgentSection";
 import SettingsIntegrationsSection from "@/components/dashboard/settings/SettingsIntegrationsSection";
+import CallCenterDashboard from "@/components/dashboard/callcenter/CallCenterDashboard";
 import { useAuth } from "@/context/AuthContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -80,6 +81,10 @@ const Dashboard = () => {
       // Outreach System (replaces actions)
       case "outreach-system":
         return <CallynOutreachSystem />;
+
+      // Call Center Dashboard
+      case "call-center":
+        return <CallCenterDashboard />;
       
       // Campaign Manager sections  
       case "lead-lists":

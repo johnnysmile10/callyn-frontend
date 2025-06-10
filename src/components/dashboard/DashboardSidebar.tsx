@@ -10,7 +10,8 @@ import {
   Calendar,
   Eye,
   PhoneCall,
-  Settings
+  Settings,
+  Phone
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -79,6 +80,11 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Call Log",
       icon: PhoneCall,
       id: "call-log",
+    },
+    {
+      name: "Call Center",
+      icon: Phone,
+      id: "call-center",
     },
     {
       name: "Campaigns",

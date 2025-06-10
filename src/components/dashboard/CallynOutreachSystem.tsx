@@ -4,14 +4,15 @@ import {
   Target, 
   Users, 
   MessageSquare, 
+  Phone,
   Calendar, 
-  Phone, 
   Rocket
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Step1TargetAudience from "./outreach/steps/Step1TargetAudience";
 import Step2LeadList from "./outreach/steps/Step2LeadList";
 import Step3ScriptLanguage from "./outreach/steps/Step3ScriptLanguage";
+import Step4CallCenter from "./outreach/steps/Step4CallCenter";
 import StepNavigation from "./outreach/steps/StepNavigation";
 import OutreachHeader from "./outreach/OutreachHeader";
 import StepProgressIndicator from "./outreach/StepProgressIndicator";
@@ -47,16 +48,16 @@ const CallynOutreachSystem = () => {
     },
     {
       id: 4,
-      title: "Set Call Scheduling",
-      description: "Configure availability and booking",
-      icon: Calendar,
-      component: null
+      title: "Setup Call Center",
+      description: "Configure your AI calling operations",
+      icon: Phone,
+      component: Step4CallCenter
     },
     {
       id: 5,
-      title: "Test Your Setup",
-      description: "Run test calls for optimization",
-      icon: Phone,
+      title: "Set Call Scheduling",
+      description: "Configure availability and booking",
+      icon: Calendar,
       component: null
     },
     {
