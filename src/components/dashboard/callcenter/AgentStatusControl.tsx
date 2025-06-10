@@ -1,11 +1,10 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { 
   Play, 
   Pause, 
-  Stop, 
+  Square, 
   Phone, 
   Activity
 } from "lucide-react";
@@ -104,7 +103,7 @@ const AgentStatusControl = ({ status, onStatusChange }: AgentStatusControlProps)
               className="flex items-center gap-1"
               size="sm"
             >
-              <Stop className="h-3 w-3" />
+              <Square className="h-3 w-3" />
               Stop
             </Button>
             <Button
