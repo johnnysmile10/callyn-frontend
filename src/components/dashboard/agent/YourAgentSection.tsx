@@ -29,7 +29,7 @@ const YourAgentSection = () => {
   const [isAgentLive, setIsAgentLive] = useState(false);
   const [showLanguageConfig, setShowLanguageConfig] = useState(false);
   const [languageConfig, setLanguageConfig] = useState<LanguageConfig>({
-    primaryLanguage: onboardingData?.selectedLanguage || 'en',
+    primaryLanguage: onboardingData?.languageConfig?.primaryLanguage || onboardingData?.selectedVoice ? 'en' : 'en',
     secondaryLanguages: [],
     tone: 'professional',
     formality: 'balanced',
@@ -69,7 +69,7 @@ const YourAgentSection = () => {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Your AI Agent</h1>
           <p className="text-gray-600 mt-1">
-            {onboardingData?.businessName || userAgent?.businessName || "Your Business"}'s AI Sales Representative
+            {onboardingData?.businessName || userAgent?.configuration?.businessInfo?.name || "Your Business"}'s AI Sales Representative
           </p>
         </div>
         <div className="flex items-center gap-4">
