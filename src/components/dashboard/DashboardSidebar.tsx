@@ -66,13 +66,7 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Outreach System",
       icon: Target,
       id: "outreach-system",
-    },
-    // Add Settings & Integrations if user has agent or onboarding data
-    ...(userAgent || onboardingData ? [{
-      name: "Settings & Integrations",
-      icon: Settings,
-      id: "settings-integrations",
-    }] : [])
+    }
   ];
 
   const campaignManagerItems = [
@@ -96,6 +90,15 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       icon: BarChart,
       id: "analytics",
     }
+  ];
+
+  const settingsItems = [
+    // Only show Settings & Integrations if user has agent or onboarding data
+    ...(userAgent || onboardingData ? [{
+      name: "Settings & Integrations",
+      icon: Settings,
+      id: "settings-integrations",
+    }] : [])
   ];
   
   return (
@@ -178,6 +181,28 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Settings Section at the bottom */}
+        {settingsItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {settingsItems.map((item) => (
+                  <SidebarMenuItem key={item.name}>
+                    <SidebarMenuButton 
+                      onClick={() => setActiveTab(item.id)}
+                      isActive={activeTab === item.id}
+                      tooltip={item.name}
+                    >
+                      <item.icon className="h-4 w-4" />
+                      <span>{item.name}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
