@@ -67,6 +67,11 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Outreach System",
       icon: Target,
       id: "outreach-system",
+    },
+    {
+      name: "Call Center",
+      icon: Phone,
+      id: "call-center",
     }
   ];
 
@@ -80,11 +85,6 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Call Log",
       icon: PhoneCall,
       id: "call-log",
-    },
-    {
-      name: "Call Center",
-      icon: Phone,
-      id: "call-center",
     },
     {
       name: "Campaigns",

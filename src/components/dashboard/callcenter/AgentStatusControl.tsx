@@ -2,14 +2,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { 
   Play, 
   Pause, 
-  Square, 
+  Stop, 
   Phone, 
-  Clock,
   Activity
 } from "lucide-react";
 
@@ -27,12 +24,20 @@ interface AgentStatusControlProps {
 }
 
 const AgentStatusControl = ({ status, onStatusChange }: AgentStatusControlProps) => {
-  const handleModeChange = (mode: 'auto' | 'manual' | 'paused') => {
-    onStatusChange({ mode, isActive: mode !== 'paused' });
+  const handleStart = () => {
+    onStatusChange({ isActive: true, mode: 'auto' });
   };
 
-  const toggleActive = () => {
-    onStatusChange({ isActive: !status.isActive });
+  const handlePause = () => {
+    onStatusChange({ mode: 'paused' });
+  };
+
+  const handleStop = () => {
+    onStatusChange({ isActive: false, mode: 'paused' });
+  };
+
+  const handleManual = () => {
+    onStatusChange({ isActive: true, mode: 'manual' });
   };
 
   const getStatusColor = () => {
@@ -46,7 +51,7 @@ const AgentStatusControl = ({ status, onStatusChange }: AgentStatusControlProps)
     if (!status.isActive) return "Offline";
     if (status.currentCall) return "On Call";
     if (status.mode === 'paused') return "Paused";
-    return "Ready";
+    return status.mode === 'manual' ? "Manual Mode" : "Auto Mode";
   };
 
   return (
@@ -73,39 +78,43 @@ const AgentStatusControl = ({ status, onStatusChange }: AgentStatusControlProps)
             </Badge>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <Switch 
-              checked={status.isActive}
-              onCheckedChange={toggleActive}
-              id="agent-active"
-            />
-            <Label htmlFor="agent-active">Enable Agent</Label>
-          </div>
-
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-4 gap-2">
             <Button
-              variant={status.mode === 'auto' ? "default" : "outline"}
-              onClick={() => handleModeChange('auto')}
-              className="flex items-center gap-2"
+              variant={status.isActive && status.mode === 'auto' ? "default" : "outline"}
+              onClick={handleStart}
+              className="flex items-center gap-1"
+              size="sm"
             >
-              <Play className="h-4 w-4" />
-              Auto
-            </Button>
-            <Button
-              variant={status.mode === 'manual' ? "default" : "outline"}
-              onClick={() => handleModeChange('manual')}
-              className="flex items-center gap-2"
-            >
-              <Phone className="h-4 w-4" />
-              Manual
+              <Play className="h-3 w-3" />
+              Start
             </Button>
             <Button
               variant={status.mode === 'paused' ? "default" : "outline"}
-              onClick={() => handleModeChange('paused')}
-              className="flex items-center gap-2"
+              onClick={handlePause}
+              className="flex items-center gap-1"
+              size="sm"
+              disabled={!status.isActive}
             >
-              <Pause className="h-4 w-4" />
+              <Pause className="h-3 w-3" />
               Pause
+            </Button>
+            <Button
+              variant={!status.isActive ? "destructive" : "outline"}
+              onClick={handleStop}
+              className="flex items-center gap-1"
+              size="sm"
+            >
+              <Stop className="h-3 w-3" />
+              Stop
+            </Button>
+            <Button
+              variant={status.isActive && status.mode === 'manual' ? "default" : "outline"}
+              onClick={handleManual}
+              className="flex items-center gap-1"
+              size="sm"
+            >
+              <Phone className="h-3 w-3" />
+              Manual
             </Button>
           </div>
         </CardContent>
