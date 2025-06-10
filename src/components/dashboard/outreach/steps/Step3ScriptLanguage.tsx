@@ -36,18 +36,18 @@ const Step3ScriptLanguage = ({ data, onUpdate }: Step3ScriptLanguageProps) => {
 
   const generateSampleScript = () => {
     const currentLanguage = data.languageConfig?.primaryLanguage || 'en';
-    const tone = data.languageConfig?.tone || 'professional';
+    const formality = data.languageConfig?.formality || 'balanced';
     
     let greeting = "Hello! This is [Your Name] from [Company]. How are you today?";
     let pitch = "I'm reaching out because I noticed your company could benefit from our solution that helps businesses increase their efficiency by 30%.";
     
     if (currentLanguage === 'es') {
-      greeting = tone === 'formal' 
+      greeting = formality === 'formal' 
         ? "Buenos días. Mi nombre es [Su Nombre] de [Empresa]. ¿Cómo se encuentra usted hoy?"
         : "¡Hola! Soy [Su Nombre] de [Empresa]. ¿Cómo está?";
       pitch = "Me comunico con usted porque noté que su empresa podría beneficiarse de nuestra solución que ayuda a las empresas a aumentar su eficiencia en un 30%.";
     } else if (currentLanguage === 'fr') {
-      greeting = tone === 'formal'
+      greeting = formality === 'formal'
         ? "Bonjour. Je suis [Votre Nom] de [Entreprise]. Comment allez-vous aujourd'hui?"
         : "Salut! Je suis [Votre Nom] de [Entreprise]. Comment ça va?";
       pitch = "Je vous contacte parce que j'ai remarqué que votre entreprise pourrait bénéficier de notre solution qui aide les entreprises à augmenter leur efficacité de 30%.";

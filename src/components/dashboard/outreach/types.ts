@@ -4,15 +4,19 @@ export interface TargetAudience {
   companySize: string[];
   jobTitles: string[];
   location: string[];
+  customCriteria?: string;
 }
 
 export interface LeadRecord {
   id: string;
   name: string;
-  company: string;
-  email: string;
+  company?: string;
+  email?: string;
   phone: string;
   status: 'new' | 'contacted' | 'interested' | 'not_interested';
+  source?: string;
+  tags?: string[];
+  createdAt?: string;
 }
 
 export interface LanguageConfig {
