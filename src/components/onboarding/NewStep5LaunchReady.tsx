@@ -43,7 +43,8 @@ const NewStep5LaunchReady = ({ onboardingData }: NewStep5LaunchReadyProps) => {
       await new Promise(resolve => setTimeout(resolve, 500));
       
       setIsLaunching(false);
-      navigate("/dashboard");
+      // Redirect to "Your Agent" section instead of dashboard overview
+      navigate("/dashboard", { state: { activeTab: "your-agent" } });
     } catch (error) {
       console.error('Error creating agent:', error);
       setIsLaunching(false);

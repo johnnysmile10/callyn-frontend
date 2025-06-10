@@ -1,6 +1,5 @@
-
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
@@ -9,6 +8,7 @@ import DashboardActions from "@/components/dashboard/DashboardActions";
 import DashboardCampaignManager from "@/components/dashboard/DashboardCampaignManager";
 import CallControlBar from "@/components/dashboard/CallControlBar";
 import CallLogView from "@/components/dashboard/CallLogView";
+import YourAgentSection from "@/components/dashboard/agent/YourAgentSection";
 import { useAuth } from "@/context/AuthContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -16,10 +16,21 @@ import { Rocket, ArrowRight } from "lucide-react";
 import CallynOutreachSystem from "@/components/dashboard/CallynOutreachSystem";
 
 const Dashboard = () => {
-  const { isAuthenticated, userAgent, hasCompletedSetup } = useAuth();
+  const { isAuthenticated, userAgent, hasCompletedSetup, onboardingData } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState<string>(() => {
-    // Default to agent-setup if no agent exists, otherwise overview
+    // Check if there's a specific tab requested via navigation state
+    const requestedTab = location.state?.activeTab;
+    if (requestedTab) {
+      return requestedTab;
+    }
+    
+    // If user has completed onboarding but no agent exists, show your-agent
+    // If user has an agent, default to your-agent instead of overview
+    if (onboardingData || userAgent) {
+      return "your-agent";
+    }
     return userAgent ? "overview" : "agent-setup";
   });
   const [campaignActive, setCampaignActive] = useState(false);
@@ -35,7 +46,12 @@ const Dashboard = () => {
     if (!userAgent && activeTab === "overview") {
       setActiveTab("agent-setup");
     }
-  }, [isAuthenticated, userAgent, navigate, activeTab]);
+
+    // Handle navigation state for tab switching
+    if (location.state?.activeTab && location.state.activeTab !== activeTab) {
+      setActiveTab(location.state.activeTab);
+    }
+  }, [isAuthenticated, userAgent, navigate, activeTab, location.state]);
 
   if (!isAuthenticated) return null;
 
@@ -46,6 +62,10 @@ const Dashboard = () => {
       
       case "call-log":
         return <CallLogView />;
+      
+      // Your Agent section (new)
+      case "your-agent":
+        return <YourAgentSection />;
       
       // Agent Builder sections
       case "agent-setup":

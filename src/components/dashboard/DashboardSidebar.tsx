@@ -33,7 +33,7 @@ interface DashboardSidebarProps {
 }
 
 const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) => {
-  const { user, logout, userAgent } = useAuth();
+  const { user, logout, userAgent, onboardingData } = useAuth();
   const navigate = useNavigate();
   
   const handleLogout = () => {
@@ -50,9 +50,15 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
   ];
 
   const agentBuilderItems = [
+    // Show "Your Agent" if user has completed onboarding or has an agent
+    ...(userAgent || onboardingData ? [{
+      name: "Your Agent",
+      icon: Eye,
+      id: "your-agent",
+    }] : []),
     {
       name: userAgent ? "Agent Overview" : "Create Agent",
-      icon: userAgent ? Eye : Bot,
+      icon: userAgent ? Bot : Bot,
       id: "agent-setup",
     },
     {
