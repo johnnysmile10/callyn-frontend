@@ -3,27 +3,25 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Zap, Clock, Shield, CheckCircle, ArrowRight, Play } from "lucide-react";
+import { Zap, Clock, Shield, CheckCircle, ArrowRight, Play, Rocket, Target, Bot } from "lucide-react";
 
 interface NewStep1WelcomeProps {
   handleNext: () => void;
 }
 
 const NewStep1Welcome = ({ handleNext }: NewStep1WelcomeProps) => {
-  const [selectedTimeframe, setSelectedTimeframe] = useState<string>("");
-
-  const timeframes = [
-    { id: "asap", label: "ASAP - I need this working today!", icon: Zap },
-    { id: "week", label: "Within a week", icon: Clock },
-    { id: "month", label: "Within a month", icon: Shield }
-  ];
-
   const features = [
     "✅ No coding required - just point & click",
     "✅ Your agent learns from your existing sales materials",
     "✅ Sounds exactly like a human sales rep",
     "✅ Handles objections & books meetings automatically",
     "✅ Works 24/7 while you sleep"
+  ];
+
+  const ctaPoints = [
+    { icon: Rocket, text: "Get your AI agent live in 3 minutes" },
+    { icon: Target, text: "Start closing deals while you sleep" },
+    { icon: Bot, text: "No technical skills required" }
   ];
 
   return (
@@ -56,42 +54,29 @@ const NewStep1Welcome = ({ handleNext }: NewStep1WelcomeProps) => {
             </div>
           </div>
 
-          {/* Timeline Selection */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">
-              When do you need your AI agent ready?
+          {/* Direct CTA Section */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">
+              Ready to Transform Your Sales Process?
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {timeframes.map((timeframe) => {
-                const Icon = timeframe.icon;
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              {ctaPoints.map((point, index) => {
+                const Icon = point.icon;
                 return (
-                  <button
-                    key={timeframe.id}
-                    onClick={() => setSelectedTimeframe(timeframe.id)}
-                    className={`p-4 rounded-lg border-2 transition-all text-left ${
-                      selectedTimeframe === timeframe.id
-                        ? "border-blue-500 bg-blue-50 ring-2 ring-blue-200"
-                        : "border-gray-200 hover:border-gray-300"
-                    }`}
-                  >
-                    <div className="flex items-center gap-3">
-                      <Icon className={`h-5 w-5 ${
-                        selectedTimeframe === timeframe.id ? "text-blue-600" : "text-gray-600"
-                      }`} />
-                      <span className={`font-medium ${
-                        selectedTimeframe === timeframe.id ? "text-blue-900" : "text-gray-900"
-                      }`}>
-                        {timeframe.label}
-                      </span>
-                    </div>
-                    {timeframe.id === "asap" && (
-                      <Badge className="mt-2 bg-orange-100 text-orange-700 border-orange-200">
-                        Most Popular
-                      </Badge>
-                    )}
-                  </button>
+                  <div key={index} className="flex items-center gap-3 text-center md:text-left">
+                    <Icon className="h-6 w-6 text-blue-600 flex-shrink-0" />
+                    <span className="font-medium text-gray-900">{point.text}</span>
+                  </div>
                 );
               })}
+            </div>
+            <div className="text-center">
+              <p className="text-lg text-gray-700 mb-4">
+                Join thousands of businesses already using AI to close more deals
+              </p>
+              <Badge className="bg-orange-100 text-orange-700 border-orange-200">
+                Most Popular Choice
+              </Badge>
             </div>
           </div>
 
@@ -119,9 +104,8 @@ const NewStep1Welcome = ({ handleNext }: NewStep1WelcomeProps) => {
               onClick={handleNext}
               size="lg"
               className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold"
-              disabled={!selectedTimeframe}
             >
-              {selectedTimeframe === "asap" ? "Let's Build This Now!" : "Start Building My Agent"}
+              Start Now
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <p className="text-sm text-gray-500 mt-3">
