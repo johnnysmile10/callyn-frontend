@@ -11,6 +11,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import EnhancedLanguageSelector from "../language/EnhancedLanguageSelector";
 import LanguagePreviewSystem from "../language/LanguagePreviewSystem";
+import { LanguageConfig } from "../outreach/types";
 
 const VoiceLanguageTab = () => {
   const { userAgent, onboardingData, setOnboardingData } = useAuth();
@@ -23,7 +24,16 @@ const VoiceLanguageTab = () => {
   const currentEnthusiasm = onboardingData?.enthusiasm || 5;
 
   const [selectedVoice, setSelectedVoice] = useState(currentVoice);
-  const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage);
+  const [languageConfig, setLanguageConfig] = useState<LanguageConfig>({
+    primaryLanguage: currentLanguage,
+    secondaryLanguages: onboardingData?.languageConfig?.secondaryLanguages || [],
+    voiceId: onboardingData?.languageConfig?.voiceId || "9BWtsMINqrJLrRacOk9x",
+    model: onboardingData?.languageConfig?.model || "eleven_multilingual_v2",
+    tone: onboardingData?.languageConfig?.tone || "professional",
+    formality: onboardingData?.languageConfig?.formality || "balanced",
+    culturalAdaptation: onboardingData?.languageConfig?.culturalAdaptation || false,
+    localExpressions: onboardingData?.languageConfig?.localExpressions || false
+  });
   const [speakingSpeed, setSpeakingSpeed] = useState([currentSpeed]);
   const [enthusiasm, setEnthusiasm] = useState([currentEnthusiasm]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -47,16 +57,17 @@ const VoiceLanguageTab = () => {
     });
   };
 
+  const handleLanguageConfigChange = (newConfig: LanguageConfig) => {
+    setLanguageConfig(newConfig);
+  };
+
   const handleSaveSettings = () => {
     const updatedData = {
       ...onboardingData,
       selectedVoice,
       speakingSpeed: speakingSpeed[0],
       enthusiasm: enthusiasm[0],
-      languageConfig: {
-        ...onboardingData?.languageConfig,
-        primaryLanguage: selectedLanguage
-      }
+      languageConfig
     };
 
     setOnboardingData(updatedData);
@@ -70,29 +81,22 @@ const VoiceLanguageTab = () => {
   return (
     <div className="space-y-6">
       {/* Language Selection */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Globe className="h-5 w-5 text-blue-600" />
-            Language Settings
-          </CardTitle>
-          <CardDescription>
-            Configure the primary language for your AI agent
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <EnhancedLanguageSelector
-            selectedLanguage={selectedLanguage}
-            onLanguageChange={setSelectedLanguage}
-          />
-          <LanguagePreviewSystem
-            selectedLanguage={selectedLanguage}
-            selectedVoice={selectedVoice}
-            onLanguageChange={setSelectedLanguage}
-            onVoiceChange={setSelectedVoice}
-          />
-        </CardContent>
-      </Card>
+      <EnhancedLanguageSelector
+        config={languageConfig}
+        onConfigChange={handleLanguageConfigChange}
+        showVoiceSelection={true}
+      />
+
+      <LanguagePreviewSystem
+        selectedLanguage={languageConfig.primaryLanguage}
+        selectedVoice={languageConfig.voiceId}
+        onLanguageChange={(language) => 
+          setLanguageConfig(prev => ({ ...prev, primaryLanguage: language }))
+        }
+        onVoiceChange={(voiceId) => 
+          setLanguageConfig(prev => ({ ...prev, voiceId }))
+        }
+      />
 
       {/* Voice Selection */}
       <Card>
