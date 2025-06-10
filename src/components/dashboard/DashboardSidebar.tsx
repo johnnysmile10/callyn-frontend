@@ -9,7 +9,8 @@ import {
   Users,
   Calendar,
   Eye,
-  PhoneCall
+  PhoneCall,
+  Settings
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -65,7 +66,13 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Outreach System",
       icon: Target,
       id: "outreach-system",
-    }
+    },
+    // Add Settings & Integrations if user has agent or onboarding data
+    ...(userAgent || onboardingData ? [{
+      name: "Settings & Integrations",
+      icon: Settings,
+      id: "settings-integrations",
+    }] : [])
   ];
 
   const campaignManagerItems = [
