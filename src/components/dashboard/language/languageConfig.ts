@@ -123,35 +123,35 @@ export const SUPPORTED_LANGUAGES: SupportedLanguage[] = [
     defaultModel: 'eleven_multilingual_v2'
   },
   {
-    code: 'zh',
-    name: 'Chinese',
-    nativeName: '中文',
-    flag: '🇨🇳',
-    elevenlabsVoices: [
-      { id: '9BWtsMINqrJLrRacOk9x', name: 'Aria', gender: 'female' },
-      { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', gender: 'female' }
-    ],
-    defaultModel: 'eleven_multilingual_v2'
-  },
-  {
-    code: 'ja',
-    name: 'Japanese',
-    nativeName: '日本語',
-    flag: '🇯🇵',
-    elevenlabsVoices: [
-      { id: '9BWtsMINqrJLrRacOk9x', name: 'Aria', gender: 'female' },
-      { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', gender: 'female' }
-    ],
-    defaultModel: 'eleven_multilingual_v2'
-  },
-  {
-    code: 'ko',
-    name: 'Korean',
-    nativeName: '한국어',
-    flag: '🇰🇷',
+    code: 'da',
+    name: 'Danish',
+    nativeName: 'Dansk',
+    flag: '🇩🇰',
     elevenlabsVoices: [
       { id: '9BWtsMINqrJLrRacOk9x', name: 'Aria', gender: 'female' },
       { id: 'TX3LPaxmHKxFdv7VOQHJ', name: 'Liam', gender: 'male' }
+    ],
+    defaultModel: 'eleven_multilingual_v2'
+  },
+  {
+    code: 'no',
+    name: 'Norwegian',
+    nativeName: 'Norsk',
+    flag: '🇳🇴',
+    elevenlabsVoices: [
+      { id: '9BWtsMINqrJLrRacOk9x', name: 'Aria', gender: 'female' },
+      { id: 'CwhRBWXzGAHq8TQ4Fs17', name: 'Roger', gender: 'male' }
+    ],
+    defaultModel: 'eleven_multilingual_v2'
+  },
+  {
+    code: 'sv',
+    name: 'Swedish',
+    nativeName: 'Svenska',
+    flag: '🇸🇪',
+    elevenlabsVoices: [
+      { id: '9BWtsMINqrJLrRacOk9x', name: 'Aria', gender: 'female' },
+      { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', gender: 'female' }
     ],
     defaultModel: 'eleven_multilingual_v2'
   },

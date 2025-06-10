@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Play, Plus, X } from "lucide-react";
 import { AgentData } from "@/pages/CreateAgent";
+import { SUPPORTED_LANGUAGES } from "@/components/dashboard/language/languageConfig";
 
 interface Step3Props {
   data: AgentData;
@@ -19,19 +20,6 @@ const voices = [
   { id: "sarah", name: "Sarah", gender: "Female", accent: "Australian" },
   { id: "charlie", name: "Charlie", gender: "Male", accent: "American" },
   { id: "laura", name: "Laura", gender: "Female", accent: "Canadian" },
-];
-
-const languages = [
-  { code: "en", name: "English" },
-  { code: "es", name: "Spanish" },
-  { code: "fr", name: "French" },
-  { code: "de", name: "German" },
-  { code: "it", name: "Italian" },
-  { code: "pt", name: "Portuguese" },
-  { code: "zh", name: "Chinese" },
-  { code: "ja", name: "Japanese" },
-  { code: "ko", name: "Korean" },
-  { code: "ar", name: "Arabic" },
 ];
 
 const Step3VoiceLanguage = ({ data, updateData, onNext }: Step3Props) => {
@@ -63,7 +51,7 @@ const Step3VoiceLanguage = ({ data, updateData, onNext }: Step3Props) => {
   };
 
   const getLanguageName = (code: string) => {
-    return languages.find(lang => lang.code === code)?.name || code;
+    return SUPPORTED_LANGUAGES.find(lang => lang.code === code)?.name || code;
   };
 
   return (
@@ -113,9 +101,12 @@ const Step3VoiceLanguage = ({ data, updateData, onNext }: Step3Props) => {
                 <SelectValue placeholder="Select primary language" />
               </SelectTrigger>
               <SelectContent>
-                {languages.map((lang) => (
+                {SUPPORTED_LANGUAGES.map((lang) => (
                   <SelectItem key={lang.code} value={lang.code}>
-                    {lang.name}
+                    <div className="flex items-center gap-2">
+                      <span>{lang.flag}</span>
+                      <span>{lang.name}</span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -144,11 +135,14 @@ const Step3VoiceLanguage = ({ data, updateData, onNext }: Step3Props) => {
                 <SelectValue placeholder="Add another language" />
               </SelectTrigger>
               <SelectContent>
-                {languages
+                {SUPPORTED_LANGUAGES
                   .filter(lang => lang.code !== primaryLanguage && !additionalLanguages.includes(lang.code))
                   .map((lang) => (
                     <SelectItem key={lang.code} value={lang.code}>
-                      {lang.name}
+                      <div className="flex items-center gap-2">
+                        <span>{lang.flag}</span>
+                        <span>{lang.name}</span>
+                      </div>
                     </SelectItem>
                   ))}
               </SelectContent>
