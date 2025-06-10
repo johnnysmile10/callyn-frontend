@@ -26,6 +26,8 @@ export interface LanguageConfig {
   formality: 'formal' | 'informal' | 'balanced';
   culturalAdaptation: boolean;
   localExpressions: boolean;
+  voiceId?: string;
+  model?: string;
 }
 
 export interface ScriptConfig {

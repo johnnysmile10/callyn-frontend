@@ -7,7 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MessageSquare, Globe, FileText, TestTube } from "lucide-react";
 import { useState } from "react";
 import { ScriptConfig, LanguageConfig } from "../types";
-import LanguageSelector from "../../language/LanguageSelector";
+import EnhancedLanguageSelector from "../../language/EnhancedLanguageSelector";
+import { getLanguageByCode } from "../../language/languageConfig";
 
 interface Step3ScriptLanguageProps {
   data: ScriptConfig;
@@ -37,27 +38,49 @@ const Step3ScriptLanguage = ({ data, onUpdate }: Step3ScriptLanguageProps) => {
   const generateSampleScript = () => {
     const currentLanguage = data.languageConfig?.primaryLanguage || 'en';
     const formality = data.languageConfig?.formality || 'balanced';
+    const tone = data.languageConfig?.tone || 'professional';
+    
+    const language = getLanguageByCode(currentLanguage);
     
     let greeting = "Hello! This is [Your Name] from [Company]. How are you today?";
     let pitch = "I'm reaching out because I noticed your company could benefit from our solution that helps businesses increase their efficiency by 30%.";
+    let closing = "Would you be interested in a brief 15-minute demo next week?";
     
     if (currentLanguage === 'es') {
       greeting = formality === 'formal' 
         ? "Buenos días. Mi nombre es [Su Nombre] de [Empresa]. ¿Cómo se encuentra usted hoy?"
         : "¡Hola! Soy [Su Nombre] de [Empresa]. ¿Cómo está?";
       pitch = "Me comunico con usted porque noté que su empresa podría beneficiarse de nuestra solución que ayuda a las empresas a aumentar su eficiencia en un 30%.";
+      closing = "¿Le interesaría una demostración breve de 15 minutos la próxima semana?";
     } else if (currentLanguage === 'fr') {
       greeting = formality === 'formal'
         ? "Bonjour. Je suis [Votre Nom] de [Entreprise]. Comment allez-vous aujourd'hui?"
         : "Salut! Je suis [Votre Nom] de [Entreprise]. Comment ça va?";
       pitch = "Je vous contacte parce que j'ai remarqué que votre entreprise pourrait bénéficier de notre solution qui aide les entreprises à augmenter leur efficacité de 30%.";
+      closing = "Seriez-vous intéressé par une démonstration de 15 minutes la semaine prochaine?";
+    } else if (currentLanguage === 'de') {
+      greeting = formality === 'formal'
+        ? "Guten Tag. Ich bin [Ihr Name] von [Unternehmen]. Wie geht es Ihnen heute?"
+        : "Hallo! Ich bin [Ihr Name] von [Unternehmen]. Wie geht's?";
+      pitch = "Ich kontaktiere Sie, weil ich bemerkt habe, dass Ihr Unternehmen von unserer Lösung profitieren könnte, die Unternehmen dabei hilft, ihre Effizienz um 30% zu steigern.";
+      closing = "Wären Sie an einer kurzen 15-minütigen Demo nächste Woche interessiert?";
+    }
+
+    // Adjust tone
+    if (tone === 'casual') {
+      greeting = greeting.replace(/Good|Buenos|Bonjour|Guten/, match => 
+        currentLanguage === 'en' ? 'Hey' :
+        currentLanguage === 'es' ? 'Hola' :
+        currentLanguage === 'fr' ? 'Salut' : 
+        'Hi'
+      );
     }
 
     updateScript({
       greeting,
       mainPitch: pitch,
       objectionHandling: ["I understand your concern. Let me explain how this specifically helps your situation..."],
-      closingStatement: "Would you be interested in a brief 15-minute demo next week?"
+      closingStatement: closing
     });
   };
 
@@ -81,7 +104,7 @@ const Step3ScriptLanguage = ({ data, onUpdate }: Step3ScriptLanguageProps) => {
             </TabsTrigger>
             <TabsTrigger value="language" className="flex items-center gap-2">
               <Globe className="h-4 w-4" />
-              Language Config
+              Language & Voice
             </TabsTrigger>
             <TabsTrigger value="preview" className="flex items-center gap-2">
               <TestTube className="h-4 w-4" />
@@ -133,9 +156,10 @@ const Step3ScriptLanguage = ({ data, onUpdate }: Step3ScriptLanguageProps) => {
           </TabsContent>
 
           <TabsContent value="language" className="space-y-6">
-            <LanguageSelector
+            <EnhancedLanguageSelector
               config={data.languageConfig || defaultLanguageConfig}
               onConfigChange={updateLanguageConfig}
+              showVoiceSelection={true}
             />
           </TabsContent>
 
@@ -148,6 +172,20 @@ const Step3ScriptLanguage = ({ data, onUpdate }: Step3ScriptLanguageProps) => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                {data.languageConfig && (
+                  <div className="pb-4 border-b">
+                    <Label className="text-sm font-medium text-blue-700">Language Configuration:</Label>
+                    <div className="text-sm mt-1 space-y-1">
+                      <p>Primary: {getLanguageByCode(data.languageConfig.primaryLanguage)?.name} {getLanguageByCode(data.languageConfig.primaryLanguage)?.flag}</p>
+                      {data.languageConfig.secondaryLanguages.length > 0 && (
+                        <p>Secondary: {data.languageConfig.secondaryLanguages.map(code => getLanguageByCode(code)?.name).join(", ")}</p>
+                      )}
+                      <p>Tone: {data.languageConfig.tone} • Formality: {data.languageConfig.formality}</p>
+                      {data.languageConfig.voiceId && <p>Voice: {data.languageConfig.voiceId}</p>}
+                    </div>
+                  </div>
+                )}
+
                 {data.greeting && (
                   <div>
                     <Label className="text-sm font-medium text-green-700">Opening:</Label>
@@ -169,20 +207,9 @@ const Step3ScriptLanguage = ({ data, onUpdate }: Step3ScriptLanguageProps) => {
                   </div>
                 )}
 
-                {data.languageConfig && (
-                  <div className="pt-4 border-t">
-                    <Label className="text-sm font-medium text-gray-700">Language Settings:</Label>
-                    <div className="text-sm mt-1 space-y-1">
-                      <p>Primary: {data.languageConfig.primaryLanguage.toUpperCase()}</p>
-                      <p>Tone: {data.languageConfig.tone}</p>
-                      <p>Formality: {data.languageConfig.formality}</p>
-                    </div>
-                  </div>
-                )}
-
                 {(!data.greeting && !data.mainPitch) && (
                   <p className="text-muted-foreground text-center py-8">
-                    No script content to preview. Start by adding your greeting and main pitch.
+                    No script content to preview. Start by configuring your language settings and adding your greeting and main pitch.
                   </p>
                 )}
               </CardContent>
