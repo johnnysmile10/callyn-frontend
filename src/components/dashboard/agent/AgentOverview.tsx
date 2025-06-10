@@ -17,9 +17,22 @@ import {
   Users
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import LanguageConfigPanel from "./LanguageConfigPanel";
+import { LanguageConfig } from "../outreach/types";
 
 const AgentOverview = () => {
-  const { userAgent } = useAuth();
+  const { userAgent, onboardingData, setOnboardingData } = useAuth();
+
+  const handleLanguageConfigChange = (languageConfig: LanguageConfig) => {
+    // Store language config in onboarding data for now
+    // In a real app, this would be stored with the agent configuration
+    if (setOnboardingData && onboardingData) {
+      setOnboardingData({
+        ...onboardingData,
+        languageConfig
+      });
+    }
+  };
 
   if (!userAgent) {
     return (
@@ -145,6 +158,12 @@ const AgentOverview = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Language Configuration */}
+      <LanguageConfigPanel
+        config={onboardingData?.languageConfig}
+        onConfigChange={handleLanguageConfigChange}
+      />
 
       {/* Script Configuration */}
       <Card>

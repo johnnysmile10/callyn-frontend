@@ -1,6 +1,6 @@
 
 import { useAuth } from "@/context/AuthContext";
-import { OutreachData, TargetAudience, LeadRecord } from "../types";
+import { OutreachData, TargetAudience, LeadRecord, ScriptConfig } from "../types";
 
 export const useOutreachFlow = () => {
   const { outreachData, setOutreachData } = useAuth();
@@ -18,7 +18,7 @@ export const useOutreachFlow = () => {
       case 2:
         return !!(outreachData?.leadList?.length && outreachData.leadList.length > 0);
       case 3:
-        return !!(outreachData?.script?.greeting);
+        return !!(outreachData?.script?.greeting && outreachData?.script?.mainPitch);
       case 4:
         return !!(outreachData?.scheduling?.timezone);
       case 5:
@@ -30,7 +30,7 @@ export const useOutreachFlow = () => {
     }
   };
 
-  const getCurrentStepData = (currentStep: number): TargetAudience | LeadRecord[] => {
+  const getCurrentStepData = (currentStep: number): TargetAudience | LeadRecord[] | ScriptConfig => {
     switch (currentStep) {
       case 1:
         return outreachData?.targetAudience || {
@@ -41,6 +41,13 @@ export const useOutreachFlow = () => {
         };
       case 2:
         return outreachData?.leadList || [];
+      case 3:
+        return outreachData?.script || {
+          greeting: '',
+          mainPitch: '',
+          objectionHandling: [],
+          closingStatement: ''
+        };
       default:
         // Return a default TargetAudience for other steps
         return {
@@ -52,13 +59,16 @@ export const useOutreachFlow = () => {
     }
   };
 
-  const handleStepDataUpdate = (currentStep: number, data: TargetAudience | LeadRecord[]) => {
+  const handleStepDataUpdate = (currentStep: number, data: TargetAudience | LeadRecord[] | ScriptConfig) => {
     switch (currentStep) {
       case 1:
         updateOutreachData({ targetAudience: data as TargetAudience });
         break;
       case 2:
         updateOutreachData({ leadList: data as LeadRecord[] });
+        break;
+      case 3:
+        updateOutreachData({ script: data as ScriptConfig });
         break;
     }
   };

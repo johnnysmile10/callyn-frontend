@@ -11,6 +11,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import Step1TargetAudience from "./outreach/steps/Step1TargetAudience";
 import Step2LeadList from "./outreach/steps/Step2LeadList";
+import Step3ScriptLanguage from "./outreach/steps/Step3ScriptLanguage";
 import StepNavigation from "./outreach/steps/StepNavigation";
 import OutreachIntegrations from "./outreach/OutreachIntegrations";
 import OutreachHeader from "./outreach/OutreachHeader";
@@ -41,9 +42,9 @@ const CallynOutreachSystem = () => {
     {
       id: 3,
       title: "Craft Outreach Script",
-      description: "Design compelling conversation flows",
+      description: "Design compelling conversation flows with language support",
       icon: MessageSquare,
-      component: null
+      component: Step3ScriptLanguage
     },
     {
       id: 4,

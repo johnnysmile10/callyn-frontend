@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { ScenarioProps } from '@/components/onboarding/types';
-import { OutreachData } from '@/components/dashboard/outreach/types';
+import { OutreachData, LanguageConfig } from '@/components/dashboard/outreach/types';
 
 interface User {
   id?: string;
@@ -32,6 +32,9 @@ interface OnboardingData {
   enthusiasm?: number;
   useSmallTalk?: boolean;
   handleObjections?: boolean;
+  
+  // Language configuration
+  languageConfig?: LanguageConfig;
   
   // Legacy data for backward compatibility
   selectedScenario?: ScenarioProps | null;
@@ -254,3 +257,5 @@ export const useAuth = () => {
   }
   return context;
 };
+
+export default AuthProvider;
