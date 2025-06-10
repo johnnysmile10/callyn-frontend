@@ -13,7 +13,6 @@ import Step1TargetAudience from "./outreach/steps/Step1TargetAudience";
 import Step2LeadList from "./outreach/steps/Step2LeadList";
 import Step3ScriptLanguage from "./outreach/steps/Step3ScriptLanguage";
 import StepNavigation from "./outreach/steps/StepNavigation";
-import OutreachIntegrations from "./outreach/OutreachIntegrations";
 import OutreachHeader from "./outreach/OutreachHeader";
 import StepProgressIndicator from "./outreach/StepProgressIndicator";
 import StepRenderer from "./outreach/StepRenderer";
@@ -120,8 +119,6 @@ const CallynOutreachSystem = () => {
           isLastStep={currentStep === steps.length}
         />
       </div>
-
-      <OutreachIntegrations />
     </div>
   );
 };
