@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
-import DashboardAgentBuilder from "@/components/dashboard/DashboardAgentBuilder";
+import AgentConfigurationDashboard from "@/components/dashboard/AgentConfigurationDashboard";
 import DashboardActions from "@/components/dashboard/DashboardActions";
 import DashboardCampaignManager from "@/components/dashboard/DashboardCampaignManager";
 import CallControlBar from "@/components/dashboard/CallControlBar";
@@ -73,9 +73,9 @@ const Dashboard = () => {
       case "settings-integrations":
         return <SettingsIntegrationsSection />;
       
-      // Agent Builder sections
+      // Agent Configuration (replaces agent-setup)
       case "agent-setup":
-        return <DashboardAgentBuilder />;
+        return <AgentConfigurationDashboard />;
       
       // Outreach System (replaces actions)
       case "outreach-system":

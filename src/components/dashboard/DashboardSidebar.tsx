@@ -58,8 +58,8 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       id: "your-agent",
     }] : []),
     {
-      name: userAgent ? "Agent Overview" : "Create Agent",
-      icon: userAgent ? Bot : Bot,
+      name: userAgent ? "Agent Configuration" : "Create Agent",
+      icon: userAgent ? Settings : Bot,
       id: "agent-setup",
     },
     {
