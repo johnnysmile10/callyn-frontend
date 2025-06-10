@@ -46,10 +46,13 @@ const OperatingHoursScheduler = ({ hours, onHoursChange }: OperatingHoursSchedul
   ];
 
   const updateDaySchedule = (day: string, field: 'start' | 'end' | 'enabled', value: string | boolean) => {
+    const dayKey = day as keyof Omit<OperatingHours, 'timezone'>;
+    const currentDaySchedule = hours[dayKey] as TimeSlot;
+    
     onHoursChange({
       ...hours,
       [day]: {
-        ...hours[day as keyof OperatingHours],
+        ...currentDaySchedule,
         [field]: value
       }
     });
