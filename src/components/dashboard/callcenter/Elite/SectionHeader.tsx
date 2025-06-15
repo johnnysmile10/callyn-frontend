@@ -7,7 +7,7 @@ import React from "react";
 interface SectionHeaderProps {
   title: string;
   icon?: React.ReactNode;
-  subtext?: string;
+  subtext?: React.ReactNode;
   className?: string;
 }
 const SectionHeader = ({ title, icon, subtext, className = "" }: SectionHeaderProps) => (
@@ -19,3 +19,4 @@ const SectionHeader = ({ title, icon, subtext, className = "" }: SectionHeaderPr
 );
 
 export default SectionHeader;
+

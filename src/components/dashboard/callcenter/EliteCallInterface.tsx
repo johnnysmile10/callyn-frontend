@@ -12,7 +12,8 @@ import { toast } from "@/hooks/use-toast";
 import AIAssistantPanel from "./Elite/AIAssistantPanel";
 import CardSection from "./Elite/CardSection";
 import SectionHeader from "./Elite/SectionHeader";
-import { Bot, Waveform, Users, Clock, Headphones, Script } from "lucide-react";
+// REPLACE Waveform -> Activity, Script -> FileText (which actually exist)
+import { Bot, Activity, Users, Clock, Headphones, FileText } from "lucide-react";
 import React, { useRef, useEffect, useState } from "react";
 
 const DUMMY_LEAD = {
@@ -90,8 +91,9 @@ const EliteCallInterface = () => {
         <div className="col-span-8 mb-0">
           <CardSection className="flex flex-row items-center gap-4 !mb-6 px-6 py-4 border-blue-300 shadow-md bg-blue-50/80 sticky top-2 z-10">
             <SectionHeader
-              icon={<Waveform className={`h-5 w-5 ${isConnected ? "text-green-500 animate-pulse" : "text-gray-400"}`} />}
+              icon={<Activity className={`h-5 w-5 ${isConnected ? "text-green-500 animate-pulse" : "text-gray-400"}`} />}
               title={isConnected ? "Live Call In Progress" : "Waiting for Call…"}
+              // subtext should be React.ReactNode, see SectionHeader fix!
               subtext={isConnected && callDuration ? (
                 <span className="flex items-center gap-1 text-xs font-mono text-gray-700">
                   <Clock className="h-4 w-4 inline-block mr-1" /> {callDuration}
@@ -138,7 +140,7 @@ const EliteCallInterface = () => {
           <CardSection className="mt-0 pt-0">
             <SectionHeader
               title="Call Controls"
-              icon={<Waveform className="w-5 h-5 text-blue-500" />}
+              icon={<Activity className="w-5 h-5 text-blue-500" />}
             />
             <QuickActionsBar
               isConnected={isConnected}
@@ -152,7 +154,7 @@ const EliteCallInterface = () => {
 
           {/* Script/Instructions Group */}
           <CardSection className="mt-4 !mb-2">
-            <SectionHeader icon={<Script className="w-5 h-5 text-indigo-500" />} title="Script Breakdown" />
+            <SectionHeader icon={<FileText className="w-5 h-5 text-indigo-500" />} title="Script Breakdown" />
             <ScriptBreakdownView
               scriptSections={SCRIPT_STEPS}
               currentStepIdx={agentIdx}
@@ -170,7 +172,7 @@ const EliteCallInterface = () => {
         <div className="col-span-4 flex flex-col gap-4">
           <CardSection borderColor="border-blue-200">
             <SectionHeader
-              icon={<Waveform className="w-5 h-5 text-blue-700" />}
+              icon={<Activity className="w-5 h-5 text-blue-700" />}
               title="Active Call Transcript"
             />
             <RealtimeMonitorPanel
@@ -180,7 +182,7 @@ const EliteCallInterface = () => {
           </CardSection>
           <CardSection className="pt-2 pb-3 border-blue-100">
             <SectionHeader
-              icon={<Waveform className="w-4 h-4 text-blue-400" />}
+              icon={<Activity className="w-4 h-4 text-blue-400" />}
               title="Log Call Outcome"
             />
             {/* Call Outcomes Fast Logging */}
@@ -204,3 +206,4 @@ const EliteCallInterface = () => {
 };
 
 export default EliteCallInterface;
+
