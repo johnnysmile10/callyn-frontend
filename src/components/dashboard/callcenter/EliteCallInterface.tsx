@@ -6,6 +6,7 @@ import useSimulatedCall from "./Elite/useSimulatedCall";
 import ScriptBreakdownView from "./Elite/ScriptBreakdownView";
 import CallOutcomeButtons from "./Elite/CallOutcomeButtons";
 import LeadInfoPanel from "./Elite/LeadInfoPanel";
+import { toast } from "@/hooks/use-toast";
 
 const DUMMY_LEAD = {
   name: "John Doe",
@@ -52,7 +53,7 @@ const EliteCallInterface = () => {
 
   // Callback for outcomes (stub: shadcn toast can go here)
   const handleOutcome = (outcome: string) => {
-    if (window?.toast) window.toast(`Outcome: ${outcome}`);
+    toast({ title: `Outcome: ${outcome}` });
     // In real use: log with API, show toast, etc.
   };
 
