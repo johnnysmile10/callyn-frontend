@@ -1,4 +1,3 @@
-
 import EliteErrorBoundary from "./Elite/EliteErrorBoundary";
 import { useEliteSimulatedCall } from "./Elite/useEliteSimulatedCall";
 import LiveListen from "./Elite/LiveListen";
@@ -9,6 +8,7 @@ import ScriptBreakdownView from "./Elite/ScriptBreakdownView";
 import CallOutcomeButtons from "./Elite/CallOutcomeButtons";
 import LeadInfoPanel from "./Elite/LeadInfoPanel";
 import { toast } from "@/hooks/use-toast";
+import AIAssistantPanel from "./Elite/AIAssistantPanel";
 
 /**
  * Simulated lead for demo.
@@ -113,10 +113,7 @@ const EliteCallInterface = () => {
 
         {/* --- (OPTIONAL) RIGHT PANEL for future expansion --- */}
         <div className="hidden lg:flex col-span-2 flex-col gap-5">
-          <div className="bg-white border border-blue-100 rounded-lg shadow px-4 py-6 min-h-[200px] flex items-center justify-center text-gray-400 text-sm">
-            {/* Placeholder for future tabs: AI Voice Tester, Agent Score, Metrics... */}
-            <span>Coming Soon: Coaching, Voice Tester, Leaderboards</span>
-          </div>
+          <AIAssistantPanel />
         </div>
       </div>
     </EliteErrorBoundary>
@@ -124,4 +121,3 @@ const EliteCallInterface = () => {
 };
 
 export default EliteCallInterface;
-
