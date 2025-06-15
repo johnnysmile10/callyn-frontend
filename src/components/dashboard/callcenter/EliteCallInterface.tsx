@@ -1,3 +1,4 @@
+
 import EliteErrorBoundary from "./Elite/EliteErrorBoundary";
 import { useEliteSimulatedCall } from "./Elite/useEliteSimulatedCall";
 import LiveListen from "./Elite/LiveListen";
@@ -9,10 +10,11 @@ import CallOutcomeButtons from "./Elite/CallOutcomeButtons";
 import LeadInfoPanel from "./Elite/LeadInfoPanel";
 import { toast } from "@/hooks/use-toast";
 import AIAssistantPanel from "./Elite/AIAssistantPanel";
+import CardSection from "./Elite/CardSection";
+import SectionHeader from "./Elite/SectionHeader";
+import { Bot, Waveform, Users, Clock, Headphones, Script } from "lucide-react";
+import React, { useRef, useEffect, useState } from "react";
 
-/**
- * Simulated lead for demo.
- */
 const DUMMY_LEAD = {
   name: "John Doe",
   phone: "+1 (555) 012-3344",
@@ -27,13 +29,28 @@ const SCRIPT_STEPS = [
   { step: "Book", details: "Attempt to book demo appointment" },
 ];
 
+// CallTimer Hook
+function useCallTimer(isConnected: boolean) {
+  const [seconds, setSeconds] = useState(0);
+  useEffect(() => {
+    let interval: any = null;
+    if (isConnected) {
+      interval = setInterval(() => setSeconds((s) => s + 1), 1000);
+    } else {
+      setSeconds(0);
+    }
+    return () => clearInterval(interval);
+  }, [isConnected]);
+  const mm = String(Math.floor(seconds / 60)).padStart(2, "0");
+  const ss = String(seconds % 60).padStart(2, "0");
+  return isConnected ? `${mm}:${ss}` : null;
+}
+
 /**
- * The "Elite Call Interface" main component (V2, robust).
- * Provides live listen access, real-time controls, agent instruction snapshot, and instant monitoring.
- * Enhanced with error boundaries, loading states, improved accessibility.
+ * The "Elite Call Interface" main component (V2, robust, card layout).
+ * Professional sectioning, logical grouping, section headers, unified cards, visual indicators, clear hierarchy.
  */
 const EliteCallInterface = () => {
-  // Simulate a call (replace with real call state in production, see useEliteSimulatedCall)
   const {
     isConnected,
     isMuted,
@@ -45,7 +62,7 @@ const EliteCallInterface = () => {
     onVolumeChange,
     agentInstructions,
     outcomeGoals,
-    transcriptLines
+    transcriptLines,
   } = useEliteSimulatedCall();
 
   // Figure out which script section is active
@@ -57,26 +74,72 @@ const EliteCallInterface = () => {
     0
   );
 
+  // Call timer
+  const callDuration = useCallTimer(isConnected);
+
   // Callback for outcomes
   const handleOutcome = (outcome: string) => {
     toast({ title: `Outcome: ${outcome}` });
-    // In real use: log with API, show toast, etc.
+    // ... In real use: log with API, etc.
   };
 
   return (
     <EliteErrorBoundary>
-      <div className="max-w-6xl mx-auto mt-6 grid grid-cols-1 lg:grid-cols-8 gap-8 animate-fade-in">
-        {/* --- COMMAND LEFT PANEL --- */}
-        <div className="col-span-2 flex flex-col gap-6">
-          <LeadInfoPanel lead={DUMMY_LEAD} />
+      <div className="max-w-6xl mx-auto mt-10 mb-9 grid grid-cols-1 lg:grid-cols-8 gap-8 animate-fade-in">
+        {/* ----- TOP: CALL STATUS HEADER ------- */}
+        <div className="col-span-8 mb-0">
+          <CardSection className="flex flex-row items-center gap-4 !mb-6 px-6 py-4 border-blue-300 shadow-md bg-blue-50/80 sticky top-2 z-10">
+            <SectionHeader
+              icon={<Waveform className={`h-5 w-5 ${isConnected ? "text-green-500 animate-pulse" : "text-gray-400"}`} />}
+              title={isConnected ? "Live Call In Progress" : "Waiting for Call…"}
+              subtext={isConnected && callDuration ? (
+                <span className="flex items-center gap-1 text-xs font-mono text-gray-700">
+                  <Clock className="h-4 w-4 inline-block mr-1" /> {callDuration}
+                </span>
+              ) : undefined}
+              className="!mb-0"
+            />
+            <div className="flex-1" />
+            <span
+              className={`rounded px-3 py-1.5 text-xs font-bold tracking-wider border
+                ${isConnected ? "bg-green-100 text-green-700 border-green-200" : "bg-gray-100 text-gray-500 border-gray-200"}`}
+            >
+              {isConnected ? "CONNECTED" : "IDLE"}
+            </span>
+          </CardSection>
+        </div>
 
-          <LiveListen
-            isConnected={isConnected}
-            onSpeak={onSpeak}
-            onVolumeChange={onVolumeChange}
-          />
+        {/* ----- LEFT PANEL ----- */}
+        <div className="col-span-2 flex flex-col gap-0">
+          {/* Lead Info */}
+          <CardSection>
+            <SectionHeader
+              icon={<Users className="w-5 h-5 text-blue-700" />}
+              title="Lead Info"
+            />
+            <LeadInfoPanel lead={DUMMY_LEAD} />
+          </CardSection>
 
-          <div>
+          {/* --- LISTEN + CONTROLS GROUP BOX --- */}
+          <CardSection className="mt-2 !pb-0">
+            {/* Live listen, visually separated */}
+            <SectionHeader
+              icon={<Headphones className="w-5 h-5 text-blue-700" />}
+              title="Live Listen"
+            />
+            <LiveListen
+              isConnected={isConnected}
+              onSpeak={onSpeak}
+              onVolumeChange={onVolumeChange}
+            />
+          </CardSection>
+
+          {/* Call Controls */}
+          <CardSection className="mt-0 pt-0">
+            <SectionHeader
+              title="Call Controls"
+              icon={<Waveform className="w-5 h-5 text-blue-500" />}
+            />
             <QuickActionsBar
               isConnected={isConnected}
               isMuted={isMuted}
@@ -85,35 +148,55 @@ const EliteCallInterface = () => {
               onEndCall={onEndCall}
               onHoldToggle={onHoldToggle}
             />
-          </div>
+          </CardSection>
 
-          {/* Script Breakdown */}
-          <ScriptBreakdownView
-            scriptSections={SCRIPT_STEPS}
-            currentStepIdx={agentIdx}
-          />
-
-          {/* Agent Instructions, adjusted margin */}
-          <AgentInstructions
-            agentInstructions={agentInstructions}
-            outcomeGoals={outcomeGoals}
-          />
+          {/* Script/Instructions Group */}
+          <CardSection className="mt-4 !mb-2">
+            <SectionHeader icon={<Script className="w-5 h-5 text-indigo-500" />} title="Script Breakdown" />
+            <ScriptBreakdownView
+              scriptSections={SCRIPT_STEPS}
+              currentStepIdx={agentIdx}
+            />
+            <div className="my-3" />
+            <SectionHeader title="Agent Instructions" />
+            <AgentInstructions
+              agentInstructions={agentInstructions}
+              outcomeGoals={outcomeGoals}
+            />
+          </CardSection>
         </div>
 
-        {/* --- CENTER MAIN TRANSCRIPT MONITOR --- */}
-        <div className="col-span-4 flex flex-col gap-3">
-          <RealtimeMonitorPanel
-            isConnected={isConnected}
-            transcriptLines={transcriptLines}
-          />
-
-          {/* Call Outcomes Fast Logging */}
-          <CallOutcomeButtons onOutcomeSelect={handleOutcome} />
+        {/* ----- CENTER MAIN TRANSCRIPT MONITOR ----- */}
+        <div className="col-span-4 flex flex-col gap-4">
+          <CardSection borderColor="border-blue-200">
+            <SectionHeader
+              icon={<Waveform className="w-5 h-5 text-blue-700" />}
+              title="Active Call Transcript"
+            />
+            <RealtimeMonitorPanel
+              isConnected={isConnected}
+              transcriptLines={transcriptLines}
+            />
+          </CardSection>
+          <CardSection className="pt-2 pb-3 border-blue-100">
+            <SectionHeader
+              icon={<Waveform className="w-4 h-4 text-blue-400" />}
+              title="Log Call Outcome"
+            />
+            {/* Call Outcomes Fast Logging */}
+            <CallOutcomeButtons onOutcomeSelect={handleOutcome} />
+          </CardSection>
         </div>
 
-        {/* --- (OPTIONAL) RIGHT PANEL for future expansion --- */}
+        {/* ----- RIGHT PANEL: (AI Assistant & future) ----- */}
         <div className="hidden lg:flex col-span-2 flex-col gap-5">
-          <AIAssistantPanel />
+          <CardSection>
+            <SectionHeader
+              icon={<Bot className="w-5 h-5 text-blue-700" />}
+              title="AI Assistant"
+            />
+            <AIAssistantPanel />
+          </CardSection>
         </div>
       </div>
     </EliteErrorBoundary>
