@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -12,6 +11,7 @@ import CallLogView from "@/components/dashboard/CallLogView";
 import YourAgentSection from "@/components/dashboard/agent/YourAgentSection";
 import SettingsIntegrationsSection from "@/components/dashboard/settings/SettingsIntegrationsSection";
 import CallCenterDashboard from "@/components/dashboard/callcenter/CallCenterDashboard";
+import EliteCallInterface from "@/components/dashboard/callcenter/EliteCallInterface";
 import { useAuth } from "@/context/AuthContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -81,7 +81,11 @@ const Dashboard = () => {
       // Outreach System (replaces actions)
       case "outreach-system":
         return <CallynOutreachSystem />;
-
+      
+      // Elite Call Interface
+      case "elite-call-interface":
+        return <EliteCallInterface />;
+      
       // Call Center Dashboard
       case "call-center":
         return <CallCenterDashboard />;

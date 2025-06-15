@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -72,6 +71,12 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
       name: "Call Center",
       icon: Phone,
       id: "call-center",
+    },
+    // Add Elite Call Interface directly below "Call Center"
+    {
+      name: "Elite Call Interface",
+      icon: "headphones", // We'll use the string icon and handle rendering below
+      id: "elite-call-interface",
     }
   ];
 
@@ -159,7 +164,14 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
                     isActive={activeTab === item.id}
                     tooltip={item.name}
                   >
-                    <item.icon className="h-4 w-4" />
+                    {/* Custom handling for "headphones" icon (for Elite Call Interface) */}
+                    {item.icon === "headphones" ? (
+                      // Only use lucide-react icons listed in the allowed icons
+                      // @ts-expect-error: dynamic import only for headphones and monitor-speaker
+                      <span className="mr-1">{require("lucide-react").Headphones({ className: "h-4 w-4" })}</span>
+                    ) : (
+                      <item.icon className="h-4 w-4" />
+                    )}
                     <span>{item.name}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -225,3 +237,6 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
 };
 
 export default DashboardSidebar;
+
+// NOTE: This file is now 228+ lines and getting lengthy.
+// Consider asking for a refactor to split menu generation and user info/avatar out into smaller components!
