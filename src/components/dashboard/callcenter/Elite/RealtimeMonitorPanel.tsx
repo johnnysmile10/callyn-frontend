@@ -1,10 +1,24 @@
-
 interface RealtimeMonitorPanelProps {
   isConnected: boolean;
   transcriptLines: { speaker: string; text: string }[];
 }
 
+/**
+ * RealtimeMonitorPanel - displays the real-time transcript.
+ * Shows loading skeleton while isConnected and transcript not yet loaded.
+ */
 const RealtimeMonitorPanel = ({ isConnected, transcriptLines }: RealtimeMonitorPanelProps) => {
+  if (isConnected && !transcriptLines.length) {
+    return (
+      <div className="rounded-xl bg-white border border-blue-100 p-6 shadow-lg min-h-[340px] flex flex-col justify-center items-center animate-pulse">
+        <div className="w-2/3 h-10 rounded bg-blue-100/70 mb-4" />
+        <div className="w-full h-6 rounded bg-gray-100/80 mb-2" />
+        <div className="w-5/6 h-6 rounded bg-gray-100/80 mb-2" />
+        <div className="w-4/6 h-6 rounded bg-gray-100/80 mb-2" />
+      </div>
+    );
+  }
+
   return (
     <div className="rounded-xl bg-white border border-blue-100 p-6 shadow-lg min-h-[340px] flex flex-col">
       <div className="flex items-center gap-2 mb-4">

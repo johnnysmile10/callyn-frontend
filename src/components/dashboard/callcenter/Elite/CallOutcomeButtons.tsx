@@ -1,5 +1,6 @@
 
-import { useState } from "react";
+
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 const OUTCOMES = [
@@ -14,12 +15,27 @@ interface CallOutcomeButtonsProps {
   onOutcomeSelect: (outcome: string) => void;
 }
 
+/**
+ * CallOutcomeButtons - Logs call outcome with keyboard and accessibility features.
+ */
 const CallOutcomeButtons = ({ onOutcomeSelect }: CallOutcomeButtonsProps) => {
   const [selected, setSelected] = useState<string | null>(null);
 
+  // Keyboard accessibility: focus management
+  const btnRefs = useRef<Array<HTMLButtonElement | null>>([]);
+
+  useEffect(() => {
+    if (selected && btnRefs.current) {
+      const idx = OUTCOMES.findIndex(o => o.id === selected);
+      if (btnRefs.current[idx]) {
+        btnRefs.current[idx]?.focus();
+      }
+    }
+  }, [selected]);
+
   return (
-    <div className="flex gap-2 flex-wrap mb-2 mt-4">
-      {OUTCOMES.map((o) => (
+    <div className="flex gap-2 flex-wrap mb-2 mt-4" role="group" aria-label="Log Call Outcome">
+      {OUTCOMES.map((o, idx) => (
         <Button
           key={o.id}
           className={`px-3 py-1 text-sm font-semibold rounded transition-all shadow-sm ${o.color} text-white ${selected === o.id ? "ring-2 ring-offset-1 ring-blue-400 scale-105" : ""}`}
@@ -27,8 +43,24 @@ const CallOutcomeButtons = ({ onOutcomeSelect }: CallOutcomeButtonsProps) => {
             setSelected(o.id);
             onOutcomeSelect(o.id);
           }}
+          ref={el => btnRefs.current[idx] = el}
+          aria-pressed={selected === o.id}
+          aria-label={o.label}
+          tabIndex={0}
           variant="ghost"
           type="button"
+          onKeyDown={e => {
+            // Allow left/right navigation between buttons
+            if (e.key === "ArrowRight") {
+              const next = (idx + 1) % OUTCOMES.length;
+              btnRefs.current[next]?.focus();
+              e.preventDefault();
+            } else if (e.key === "ArrowLeft") {
+              const prev = (idx - 1 + OUTCOMES.length) % OUTCOMES.length;
+              btnRefs.current[prev]?.focus();
+              e.preventDefault();
+            }
+          }}
         >
           {o.label}
         </Button>
@@ -38,3 +70,4 @@ const CallOutcomeButtons = ({ onOutcomeSelect }: CallOutcomeButtonsProps) => {
 };
 
 export default CallOutcomeButtons;
+
