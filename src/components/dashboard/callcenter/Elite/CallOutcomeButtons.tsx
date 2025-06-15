@@ -1,5 +1,4 @@
 
-
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -17,6 +16,7 @@ interface CallOutcomeButtonsProps {
 
 /**
  * CallOutcomeButtons - Logs call outcome with keyboard and accessibility features.
+ * Layout: always horizontal, scrollable on small screens, wraps on large.
  */
 const CallOutcomeButtons = ({ onOutcomeSelect }: CallOutcomeButtonsProps) => {
   const [selected, setSelected] = useState<string | null>(null);
@@ -34,11 +34,17 @@ const CallOutcomeButtons = ({ onOutcomeSelect }: CallOutcomeButtonsProps) => {
   }, [selected]);
 
   return (
-    <div className="flex gap-2 flex-wrap mb-2 mt-4" role="group" aria-label="Log Call Outcome">
+    // Use flex-row and scrolling for x-overflow on small screens, wrap on lg
+    <div
+      className="flex flex-row gap-2 mb-2 mt-4 overflow-x-auto whitespace-nowrap lg:flex-wrap scrollbar-thin"
+      role="group"
+      aria-label="Log Call Outcome"
+      style={{ WebkitOverflowScrolling: 'touch', paddingBottom: 2 }}
+    >
       {OUTCOMES.map((o, idx) => (
         <Button
           key={o.id}
-          className={`px-3 py-1 text-sm font-semibold rounded transition-all shadow-sm ${o.color} text-white ${selected === o.id ? "ring-2 ring-offset-1 ring-blue-400 scale-105" : ""}`}
+          className={`!inline-flex !w-auto min-w-[110px] justify-center px-3 py-1 text-sm font-semibold rounded transition-all shadow-sm ${o.color} text-white ${selected === o.id ? "ring-2 ring-offset-1 ring-blue-400 scale-105" : ""}`}
           onClick={() => {
             setSelected(o.id);
             onOutcomeSelect(o.id);
@@ -70,4 +76,3 @@ const CallOutcomeButtons = ({ onOutcomeSelect }: CallOutcomeButtonsProps) => {
 };
 
 export default CallOutcomeButtons;
-
