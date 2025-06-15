@@ -10,7 +10,8 @@ import {
   Eye,
   PhoneCall,
   Settings,
-  Phone
+  Phone,
+  Headphones // <-- Add import for Headphones icon
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -166,9 +167,7 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
                   >
                     {/* Custom handling for "headphones" icon (for Elite Call Interface) */}
                     {item.icon === "headphones" ? (
-                      // Only use lucide-react icons listed in the allowed icons
-                      // @ts-expect-error: dynamic import only for headphones and monitor-speaker
-                      <span className="mr-1">{require("lucide-react").Headphones({ className: "h-4 w-4" })}</span>
+                      <Headphones className="h-4 w-4 mr-1" />
                     ) : (
                       <item.icon className="h-4 w-4" />
                     )}
