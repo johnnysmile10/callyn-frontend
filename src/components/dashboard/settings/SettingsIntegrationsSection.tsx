@@ -14,7 +14,7 @@ import {
   AlertCircle,
   ExternalLink
 } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 import PhoneNumberSetup from "./PhoneNumberSetup";
 import TwilioIntegration from "./TwilioIntegration";
 import LanguageVoiceSettings from "./LanguageVoiceSettings";

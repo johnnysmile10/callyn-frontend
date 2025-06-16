@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -6,7 +5,7 @@ import Footer from "@/components/Footer";
 import SignUpForm from "@/components/auth/SignUpForm";
 import GoogleSignupButton from "@/components/auth/GoogleSignupButton";
 import { Separator } from "@/components/ui/separator";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 
 const SignUp = () => {
   const [searchParams] = useSearchParams();

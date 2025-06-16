@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 import CreateAgentWizard from "@/components/createAgent/CreateAgentWizard";
 import CreateAgentSuccess from "@/components/createAgent/CreateAgentSuccess";
 

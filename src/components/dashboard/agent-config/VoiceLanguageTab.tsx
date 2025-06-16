@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 import EnhancedLanguageSelector from "../language/EnhancedLanguageSelector";
 import LanguagePreviewSystem from "../language/LanguagePreviewSystem";
 import VoiceSelectionCard from "./voice/VoiceSelectionCard";
