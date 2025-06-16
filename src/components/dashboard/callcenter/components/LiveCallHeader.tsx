@@ -1,6 +1,5 @@
-
 import { Button } from "@/components/ui/button";
-import { Bot, FileText, Settings, Clock, Wifi, WifiOff } from "lucide-react";
+import { Bot, FileText, Settings, Clock, Wifi, WifiOff, Phone } from "lucide-react";
 
 interface LiveCallHeaderProps {
   isConnected: boolean;
