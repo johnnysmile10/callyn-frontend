@@ -98,9 +98,9 @@ const Dashboard = () => {
       case "live-call-center":
         return <LiveCallCenter />;
       
-      // Campaign Manager sections  
-      case "lead-lists":
+      // Campaign Manager - Updated to handle all campaign-related functionality
       case "campaigns":
+      case "lead-lists":
       case "analytics":
         return <DashboardCampaignManager />;
       

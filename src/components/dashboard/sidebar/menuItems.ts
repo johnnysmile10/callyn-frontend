@@ -55,24 +55,14 @@ export const getAgentBuilderItems = (userAgent: any, onboardingData: any): MenuI
 
 export const getCampaignManagerItems = (): MenuItem[] => [
   {
-    name: "Lead Lists",
-    icon: Users,
-    id: "lead-lists",
+    name: "Campaign Manager",
+    icon: Target,
+    id: "campaigns",
   },
   {
     name: "Call Log",
     icon: PhoneCall,
     id: "call-log",
-  },
-  {
-    name: "Campaigns",
-    icon: Calendar,
-    id: "campaigns",
-  },
-  {
-    name: "Call Analytics",
-    icon: BarChart,
-    id: "analytics",
   }
 ];
 

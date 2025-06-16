@@ -2,12 +2,12 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, Calendar, BarChart } from "lucide-react";
-import DashboardSalesTools from "./DashboardSalesTools";
-import DashboardCallsAndActivity from "./DashboardCallsAndActivity";
-import DashboardInsights from "./DashboardInsights";
+import LeadListsTab from "./campaign-manager/LeadListsTab";
+import CampaignsTab from "./campaign-manager/CampaignsTab";
+import ResultsTab from "./campaign-manager/ResultsTab";
 
 const DashboardCampaignManager = () => {
-  const [activeTab, setActiveTab] = useState("leads");
+  const [activeTab, setActiveTab] = useState("lead-lists");
 
   return (
     <div className="space-y-6">
@@ -18,14 +18,14 @@ const DashboardCampaignManager = () => {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Campaign Manager</h1>
           <p className="text-gray-600">
-            Manage your lead lists, campaigns, and track performance
+            Manage lead lists, run campaigns, and analyze results
           </p>
         </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="leads" className="flex items-center gap-2">
+          <TabsTrigger value="lead-lists" className="flex items-center gap-2">
             <Users className="h-4 w-4" />
             Lead Lists
           </TabsTrigger>
@@ -33,22 +33,22 @@ const DashboardCampaignManager = () => {
             <Calendar className="h-4 w-4" />
             Campaigns
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center gap-2">
+          <TabsTrigger value="results" className="flex items-center gap-2">
             <BarChart className="h-4 w-4" />
-            Analytics
+            Results
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="leads" className="space-y-6">
-          <DashboardSalesTools />
+        <TabsContent value="lead-lists" className="space-y-6">
+          <LeadListsTab />
         </TabsContent>
 
         <TabsContent value="campaigns" className="space-y-6">
-          <DashboardCallsAndActivity />
+          <CampaignsTab />
         </TabsContent>
 
-        <TabsContent value="analytics" className="space-y-6">
-          <DashboardInsights />
+        <TabsContent value="results" className="space-y-6">
+          <ResultsTab />
         </TabsContent>
       </Tabs>
     </div>
