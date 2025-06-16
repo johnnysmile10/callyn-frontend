@@ -17,6 +17,7 @@ import {
   Copy,
   ExternalLink
 } from "lucide-react";
+import CountrySelector from "./CountrySelector";
 
 const PhoneNumberSetup = () => {
   const [selectedCountry, setSelectedCountry] = useState("US");
@@ -31,13 +32,6 @@ const PhoneNumberSetup = () => {
     { number: "+1 (555) 234-5678", location: "New York, NY", price: "$1.00/month" },
     { number: "+1 (555) 345-6789", location: "New York, NY", price: "$1.00/month" },
     { number: "+1 (555) 456-7890", location: "New York, NY", price: "$1.00/month" },
-  ];
-
-  const countries = [
-    { code: "US", name: "United States", flag: "🇺🇸" },
-    { code: "CA", name: "Canada", flag: "🇨🇦" },
-    { code: "GB", name: "United Kingdom", flag: "🇬🇧" },
-    { code: "AU", name: "Australia", flag: "🇦🇺" },
   ];
 
   const areaCodes = [
@@ -70,27 +64,14 @@ const PhoneNumberSetup = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Search Filters */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label>Country</Label>
-              <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {countries.map((country) => (
-                    <SelectItem key={country.code} value={country.code}>
-                      <div className="flex items-center gap-2">
-                        <span>{country.flag}</span>
-                        <span>{country.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Country Selection */}
+          <CountrySelector 
+            selectedCountry={selectedCountry}
+            onCountryChange={setSelectedCountry}
+          />
 
+          {/* Area Code and Search Filters */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Area Code (Optional)</Label>
               <Select value={selectedAreaCode} onValueChange={setSelectedAreaCode}>
