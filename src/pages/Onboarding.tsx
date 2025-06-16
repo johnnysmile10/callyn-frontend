@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -10,7 +9,7 @@ import NewStep4VoicePersonality from "@/components/onboarding/NewStep4VoicePerso
 import NewStep5CallScheduling from "@/components/onboarding/NewStep5CallScheduling";
 import NewStep6LaunchDashboard from "@/components/onboarding/NewStep6LaunchDashboard";
 import ProgressIndicator from "@/components/onboarding/ProgressIndicator";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 
 const Onboarding = () => {
   const [currentStep, setCurrentStep] = useState(1);

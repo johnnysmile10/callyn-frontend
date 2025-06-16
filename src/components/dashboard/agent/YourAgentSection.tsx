@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Bot, Settings, BarChart3, Rocket, Phone, MessageSquare } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 import AgentOverview from "./AgentOverview";
 import AgentSettings from "./AgentSettings";
 import TestAgentPanel from "./TestAgentPanel";

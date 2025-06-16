@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -13,7 +12,7 @@ import YourAgentSection from "@/components/dashboard/agent/YourAgentSection";
 import SettingsIntegrationsSection from "@/components/dashboard/settings/SettingsIntegrationsSection";
 import CallCenterDashboard from "@/components/dashboard/callcenter/CallCenterDashboard";
 import EliteCallInterface from "@/components/dashboard/callcenter/EliteCallInterface";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Rocket, ArrowRight, CheckCircle } from "lucide-react";
