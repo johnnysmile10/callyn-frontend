@@ -69,6 +69,7 @@ export interface AuthContextType {
   onboardingData: OnboardingData | null;
   userAgent: UserAgent | null;
   outreachData: OutreachData | null;
+  campaignBuilderData: any;
   setupCompleted: boolean;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
@@ -78,6 +79,7 @@ export interface AuthContextType {
   setOnboardingData: (data: OnboardingData) => void;
   setUserAgent: (agent: UserAgent) => void;
   setOutreachData: (data: OutreachData) => void;
+  setCampaignBuilderData: (data: any) => void;
   createUserAgent: (onboardingData: OnboardingData) => Promise<UserAgent>;
   hasCompletedSetup: () => boolean;
   markSetupCompleted: () => void;
