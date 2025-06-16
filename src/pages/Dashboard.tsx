@@ -86,6 +86,10 @@ const Dashboard = () => {
       case "your-agent":
         return <YourAgentSection />;
       
+      // User Database section - NEW
+      case "user-database":
+        return <SettingsIntegrationsSection />;
+      
       // Settings & Integrations section
       case "settings-integrations":
         return <SettingsIntegrationsSection />;

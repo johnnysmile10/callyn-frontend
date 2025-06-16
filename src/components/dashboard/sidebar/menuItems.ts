@@ -11,7 +11,8 @@ import {
   Settings,
   Phone,
   User,
-  Rocket
+  Rocket,
+  Database
 } from "lucide-react";
 
 export interface MenuItem {
@@ -67,6 +68,12 @@ export const getCampaignManagerItems = (): MenuItem[] => [
 ];
 
 export const getSettingsItems = (userAgent: any, onboardingData: any): MenuItem[] => [
+  // Show User Database for all users
+  {
+    name: "User Database",
+    icon: Database,
+    id: "user-database",
+  },
   // Only show Settings & Integrations if user has agent or onboarding data
   ...(userAgent || onboardingData ? [{
     name: "Settings & Integrations",
