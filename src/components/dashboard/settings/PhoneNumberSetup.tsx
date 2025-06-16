@@ -1,7 +1,8 @@
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PhoneNumberProvisioningCard from "./phone-setup/PhoneNumberProvisioningCard";
 import CurrentPhoneNumberCard from "./phone-setup/CurrentPhoneNumberCard";
+import { COUNTRY_PHONE_DATA } from "./phone-setup/phoneDataConfig";
 
 const PhoneNumberSetup = () => {
   const [selectedCountry, setSelectedCountry] = useState("US");
@@ -10,21 +11,38 @@ const PhoneNumberSetup = () => {
   const [selectedNumber, setSelectedNumber] = useState("");
   const [isProvisioning, setIsProvisioning] = useState(false);
 
-  // Mock available numbers
-  const availableNumbers = [
-    { number: "+1 (555) 123-4567", location: "New York, NY", price: "$1.00/month" },
-    { number: "+1 (555) 234-5678", location: "New York, NY", price: "$1.00/month" },
-    { number: "+1 (555) 345-6789", location: "New York, NY", price: "$1.00/month" },
-    { number: "+1 (555) 456-7890", location: "New York, NY", price: "$1.00/month" },
-  ];
+  // Get dynamic data based on selected country
+  const countryData = COUNTRY_PHONE_DATA[selectedCountry];
+  
+  // Filter numbers based on area code and search term
+  const filteredNumbers = useMemo(() => {
+    let numbers = countryData?.sampleNumbers || [];
+    
+    // Filter by area code if selected
+    if (selectedAreaCode) {
+      numbers = numbers.filter(number => 
+        number.number.includes(`(${selectedAreaCode})`) || 
+        number.number.includes(` ${selectedAreaCode} `) ||
+        number.location.toLowerCase().includes(selectedAreaCode.toLowerCase())
+      );
+    }
+    
+    // Filter by search term
+    if (searchTerm) {
+      numbers = numbers.filter(number => 
+        number.number.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        number.location.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    return numbers;
+  }, [countryData, selectedAreaCode, searchTerm]);
 
-  const areaCodes = [
-    { code: "212", location: "New York, NY" },
-    { code: "213", location: "Los Angeles, CA" },
-    { code: "312", location: "Chicago, IL" },
-    { code: "415", location: "San Francisco, CA" },
-    { code: "617", location: "Boston, MA" },
-  ];
+  const handleCountryChange = (country: string) => {
+    setSelectedCountry(country);
+    setSelectedAreaCode(""); // Reset area code when country changes
+    setSelectedNumber(""); // Reset selected number
+  };
 
   const handleProvisionNumber = async () => {
     setIsProvisioning(true);
@@ -39,7 +57,7 @@ const PhoneNumberSetup = () => {
     <div className="space-y-6">
       <PhoneNumberProvisioningCard
         selectedCountry={selectedCountry}
-        onCountryChange={setSelectedCountry}
+        onCountryChange={handleCountryChange}
         selectedAreaCode={selectedAreaCode}
         onAreaCodeChange={setSelectedAreaCode}
         searchTerm={searchTerm}
@@ -48,8 +66,8 @@ const PhoneNumberSetup = () => {
         onNumberSelect={setSelectedNumber}
         isProvisioning={isProvisioning}
         onProvision={handleProvisionNumber}
-        availableNumbers={availableNumbers}
-        areaCodes={areaCodes}
+        availableNumbers={filteredNumbers}
+        areaCodes={countryData?.areaCodes || []}
       />
 
       <CurrentPhoneNumberCard />
