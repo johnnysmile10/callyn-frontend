@@ -4,16 +4,31 @@ export interface TargetAudience {
   companySize: string[];
   jobTitles: string[];
   location: string[];
+  customCriteria?: string;
 }
 
 export interface LeadRecord {
   id: string;
   name: string;
-  email: string;
+  email?: string;
   phone: string;
-  company: string;
-  title: string;
+  company?: string;
+  title?: string;
   status: 'new' | 'called' | 'interested' | 'not_interested';
+  source?: 'manual' | 'csv' | 'import';
+  tags?: string[];
+  createdAt?: string;
+}
+
+export interface LanguageConfig {
+  primaryLanguage: string;
+  secondaryLanguages: string[];
+  voiceId?: string;
+  model?: string;
+  tone?: 'professional' | 'casual' | 'friendly' | 'authoritative';
+  formality?: 'formal' | 'informal' | 'balanced';
+  culturalAdaptation?: boolean;
+  localExpressions?: boolean;
 }
 
 export interface ScriptConfig {
@@ -24,6 +39,7 @@ export interface ScriptConfig {
   language?: string;
   tone?: string;
   personality?: string;
+  languageConfig?: LanguageConfig;
 }
 
 export interface SchedulingConfig {
