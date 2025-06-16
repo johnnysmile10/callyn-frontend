@@ -8,14 +8,13 @@ import RealtimeMonitorPanel from "./Elite/RealtimeMonitorPanel";
 import ScriptBreakdownView from "./Elite/ScriptBreakdownView";
 import CallOutcomeButtons from "./Elite/CallOutcomeButtons";
 import LeadInfoPanel from "./Elite/LeadInfoPanel";
-import EliteScriptEditorModal from "./Elite/EliteScriptEditorModal";
+import UnifiedScriptEditor from "../shared/UnifiedScriptEditor";
 import EditAgentModal from "./Elite/EditAgentModal";
 import { toast } from "@/hooks/use-toast";
 import AIAssistantPanel from "./Elite/AIAssistantPanel";
 import CardSection from "./Elite/CardSection";
 import SectionHeader from "./Elite/SectionHeader";
 import { Button } from "@/components/ui/button";
-// REPLACE Waveform -> Activity, Script -> FileText (which actually exist)
 import { Bot, Activity, Users, Clock, Headphones, FileText, Edit } from "lucide-react";
 import React, { useRef, useEffect, useState } from "react";
 
@@ -75,6 +74,9 @@ const EliteCallInterface = () => {
 
   // Script and agent states
   const [currentScript, setCurrentScript] = useState("");
+  const [currentPersonality, setCurrentPersonality] = useState("professional");
+  const [useSmallTalk, setUseSmallTalk] = useState(false);
+  const [handleObjections, setHandleObjections] = useState(false);
   const [agentSettings, setAgentSettings] = useState({
     name: "Sales Agent",
     voice: "9BWtsMINqrJLrRacOk9x",
@@ -105,12 +107,20 @@ const EliteCallInterface = () => {
   };
 
   // Modal handlers
-  const handleScriptSave = (script: string) => {
-    setCurrentScript(script);
+  const handleScriptSave = (data: {
+    script: string;
+    personality: string;
+    useSmallTalk: boolean;
+    handleObjections: boolean;
+  }) => {
+    setCurrentScript(data.script);
+    setCurrentPersonality(data.personality);
+    setUseSmallTalk(data.useSmallTalk);
+    setHandleObjections(data.handleObjections);
     setIsScriptEditorOpen(false);
     toast({ 
-      title: "Script Updated", 
-      description: "Your call script has been updated and will be used for future calls." 
+      title: "Script & Personality Updated", 
+      description: "Your call script and personality settings have been updated successfully." 
     });
   };
 
@@ -132,7 +142,6 @@ const EliteCallInterface = () => {
             <SectionHeader
               icon={<Activity className={`h-5 w-5 ${isConnected ? "text-green-500 animate-pulse" : "text-gray-400"}`} />}
               title={isConnected ? "Live Call In Progress" : "Waiting for Call…"}
-              // subtext should be React.ReactNode, see SectionHeader fix!
               subtext={isConnected && callDuration ? (
                 <span className="flex items-center gap-1 text-xs font-mono text-gray-700">
                   <Clock className="h-4 w-4 inline-block mr-1" /> {callDuration}
@@ -262,10 +271,13 @@ const EliteCallInterface = () => {
       </div>
 
       {/* Modals */}
-      <EliteScriptEditorModal
+      <UnifiedScriptEditor
         isOpen={isScriptEditorOpen}
         onClose={() => setIsScriptEditorOpen(false)}
         initialScript={currentScript}
+        initialPersonality={currentPersonality}
+        initialUseSmallTalk={useSmallTalk}
+        initialHandleObjections={handleObjections}
         onSave={handleScriptSave}
       />
 
