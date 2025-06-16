@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle, Clock, Zap, Shield, Bot, ArrowRight, Play } from "lucide-react";
+import { CheckCircle, Clock, Zap, Shield, Bot, ArrowRight, Play, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import AgentProfileStep from "./steps/AgentProfileStep";
 import ScriptStarterStep from "./steps/ScriptStarterStep";
 import BehaviorSettingsStep from "./steps/BehaviorSettingsStep";
@@ -64,15 +65,26 @@ const AgentSetupTab = () => {
       <div className="text-center space-y-4">
         <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-2 rounded-full text-sm font-medium">
           <Zap className="h-4 w-4" />
-          Your AI Sales Team Awaits
+          Advanced Agent Builder
         </div>
         <h1 className="text-4xl font-bold text-gray-900">
-          Build Your AI Agent in Minutes
+          Build a Custom AI Agent
         </h1>
         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-          Create a personalized AI sales agent that sounds like you, follows your script, 
-          and converts leads 24/7. No technical skills required.
+          Create a highly customized AI sales agent with advanced configurations. 
+          For quick setup, try our 6-step onboarding instead.
         </p>
+        
+        {/* Quick Setup Alternative */}
+        <Alert className="max-w-2xl mx-auto bg-green-50 border-green-200">
+          <AlertCircle className="h-4 w-4 text-green-600" />
+          <AlertDescription className="text-green-700">
+            <strong>Want something faster?</strong> Our 6-step onboarding can get you up and running in just 6 minutes.
+            <Button variant="link" className="text-green-700 p-0 ml-2 h-auto" onClick={() => window.location.href = '/onboarding'}>
+              Try Quick Setup →
+            </Button>
+          </AlertDescription>
+        </Alert>
       </div>
 
       {/* Trust Building Features */}
@@ -85,7 +97,7 @@ const AgentSetupTab = () => {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Bot className="h-5 w-5 text-blue-600" />
-                Setup Progress
+                Advanced Setup Progress
               </CardTitle>
               <CardDescription>
                 {completedSteps.length} of {steps.length} steps completed

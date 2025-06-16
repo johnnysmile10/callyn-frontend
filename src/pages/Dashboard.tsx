@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -15,7 +16,7 @@ import EliteCallInterface from "@/components/dashboard/callcenter/EliteCallInter
 import { useAuth } from "@/context/AuthContext";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Rocket, ArrowRight } from "lucide-react";
+import { Rocket, ArrowRight, CheckCircle } from "lucide-react";
 import CallynOutreachSystem from "@/components/dashboard/CallynOutreachSystem";
 
 const Dashboard = () => {
@@ -38,12 +39,20 @@ const Dashboard = () => {
     return "overview";
   });
   const [campaignActive, setCampaignActive] = useState(false);
+  const [showOnboardingSuccess, setShowOnboardingSuccess] = useState(false);
   
   useEffect(() => {
     // Redirect to login if not authenticated
     if (!isAuthenticated) {
       navigate("/login");
       return;
+    }
+
+    // Check if user just completed onboarding
+    if (location.state?.fromOnboarding && userAgent) {
+      setShowOnboardingSuccess(true);
+      // Auto-hide after 5 seconds
+      setTimeout(() => setShowOnboardingSuccess(false), 5000);
     }
 
     // Update active tab based on agent status if needed
@@ -112,6 +121,20 @@ const Dashboard = () => {
         <DashboardSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="flex-1 overflow-auto">
           <div className="container mx-auto py-8 px-4">
+            {/* Onboarding Success Banner */}
+            {showOnboardingSuccess && userAgent && (
+              <div className="mb-6">
+                <Alert className="bg-green-50 border-green-200">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <AlertTitle className="text-green-800">🎉 Agent Successfully Created!</AlertTitle>
+                  <AlertDescription className="text-green-700">
+                    Your AI agent "{userAgent.name}" is now live and ready to start making calls. 
+                    Set up your first campaign below to begin generating leads.
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
+
             {/* Welcome Banner for New Users - Updated */}
             {!userAgent && (
               <div className="mb-8">
@@ -119,7 +142,7 @@ const Dashboard = () => {
                   <Rocket className="h-4 w-4 text-blue-600" />
                   <AlertTitle className="text-blue-800">Welcome to Callyn!</AlertTitle>
                   <AlertDescription className="text-blue-700 flex items-center justify-between">
-                    <span>Create your first AI calling agent in just 5 minutes with our Quick Start wizard.</span>
+                    <span>Create your first AI calling agent in just 6 minutes with our Quick Start wizard.</span>
                     <Button 
                       onClick={() => setActiveTab('your-agent')} 
                       size="sm" 
