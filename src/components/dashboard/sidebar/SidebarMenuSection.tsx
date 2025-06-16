@@ -1,5 +1,4 @@
 
-import { Headphones } from "lucide-react";
 import { 
   SidebarGroup,
   SidebarGroupContent,
@@ -32,12 +31,7 @@ const SidebarMenuSection = ({ title, items, activeTab, onTabChange }: SidebarMen
                 isActive={activeTab === item.id}
                 tooltip={item.name}
               >
-                {/* Custom handling for "headphones" icon (for Elite Call Interface) */}
-                {item.icon === "headphones" ? (
-                  <Headphones className="h-4 w-4 mr-1" />
-                ) : (
-                  <item.icon className="h-4 w-4" />
-                )}
+                <item.icon className="h-4 w-4" />
                 <span>{item.name}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>

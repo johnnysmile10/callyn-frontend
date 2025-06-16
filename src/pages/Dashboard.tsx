@@ -13,6 +13,7 @@ import SettingsIntegrationsSection from "@/components/dashboard/settings/Setting
 import CallCenterDashboard from "@/components/dashboard/callcenter/CallCenterDashboard";
 import EliteCallInterface from "@/components/dashboard/callcenter/EliteCallInterface";
 import PersonalAgentManager from "@/components/dashboard/PersonalAgentManager";
+import LiveCallCenter from "@/components/dashboard/callcenter/LiveCallCenter";
 import { useAuth } from "@/context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -93,13 +94,9 @@ const Dashboard = () => {
       case "ai-campaign-builder":
         return <AICampaignBuilder />;
       
-      // Elite Call Interface
-      case "elite-call-interface":
-        return <EliteCallInterface />;
-      
-      // Call Center Dashboard
-      case "call-center":
-        return <CallCenterDashboard />;
+      // NEW: Live Call Center (replaces call-center and elite-call-interface)
+      case "live-call-center":
+        return <LiveCallCenter />;
       
       // Campaign Manager sections  
       case "lead-lists":
@@ -107,11 +104,15 @@ const Dashboard = () => {
       case "analytics":
         return <DashboardCampaignManager />;
       
-      // Legacy routes (redirect to new AI Campaign Builder)
+      // Legacy routes (redirect to new components)
       case "agent-setup":
       case "outreach-system":
       case "actions":
         return <AICampaignBuilder />;
+      
+      case "call-center":
+      case "elite-call-interface":
+        return <LiveCallCenter />;
       
       default:
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;

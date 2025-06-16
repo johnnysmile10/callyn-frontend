@@ -10,7 +10,6 @@ import {
   PhoneCall,
   Settings,
   Phone,
-  Headphones,
   User,
   Rocket
 } from "lucide-react";
@@ -48,15 +47,9 @@ export const getAgentBuilderItems = (userAgent: any, onboardingData: any): MenuI
     id: "ai-campaign-builder",
   },
   {
-    name: "Call Center",
+    name: "Live Call Center",
     icon: Phone,
-    id: "call-center",
-  },
-  // Add Elite Call Interface directly below "Call Center"
-  {
-    name: "Elite Call Interface",
-    icon: "headphones", // We'll use the string icon and handle rendering below
-    id: "elite-call-interface",
+    id: "live-call-center",
   }
 ];
 
