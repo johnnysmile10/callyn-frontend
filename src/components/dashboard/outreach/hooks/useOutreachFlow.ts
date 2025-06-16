@@ -68,6 +68,12 @@ export const useOutreachFlow = () => {
           retryDelay: 24,
           weekendCalling: false
         };
+      case 5:
+        return outreachData?.campaign || {
+          isLive: false,
+          campaignStarted: false,
+          launchedAt: null
+        };
       default:
         return {};
     }
@@ -86,6 +92,9 @@ export const useOutreachFlow = () => {
         break;
       case 4:
         updateOutreachData({ scheduling: data });
+        break;
+      case 5:
+        updateOutreachData({ campaign: data });
         break;
     }
   };

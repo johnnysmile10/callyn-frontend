@@ -1,4 +1,3 @@
-
 export interface TargetAudience {
   industry: string[];
   companySize: string[];
@@ -64,9 +63,16 @@ export interface SchedulingConfig {
   weekendCalling: boolean;
 }
 
+export interface CampaignData {
+  isLive?: boolean;
+  campaignStarted?: boolean;
+  launchedAt?: string | null;
+}
+
 export interface OutreachData {
   targetAudience?: TargetAudience;
   leadList?: LeadRecord[];
   script?: ScriptConfig;
   scheduling?: SchedulingConfig;
+  campaign?: CampaignData;
 }
