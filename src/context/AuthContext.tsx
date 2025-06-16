@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { ScenarioProps } from '@/components/onboarding/types';
 import { OutreachData, LanguageConfig } from '@/components/dashboard/outreach/types';
@@ -75,6 +76,7 @@ interface AuthContextType {
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
   setOnboardingData: (data: OnboardingData) => void;
+  setUserAgent: (agent: UserAgent) => void;
   setOutreachData: (data: OutreachData) => void;
   createUserAgent: (onboardingData: OnboardingData) => Promise<UserAgent>;
   hasCompletedSetup: () => boolean;
@@ -128,6 +130,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('onboarding_data');
     localStorage.removeItem('outreach_data');
     localStorage.removeItem('setup_completed');
+  };
+
+  const handleSetUserAgent = (agent: UserAgent) => {
+    setUserAgent(agent);
+    localStorage.setItem('user_agent', JSON.stringify(agent));
   };
 
   const createUserAgent = async (data: OnboardingData): Promise<UserAgent> => {
@@ -239,6 +246,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         signup,
         logout,
         setOnboardingData: handleSetOnboardingData,
+        setUserAgent: handleSetUserAgent,
         setOutreachData: handleSetOutreachData,
         createUserAgent,
         hasCompletedSetup,
