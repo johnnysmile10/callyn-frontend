@@ -1,35 +1,20 @@
 
 import { useNavigate } from "react-router-dom";
 import { 
-  LayoutDashboard, 
-  Bot, 
-  Target, 
-  LogOut,
-  BarChart,
-  Users,
-  Calendar,
-  Eye,
-  PhoneCall,
-  Settings,
-  Phone,
-  Headphones,
-  User
-} from "lucide-react";
-import { 
   Sidebar, 
-  SidebarContent, 
-  SidebarHeader, 
-  SidebarFooter,
-  SidebarMenu, 
-  SidebarMenuItem, 
-  SidebarMenuButton,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
+  SidebarContent,
   SidebarRail
 } from "@/components/ui/sidebar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/context";
+import SidebarUserHeader from "./sidebar/SidebarUserHeader";
+import SidebarMenuSection from "./sidebar/SidebarMenuSection";
+import SidebarLogoutFooter from "./sidebar/SidebarLogoutFooter";
+import { 
+  getMainMenuItems, 
+  getAgentBuilderItems, 
+  getCampaignManagerItems, 
+  getSettingsItems 
+} from "./sidebar/menuItems";
 
 interface DashboardSidebarProps {
   activeTab: string;
@@ -45,200 +30,46 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
     navigate("/");
   };
   
-  const mainMenuItems = [
-    {
-      name: "Overview",
-      icon: LayoutDashboard,
-      id: "overview",
-    }
-  ];
-
-  const agentBuilderItems = [
-    // Add "My Agent" as the first item for users with agents or onboarding data
-    ...(userAgent || onboardingData ? [{
-      name: "My Agent",
-      icon: User,
-      id: "my-agent",
-    }] : []),
-    // Show "Your Agent" if user has completed onboarding or has an agent
-    ...(userAgent || onboardingData ? [{
-      name: "Your Agent",
-      icon: Eye,
-      id: "your-agent",
-    }] : []),
-    {
-      name: userAgent ? "Agent Configuration" : "Create Agent",
-      icon: userAgent ? Settings : Bot,
-      id: "agent-setup",
-    },
-    {
-      name: "Outreach System",
-      icon: Target,
-      id: "outreach-system",
-    },
-    {
-      name: "Call Center",
-      icon: Phone,
-      id: "call-center",
-    },
-    // Add Elite Call Interface directly below "Call Center"
-    {
-      name: "Elite Call Interface",
-      icon: "headphones", // We'll use the string icon and handle rendering below
-      id: "elite-call-interface",
-    }
-  ];
-
-  const campaignManagerItems = [
-    {
-      name: "Lead Lists",
-      icon: Users,
-      id: "lead-lists",
-    },
-    {
-      name: "Call Log",
-      icon: PhoneCall,
-      id: "call-log",
-    },
-    {
-      name: "Campaigns",
-      icon: Calendar,
-      id: "campaigns",
-    },
-    {
-      name: "Call Analytics",
-      icon: BarChart,
-      id: "analytics",
-    }
-  ];
-
-  const settingsItems = [
-    // Only show Settings & Integrations if user has agent or onboarding data
-    ...(userAgent || onboardingData ? [{
-      name: "Settings & Integrations",
-      icon: Settings,
-      id: "settings-integrations",
-    }] : [])
-  ];
+  const mainMenuItems = getMainMenuItems();
+  const agentBuilderItems = getAgentBuilderItems(userAgent, onboardingData);
+  const campaignManagerItems = getCampaignManagerItems();
+  const settingsItems = getSettingsItems(userAgent, onboardingData);
   
   return (
     <Sidebar>
       <SidebarRail />
-      <SidebarHeader>
-        <div className="flex items-center gap-2 px-2">
-          <Avatar className="h-9 w-9">
-            <AvatarImage src={user?.photoURL || ""} alt={user?.name || "User"} />
-            <AvatarFallback>
-              {user?.name?.charAt(0) || user?.email?.charAt(0) || "U"}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col overflow-hidden">
-            <span className="text-sm font-medium truncate">
-              {user?.name || "User"}
-            </span>
-            <span className="text-xs text-muted-foreground truncate">
-              {user?.email}
-            </span>
-          </div>
-        </div>
-      </SidebarHeader>
+      
+      <SidebarUserHeader user={user} />
+      
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {mainMenuItems.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton 
-                    onClick={() => setActiveTab(item.id)}
-                    isActive={activeTab === item.id}
-                    tooltip={item.name}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.name}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <SidebarMenuSection
+          items={mainMenuItems}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Agent Builder</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {agentBuilderItems.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton 
-                    onClick={() => setActiveTab(item.id)}
-                    isActive={activeTab === item.id}
-                    tooltip={item.name}
-                  >
-                    {/* Custom handling for "headphones" icon (for Elite Call Interface) */}
-                    {item.icon === "headphones" ? (
-                      <Headphones className="h-4 w-4 mr-1" />
-                    ) : (
-                      <item.icon className="h-4 w-4" />
-                    )}
-                    <span>{item.name}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <SidebarMenuSection
+          title="Agent Builder"
+          items={agentBuilderItems}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
 
-        <SidebarGroup>
-          <SidebarGroupLabel>Campaign Manager</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {campaignManagerItems.map((item) => (
-                <SidebarMenuItem key={item.name}>
-                  <SidebarMenuButton 
-                    onClick={() => setActiveTab(item.id)}
-                    isActive={activeTab === item.id}
-                    tooltip={item.name}
-                  >
-                    <item.icon className="h-4 w-4" />
-                    <span>{item.name}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        <SidebarMenuSection
+          title="Campaign Manager"
+          items={campaignManagerItems}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
 
-        {/* Settings Section at the bottom */}
-        {settingsItems.length > 0 && (
-          <SidebarGroup>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {settingsItems.map((item) => (
-                  <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton 
-                      onClick={() => setActiveTab(item.id)}
-                      isActive={activeTab === item.id}
-                      tooltip={item.name}
-                    >
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.name}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
+        <SidebarMenuSection
+          items={settingsItems}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
       </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton onClick={handleLogout}>
-              <LogOut className="h-4 w-4" />
-              <span>Logout</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
+      
+      <SidebarLogoutFooter onLogout={handleLogout} />
     </Sidebar>
   );
 };
