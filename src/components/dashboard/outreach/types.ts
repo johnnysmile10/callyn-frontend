@@ -4,30 +4,16 @@ export interface TargetAudience {
   companySize: string[];
   jobTitles: string[];
   location: string[];
-  customCriteria?: string;
 }
 
 export interface LeadRecord {
   id: string;
   name: string;
-  company?: string;
-  email?: string;
+  email: string;
   phone: string;
-  status: 'new' | 'contacted' | 'interested' | 'not_interested';
-  source?: string;
-  tags?: string[];
-  createdAt?: string;
-}
-
-export interface LanguageConfig {
-  primaryLanguage: string;
-  secondaryLanguages: string[];
-  tone: 'professional' | 'casual' | 'friendly' | 'authoritative';
-  formality: 'formal' | 'informal' | 'balanced';
-  culturalAdaptation: boolean;
-  localExpressions: boolean;
-  voiceId?: string;
-  model?: string;
+  company: string;
+  title: string;
+  status: 'new' | 'called' | 'interested' | 'not_interested';
 }
 
 export interface ScriptConfig {
@@ -35,19 +21,36 @@ export interface ScriptConfig {
   mainPitch: string;
   objectionHandling: string[];
   closingStatement: string;
-  languageConfig?: LanguageConfig;
+  language?: string;
+  tone?: string;
+  personality?: string;
+}
+
+export interface SchedulingConfig {
+  calendarIntegration?: {
+    provider: string;
+    connected: boolean;
+    calendarId?: string;
+    syncEnabled: boolean;
+  };
+  operatingHours: {
+    monday: { enabled: boolean; start: string; end: string; };
+    tuesday: { enabled: boolean; start: string; end: string; };
+    wednesday: { enabled: boolean; start: string; end: string; };
+    thursday: { enabled: boolean; start: string; end: string; };
+    friday: { enabled: boolean; start: string; end: string; };
+    saturday: { enabled: boolean; start: string; end: string; };
+    sunday: { enabled: boolean; start: string; end: string; };
+  };
+  timezone: string;
+  bufferTime: number;
+  retryDelay: number;
+  weekendCalling: boolean;
 }
 
 export interface OutreachData {
   targetAudience?: TargetAudience;
   leadList?: LeadRecord[];
   script?: ScriptConfig;
-  scheduling?: {
-    timezone: string;
-    availability: string[];
-  };
-  testResults?: {
-    callCount: number;
-    successRate: number;
-  };
+  scheduling?: SchedulingConfig;
 }

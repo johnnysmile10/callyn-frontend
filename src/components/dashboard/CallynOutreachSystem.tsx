@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import Step1TargetAudience from "./outreach/steps/Step1TargetAudience";
 import Step2LeadList from "./outreach/steps/Step2LeadList";
 import Step3ScriptLanguage from "./outreach/steps/Step3ScriptLanguage";
+import Step4CallScheduling from "./outreach/steps/Step4CallScheduling";
 import StepNavigation from "./outreach/steps/StepNavigation";
 import OutreachHeader from "./outreach/OutreachHeader";
 import StepProgressIndicator from "./outreach/StepProgressIndicator";
@@ -47,9 +48,9 @@ const CallynOutreachSystem = () => {
     {
       id: 4,
       title: "Set Call Scheduling",
-      description: "Configure availability and booking",
+      description: "Configure availability and calendar booking",
       icon: Calendar,
-      component: null
+      component: Step4CallScheduling
     },
     {
       id: 5,

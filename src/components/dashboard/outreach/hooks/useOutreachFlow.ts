@@ -20,7 +20,8 @@ export const useOutreachFlow = () => {
       case 3:
         return !!(outreachData?.script?.greeting && outreachData?.script?.mainPitch);
       case 4:
-        return !!(outreachData?.scheduling?.timezone);
+        return !!(outreachData?.scheduling?.calendarIntegration?.connected && 
+                 outreachData?.scheduling?.timezone);
       case 5:
         return true;
       default:
@@ -28,7 +29,7 @@ export const useOutreachFlow = () => {
     }
   };
 
-  const getCurrentStepData = (currentStep: number): TargetAudience | LeadRecord[] | ScriptConfig => {
+  const getCurrentStepData = (currentStep: number): any => {
     switch (currentStep) {
       case 1:
         return outreachData?.targetAudience || {
@@ -46,18 +47,33 @@ export const useOutreachFlow = () => {
           objectionHandling: [],
           closingStatement: ''
         };
-      default:
-        // Return a default TargetAudience for other steps
-        return {
-          industry: [],
-          companySize: [],
-          jobTitles: [],
-          location: []
+      case 4:
+        return outreachData?.scheduling || {
+          calendarIntegration: {
+            provider: "",
+            connected: false,
+            syncEnabled: false
+          },
+          operatingHours: {
+            monday: { enabled: true, start: '09:00', end: '17:00' },
+            tuesday: { enabled: true, start: '09:00', end: '17:00' },
+            wednesday: { enabled: true, start: '09:00', end: '17:00' },
+            thursday: { enabled: true, start: '09:00', end: '17:00' },
+            friday: { enabled: true, start: '09:00', end: '17:00' },
+            saturday: { enabled: false, start: '09:00', end: '17:00' },
+            sunday: { enabled: false, start: '09:00', end: '17:00' }
+          },
+          timezone: 'America/New_York',
+          bufferTime: 15,
+          retryDelay: 24,
+          weekendCalling: false
         };
+      default:
+        return {};
     }
   };
 
-  const handleStepDataUpdate = (currentStep: number, data: TargetAudience | LeadRecord[] | ScriptConfig) => {
+  const handleStepDataUpdate = (currentStep: number, data: any) => {
     switch (currentStep) {
       case 1:
         updateOutreachData({ targetAudience: data as TargetAudience });
@@ -67,6 +83,9 @@ export const useOutreachFlow = () => {
         break;
       case 3:
         updateOutreachData({ script: data as ScriptConfig });
+        break;
+      case 4:
+        updateOutreachData({ scheduling: data });
         break;
     }
   };
