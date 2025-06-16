@@ -29,12 +29,13 @@ const Dashboard = () => {
       return requestedTab;
     }
     
-    // If user has completed onboarding but no agent exists, show your-agent
-    // If user has an agent, default to your-agent instead of overview
-    if (onboardingData || userAgent) {
+    // If user has no agent, always start with your-agent which includes quick-start
+    if (!userAgent) {
       return "your-agent";
     }
-    return userAgent ? "overview" : "agent-setup";
+    
+    // If user has an agent, default to overview
+    return "overview";
   });
   const [campaignActive, setCampaignActive] = useState(false);
   
@@ -111,20 +112,20 @@ const Dashboard = () => {
         <DashboardSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="flex-1 overflow-auto">
           <div className="container mx-auto py-8 px-4">
-            {/* Welcome Banner for New Users */}
-            {!userAgent && !hasCompletedSetup() && (
+            {/* Welcome Banner for New Users - Updated */}
+            {!userAgent && (
               <div className="mb-8">
                 <Alert className="bg-blue-50 border-blue-200">
                   <Rocket className="h-4 w-4 text-blue-600" />
                   <AlertTitle className="text-blue-800">Welcome to Callyn!</AlertTitle>
                   <AlertDescription className="text-blue-700 flex items-center justify-between">
-                    <span>Complete your setup to create your first AI calling agent.</span>
+                    <span>Create your first AI calling agent in just 5 minutes with our Quick Start wizard.</span>
                     <Button 
-                      onClick={() => navigate('/onboarding')} 
+                      onClick={() => setActiveTab('your-agent')} 
                       size="sm" 
                       className="bg-blue-600 hover:bg-blue-700 text-white ml-4"
                     >
-                      Complete Setup
+                      Get Started
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </AlertDescription>
