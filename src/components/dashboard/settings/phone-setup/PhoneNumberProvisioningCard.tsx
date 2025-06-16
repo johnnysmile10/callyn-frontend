@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Phone } from "lucide-react";
-import CountrySelector from "../CountrySelector";
+import PhoneCountrySelector from "./PhoneCountrySelector";
 import AreaCodeSelector from "./AreaCodeSelector";
 import NumberSearchInput from "./NumberSearchInput";
 import AvailableNumbersList from "./AvailableNumbersList";
@@ -59,7 +59,7 @@ const PhoneNumberProvisioningCard = ({
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <CountrySelector 
+        <PhoneCountrySelector 
           selectedCountry={selectedCountry}
           onCountryChange={onCountryChange}
         />
