@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,10 +19,16 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import LanguageConfigPanel from "./LanguageConfigPanel";
+import UnifiedScriptEditor from "../shared/UnifiedScriptEditor";
+import AgentProfileEditModal from "./AgentProfileEditModal";
+import VoicePersonalityEditModal from "./VoicePersonalityEditModal";
 import { LanguageConfig } from "../outreach/types";
 
 const AgentOverview = () => {
-  const { userAgent, onboardingData, setOnboardingData } = useAuth();
+  const { userAgent, onboardingData, setOnboardingData, setUserAgent } = useAuth();
+  const [showScriptEditor, setShowScriptEditor] = useState(false);
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
+  const [showVoiceEdit, setShowVoiceEdit] = useState(false);
 
   const handleLanguageConfigChange = (languageConfig: LanguageConfig) => {
     // Store language config in onboarding data for now
@@ -31,6 +38,57 @@ const AgentOverview = () => {
         ...onboardingData,
         languageConfig
       });
+    }
+  };
+
+  const handleProfileSave = (businessInfo: {
+    name: string;
+    industry: string;
+    targetAudience: string;
+    mainGoal: string;
+  }) => {
+    if (userAgent && setUserAgent) {
+      const updatedAgent = {
+        ...userAgent,
+        configuration: {
+          ...userAgent.configuration,
+          businessInfo
+        }
+      };
+      setUserAgent(updatedAgent);
+    }
+  };
+
+  const handleVoicePersonalitySave = (voice: string, personality: string) => {
+    if (userAgent && setUserAgent) {
+      const updatedAgent = {
+        ...userAgent,
+        configuration: {
+          ...userAgent.configuration,
+          voice,
+          personality
+        }
+      };
+      setUserAgent(updatedAgent);
+    }
+  };
+
+  const handleScriptSave = (data: {
+    script: string;
+    personality: string;
+    useSmallTalk: boolean;
+    handleObjections: boolean;
+  }) => {
+    if (userAgent && setUserAgent) {
+      const updatedAgent = {
+        ...userAgent,
+        configuration: {
+          ...userAgent.configuration,
+          script: data.script,
+          personality: data.personality
+        }
+      };
+      setUserAgent(updatedAgent);
     }
   };
 
@@ -95,7 +153,11 @@ const AgentOverview = () => {
               <Building2 className="h-5 w-5 text-blue-600" />
               <CardTitle>Business Information</CardTitle>
             </div>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowProfileEdit(true)}
+            >
               <Edit className="mr-2 h-4 w-4" />
               Edit
             </Button>
@@ -139,7 +201,11 @@ const AgentOverview = () => {
               <Mic className="h-5 w-5 text-purple-600" />
               <CardTitle>Voice & Personality</CardTitle>
             </div>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowVoiceEdit(true)}
+            >
               <Edit className="mr-2 h-4 w-4" />
               Edit
             </Button>
@@ -173,7 +239,11 @@ const AgentOverview = () => {
               <FileText className="h-5 w-5 text-orange-600" />
               <CardTitle>Script Configuration</CardTitle>
             </div>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowScriptEditor(true)}
+            >
               <Edit className="mr-2 h-4 w-4" />
               Edit
             </Button>
@@ -232,6 +302,32 @@ const AgentOverview = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Edit Modals */}
+      <AgentProfileEditModal
+        isOpen={showProfileEdit}
+        onClose={() => setShowProfileEdit(false)}
+        businessInfo={configuration.businessInfo}
+        onSave={handleProfileSave}
+      />
+
+      <VoicePersonalityEditModal
+        isOpen={showVoiceEdit}
+        onClose={() => setShowVoiceEdit(false)}
+        voice={configuration.voice}
+        personality={configuration.personality}
+        onSave={handleVoicePersonalitySave}
+      />
+
+      <UnifiedScriptEditor
+        isOpen={showScriptEditor}
+        onClose={() => setShowScriptEditor(false)}
+        initialScript={configuration.script || ''}
+        initialPersonality={configuration.personality}
+        initialUseSmallTalk={false}
+        initialHandleObjections={false}
+        onSave={handleScriptSave}
+      />
     </div>
   );
 };
