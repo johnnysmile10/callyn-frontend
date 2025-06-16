@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { 
   LayoutDashboard, 
@@ -11,7 +12,8 @@ import {
   PhoneCall,
   Settings,
   Phone,
-  Headphones
+  Headphones,
+  User
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -52,6 +54,12 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
   ];
 
   const agentBuilderItems = [
+    // Add "My Agent" as the first item for users with agents or onboarding data
+    ...(userAgent || onboardingData ? [{
+      name: "My Agent",
+      icon: User,
+      id: "my-agent",
+    }] : []),
     // Show "Your Agent" if user has completed onboarding or has an agent
     ...(userAgent || onboardingData ? [{
       name: "Your Agent",
@@ -236,6 +244,3 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
 };
 
 export default DashboardSidebar;
-
-// NOTE: This file is now 228+ lines and getting lengthy.
-// Consider asking for a refactor to split menu generation and user info/avatar out into smaller components!

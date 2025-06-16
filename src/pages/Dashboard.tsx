@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -12,6 +13,7 @@ import YourAgentSection from "@/components/dashboard/agent/YourAgentSection";
 import SettingsIntegrationsSection from "@/components/dashboard/settings/SettingsIntegrationsSection";
 import CallCenterDashboard from "@/components/dashboard/callcenter/CallCenterDashboard";
 import EliteCallInterface from "@/components/dashboard/callcenter/EliteCallInterface";
+import PersonalAgentManager from "@/components/dashboard/PersonalAgentManager";
 import { useAuth } from "@/context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -74,6 +76,10 @@ const Dashboard = () => {
       
       case "call-log":
         return <CallLogView />;
+      
+      // My Agent section - NEW
+      case "my-agent":
+        return <PersonalAgentManager />;
       
       // Your Agent section
       case "your-agent":
