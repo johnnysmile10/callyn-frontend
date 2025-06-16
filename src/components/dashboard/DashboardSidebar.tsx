@@ -11,7 +11,7 @@ import {
   PhoneCall,
   Settings,
   Phone,
-  Headphones // <-- Add import for Headphones icon
+  Headphones
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -27,7 +27,7 @@ import {
   SidebarRail
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 
 interface DashboardSidebarProps {
   activeTab: string;

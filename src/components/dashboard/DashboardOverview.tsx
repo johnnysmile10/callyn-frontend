@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,7 @@ import {
   Play,
   Settings
 } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 
 interface DashboardOverviewProps {
   onCampaignToggle: (active: boolean) => void;

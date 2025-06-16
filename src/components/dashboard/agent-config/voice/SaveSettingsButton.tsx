@@ -1,7 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 import { LanguageConfig } from "../../outreach/types";
 
 interface SaveSettingsButtonProps {

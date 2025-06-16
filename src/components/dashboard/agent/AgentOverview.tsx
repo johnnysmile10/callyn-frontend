@@ -17,7 +17,7 @@ import {
   Target,
   Users
 } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 import LanguageConfigPanel from "./LanguageConfigPanel";
 import UnifiedScriptEditor from "../shared/UnifiedScriptEditor";
 import AgentProfileEditModal from "./AgentProfileEditModal";

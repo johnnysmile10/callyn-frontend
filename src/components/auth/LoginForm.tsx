@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "@/components/ui/sonner";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),

@@ -1,5 +1,5 @@
 
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 import { OutreachData, TargetAudience, LeadRecord, ScriptConfig } from "../types";
 
 export const useOutreachFlow = () => {

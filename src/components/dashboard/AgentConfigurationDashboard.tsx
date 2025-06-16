@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Bot, Globe, MessageSquare, Phone } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";

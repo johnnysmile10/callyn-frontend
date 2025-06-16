@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
 import { LogIn } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context";
 
 const GoogleSignupButton = () => {
   const [loading, setLoading] = useState(false);
