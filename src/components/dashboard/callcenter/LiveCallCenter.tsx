@@ -12,8 +12,6 @@ import {
   Bot,
   FileText,
   Headphones,
-  ChevronRight,
-  ChevronLeft,
   Clock,
   Volume2
 } from "lucide-react";
@@ -83,7 +81,6 @@ const LiveCallCenter = () => {
     transcriptLines,
   } = useEliteSimulatedCall();
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isScriptEditorOpen, setIsScriptEditorOpen] = useState(false);
   const [isEditAgentOpen, setIsEditAgentOpen] = useState(false);
 
@@ -150,7 +147,7 @@ const LiveCallCenter = () => {
     <EliteErrorBoundary>
       <div className="h-screen flex bg-gray-50">
         {/* Main Content Area */}
-        <div className={`flex-1 flex flex-col transition-all duration-300 ${sidebarOpen ? 'mr-80' : 'mr-0'}`}>
+        <div className="flex-1 flex flex-col">
           {/* Header */}
           <div className="bg-white border-b px-6 py-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -201,16 +198,6 @@ const LiveCallCenter = () => {
               >
                 <FileText className="h-4 w-4" />
                 Edit Script
-              </Button>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="flex items-center gap-1"
-              >
-                {sidebarOpen ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-                {sidebarOpen ? "Hide" : "Show"} Tools
               </Button>
             </div>
           </div>
@@ -274,6 +261,19 @@ const LiveCallCenter = () => {
                     />
                   </CardContent>
                 </Card>
+
+                {/* Voice Test */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Volume2 className="h-5 w-5" />
+                      Voice Test
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <VoiceTestingPanel />
+                  </CardContent>
+                </Card>
               </div>
 
               {/* Center Column - Live Call Monitor */}
@@ -317,10 +317,44 @@ const LiveCallCenter = () => {
                     </CardContent>
                   </Card>
                 </div>
+
+                {/* AI Assistant */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Bot className="h-5 w-5" />
+                      AI Assistant
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <AIAssistantPanel />
+                  </CardContent>
+                </Card>
               </div>
 
-              {/* Right Column - Analytics & Settings */}
+              {/* Right Column - Analytics & Script Tools */}
               <div className="lg:col-span-3 space-y-6">
+                {/* Script Breakdown */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <FileText className="h-5 w-5" />
+                      Script Guide
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ScriptBreakdownView
+                      scriptSections={SCRIPT_STEPS}
+                      currentStepIdx={agentIdx}
+                    />
+                    <Separator className="my-3" />
+                    <AgentInstructions
+                      agentInstructions={agentInstructions}
+                      outcomeGoals={outcomeGoals}
+                    />
+                  </CardContent>
+                </Card>
+
                 {/* Daily Summary */}
                 <Card>
                   <CardHeader>
@@ -369,65 +403,6 @@ const LiveCallCenter = () => {
             </div>
           </div>
         </div>
-
-        {/* Collapsible Sidebar - Agent Tools */}
-        {sidebarOpen && (
-          <div className="fixed right-0 top-0 h-full w-80 bg-white border-l shadow-lg z-10 flex flex-col">
-            <div className="p-4 border-b">
-              <h3 className="font-semibold text-lg">Agent Tools</h3>
-              <p className="text-sm text-gray-600">Script, voice testing, and AI assistance</p>
-            </div>
-            
-            <div className="flex-1 overflow-auto p-4 space-y-4">
-              {/* Voice Test */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Volume2 className="h-4 w-4" />
-                    Voice Test
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <VoiceTestingPanel />
-                </CardContent>
-              </Card>
-
-              {/* Script Breakdown */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <FileText className="h-4 w-4" />
-                    Script Guide
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ScriptBreakdownView
-                    scriptSections={SCRIPT_STEPS}
-                    currentStepIdx={agentIdx}
-                  />
-                  <Separator className="my-3" />
-                  <AgentInstructions
-                    agentInstructions={agentInstructions}
-                    outcomeGoals={outcomeGoals}
-                  />
-                </CardContent>
-              </Card>
-
-              {/* AI Assistant */}
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <Bot className="h-4 w-4" />
-                    AI Assistant
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <AIAssistantPanel />
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        )}
 
         {/* Modals */}
         <UnifiedScriptEditor
