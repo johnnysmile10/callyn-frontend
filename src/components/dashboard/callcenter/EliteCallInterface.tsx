@@ -8,12 +8,15 @@ import RealtimeMonitorPanel from "./Elite/RealtimeMonitorPanel";
 import ScriptBreakdownView from "./Elite/ScriptBreakdownView";
 import CallOutcomeButtons from "./Elite/CallOutcomeButtons";
 import LeadInfoPanel from "./Elite/LeadInfoPanel";
+import EliteScriptEditorModal from "./Elite/EliteScriptEditorModal";
+import EditAgentModal from "./Elite/EditAgentModal";
 import { toast } from "@/hooks/use-toast";
 import AIAssistantPanel from "./Elite/AIAssistantPanel";
 import CardSection from "./Elite/CardSection";
 import SectionHeader from "./Elite/SectionHeader";
+import { Button } from "@/components/ui/button";
 // REPLACE Waveform -> Activity, Script -> FileText (which actually exist)
-import { Bot, Activity, Users, Clock, Headphones, FileText } from "lucide-react";
+import { Bot, Activity, Users, Clock, Headphones, FileText, Edit } from "lucide-react";
 import React, { useRef, useEffect, useState } from "react";
 
 const DUMMY_LEAD = {
@@ -66,6 +69,23 @@ const EliteCallInterface = () => {
     transcriptLines,
   } = useEliteSimulatedCall();
 
+  // Modal states
+  const [isScriptEditorOpen, setIsScriptEditorOpen] = useState(false);
+  const [isEditAgentOpen, setIsEditAgentOpen] = useState(false);
+
+  // Script and agent states
+  const [currentScript, setCurrentScript] = useState("");
+  const [agentSettings, setAgentSettings] = useState({
+    name: "Sales Agent",
+    voice: "9BWtsMINqrJLrRacOk9x",
+    language: "en",
+    speakingSpeed: 1.0,
+    enthusiasm: 5,
+    personality: "professional",
+    useSmallTalk: false,
+    handleObjections: false,
+  });
+
   // Figure out which script section is active
   const agentIdx = transcriptLines.reduce(
     (idx, l) =>
@@ -82,6 +102,25 @@ const EliteCallInterface = () => {
   const handleOutcome = (outcome: string) => {
     toast({ title: `Outcome: ${outcome}` });
     // ... In real use: log with API, etc.
+  };
+
+  // Modal handlers
+  const handleScriptSave = (script: string) => {
+    setCurrentScript(script);
+    setIsScriptEditorOpen(false);
+    toast({ 
+      title: "Script Updated", 
+      description: "Your call script has been updated and will be used for future calls." 
+    });
+  };
+
+  const handleAgentSave = (settings: any) => {
+    setAgentSettings(settings);
+    setIsEditAgentOpen(false);
+    toast({ 
+      title: "Agent Updated", 
+      description: "Your agent configuration has been updated successfully." 
+    });
   };
 
   return (
@@ -102,12 +141,32 @@ const EliteCallInterface = () => {
               className="!mb-0"
             />
             <div className="flex-1" />
-            <span
-              className={`rounded px-3 py-1.5 text-xs font-bold tracking-wider border
-                ${isConnected ? "bg-green-100 text-green-700 border-green-200" : "bg-gray-100 text-gray-500 border-gray-200"}`}
-            >
-              {isConnected ? "CONNECTED" : "IDLE"}
-            </span>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setIsEditAgentOpen(true)}
+                className="flex items-center gap-1"
+              >
+                <Bot className="h-4 w-4" />
+                Edit Agent
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setIsScriptEditorOpen(true)}
+                className="flex items-center gap-1"
+              >
+                <Edit className="h-4 w-4" />
+                Edit Script
+              </Button>
+              <span
+                className={`rounded px-3 py-1.5 text-xs font-bold tracking-wider border
+                  ${isConnected ? "bg-green-100 text-green-700 border-green-200" : "bg-gray-100 text-gray-500 border-gray-200"}`}
+              >
+                {isConnected ? "CONNECTED" : "IDLE"}
+              </span>
+            </div>
           </CardSection>
         </div>
 
@@ -201,9 +260,23 @@ const EliteCallInterface = () => {
           </CardSection>
         </div>
       </div>
+
+      {/* Modals */}
+      <EliteScriptEditorModal
+        isOpen={isScriptEditorOpen}
+        onClose={() => setIsScriptEditorOpen(false)}
+        initialScript={currentScript}
+        onSave={handleScriptSave}
+      />
+
+      <EditAgentModal
+        isOpen={isEditAgentOpen}
+        onClose={() => setIsEditAgentOpen(false)}
+        initialSettings={agentSettings}
+        onSave={handleAgentSave}
+      />
     </EliteErrorBoundary>
   );
 };
 
 export default EliteCallInterface;
-
