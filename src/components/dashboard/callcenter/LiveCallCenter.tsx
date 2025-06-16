@@ -1,12 +1,10 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { 
   Phone, 
-  Clock, 
   Users, 
   Settings, 
   BarChart, 
@@ -15,7 +13,9 @@ import {
   FileText,
   Headphones,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  Clock,
+  Volume2
 } from "lucide-react";
 
 // Import existing components
@@ -40,6 +40,7 @@ import LeadInfoPanel from "./Elite/LeadInfoPanel";
 import UnifiedScriptEditor from "../shared/UnifiedScriptEditor";
 import EditAgentModal from "./Elite/EditAgentModal";
 import AIAssistantPanel from "./Elite/AIAssistantPanel";
+import { useCallTimer } from "./Elite/useCallTimer";
 import { toast } from "@/hooks/use-toast";
 
 const DUMMY_LEAD = {
@@ -82,7 +83,6 @@ const LiveCallCenter = () => {
     transcriptLines,
   } = useEliteSimulatedCall();
 
-  const [activeTab, setActiveTab] = useState("status");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [isScriptEditorOpen, setIsScriptEditorOpen] = useState(false);
   const [isEditAgentOpen, setIsEditAgentOpen] = useState(false);
@@ -111,6 +111,9 @@ const LiveCallCenter = () => {
         : idx,
     0
   );
+
+  // Call timer
+  const callDuration = useCallTimer(isConnected);
 
   // Modal handlers
   const handleScriptSave = (data: {
@@ -159,6 +162,7 @@ const LiveCallCenter = () => {
             </div>
             
             <div className="flex items-center gap-3">
+              {/* Call Status Indicator */}
               <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
                 isConnected 
                   ? "bg-green-100 text-green-800" 
@@ -174,7 +178,30 @@ const LiveCallCenter = () => {
                       : "bg-gray-400"
                 }`} />
                 {isConnected ? "Live Call" : agentStatus.isActive ? "Agent Online" : "Agent Offline"}
+                {isConnected && callDuration && (
+                  <span className="ml-2 font-mono">{callDuration}</span>
+                )}
               </div>
+
+              {/* Quick Actions */}
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setIsEditAgentOpen(true)}
+                className="flex items-center gap-1"
+              >
+                <Bot className="h-4 w-4" />
+                Edit Agent
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setIsScriptEditorOpen(true)}
+                className="flex items-center gap-1"
+              >
+                <FileText className="h-4 w-4" />
+                Edit Script
+              </Button>
               
               <Button
                 variant="outline"
@@ -183,164 +210,180 @@ const LiveCallCenter = () => {
                 className="flex items-center gap-1"
               >
                 {sidebarOpen ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-                {sidebarOpen ? "Hide" : "Show"} Sidebar
+                {sidebarOpen ? "Hide" : "Show"} Tools
               </Button>
             </div>
           </div>
 
-          {/* Main Tabs */}
-          <div className="flex-1 overflow-auto">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-              <div className="bg-white border-b px-6">
-                <TabsList className="grid w-full max-w-2xl grid-cols-5">
-                  <TabsTrigger value="status" className="flex items-center gap-2">
-                    <Activity className="h-4 w-4" />
-                    Status
-                  </TabsTrigger>
-                  <TabsTrigger value="live-call" className="flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
-                    Live Call
-                  </TabsTrigger>
-                  <TabsTrigger value="schedule-queue" className="flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    Schedule & Queue
-                  </TabsTrigger>
-                  <TabsTrigger value="controls" className="flex items-center gap-2">
-                    <Settings className="h-4 w-4" />
-                    Controls
-                  </TabsTrigger>
-                  <TabsTrigger value="analytics" className="flex items-center gap-2">
-                    <BarChart className="h-4 w-4" />
-                    Analytics
-                  </TabsTrigger>
-                </TabsList>
+          {/* Main Dashboard Content */}
+          <div className="flex-1 overflow-auto p-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full">
+              {/* Left Column - Agent Status & Controls */}
+              <div className="lg:col-span-3 space-y-6">
+                {/* Agent Status */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Activity className="h-5 w-5" />
+                      Agent Status
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <AgentStatusControl 
+                      status={agentStatus}
+                      onStatusChange={updateAgentStatus}
+                    />
+                  </CardContent>
+                </Card>
+
+                {/* Current Lead Info */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Users className="h-5 w-5" />
+                      Current Lead
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <LeadInfoPanel lead={DUMMY_LEAD} />
+                  </CardContent>
+                </Card>
+
+                {/* Call Controls */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Headphones className="h-5 w-5" />
+                      Call Controls
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <QuickActionsBar
+                      isConnected={isConnected}
+                      isMuted={isMuted}
+                      isHolding={isHolding}
+                      onMuteToggle={onMuteToggle}
+                      onEndCall={onEndCall}
+                      onHoldToggle={onHoldToggle}
+                    />
+                    <Separator className="my-4" />
+                    <LiveListen
+                      isConnected={isConnected}
+                      onSpeak={onSpeak}
+                      onVolumeChange={onVolumeChange}
+                    />
+                  </CardContent>
+                </Card>
               </div>
 
-              <div className="flex-1 overflow-auto p-6">
-                <TabsContent value="status" className="mt-0 h-full">
-                  <AgentStatusControl 
-                    status={agentStatus}
-                    onStatusChange={updateAgentStatus}
-                  />
-                </TabsContent>
+              {/* Center Column - Live Call Monitor */}
+              <div className="lg:col-span-6 space-y-6">
+                {/* Live Transcript */}
+                <Card className="h-96">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Activity className="h-5 w-5" />
+                      Live Call Transcript
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <RealtimeMonitorPanel
+                      isConnected={isConnected}
+                      transcriptLines={transcriptLines}
+                    />
+                  </CardContent>
+                </Card>
 
-                <TabsContent value="live-call" className="mt-0 h-full">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
-                    {/* Lead Info */}
-                    <div className="lg:col-span-1">
-                      <Card className="h-fit">
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <Users className="h-5 w-5" />
-                            Current Lead
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <LeadInfoPanel lead={DUMMY_LEAD} />
-                        </CardContent>
-                      </Card>
+                {/* Call Outcome & Queue */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Log Call Outcome</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CallOutcomeButtons onOutcomeSelect={handleOutcome} />
+                    </CardContent>
+                  </Card>
 
-                      {/* Call Controls */}
-                      <Card className="mt-4">
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <Headphones className="h-5 w-5" />
-                            Call Controls
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <QuickActionsBar
-                            isConnected={isConnected}
-                            isMuted={isMuted}
-                            isHolding={isHolding}
-                            onMuteToggle={onMuteToggle}
-                            onEndCall={onEndCall}
-                            onHoldToggle={onHoldToggle}
-                          />
-                        </CardContent>
-                      </Card>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <Clock className="h-5 w-5" />
+                        Call Queue
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <CallQueueView queue={callQueue} />
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
 
-                      {/* Live Listen */}
-                      <Card className="mt-4">
-                        <CardContent className="pt-6">
-                          <LiveListen
-                            isConnected={isConnected}
-                            onSpeak={onSpeak}
-                            onVolumeChange={onVolumeChange}
-                          />
-                        </CardContent>
-                      </Card>
-                    </div>
+              {/* Right Column - Analytics & Settings */}
+              <div className="lg:col-span-3 space-y-6">
+                {/* Daily Summary */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <BarChart className="h-5 w-5" />
+                      Today's Summary
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <DailyCallSummary summary={dailySummary} />
+                  </CardContent>
+                </Card>
 
-                    {/* Transcript Monitor */}
-                    <div className="lg:col-span-2">
-                      <Card className="h-fit">
-                        <CardHeader>
-                          <CardTitle className="flex items-center gap-2">
-                            <Activity className="h-5 w-5" />
-                            Live Transcript
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <RealtimeMonitorPanel
-                            isConnected={isConnected}
-                            transcriptLines={transcriptLines}
-                          />
-                        </CardContent>
-                      </Card>
-
-                      {/* Call Outcome */}
-                      <Card className="mt-4">
-                        <CardHeader>
-                          <CardTitle>Log Call Outcome</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <CallOutcomeButtons onOutcomeSelect={handleOutcome} />
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="schedule-queue" className="mt-0 h-full">
-                  <div className="space-y-6">
+                {/* Operating Hours */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Clock className="h-5 w-5" />
+                      Operating Hours
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
                     <OperatingHoursScheduler 
                       hours={operatingHours}
                       onHoursChange={updateOperatingHours}
                     />
-                    <CallQueueView queue={callQueue} />
-                  </div>
-                </TabsContent>
+                  </CardContent>
+                </Card>
 
-                <TabsContent value="controls" className="mt-0 h-full">
-                  <CallRateControls 
-                    callRate={callRate}
-                    onRateChange={updateCallRate}
-                  />
-                </TabsContent>
-
-                <TabsContent value="analytics" className="mt-0 h-full">
-                  <DailyCallSummary summary={dailySummary} />
-                </TabsContent>
+                {/* Call Rate Controls */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Settings className="h-5 w-5" />
+                      Call Rate Settings
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CallRateControls 
+                      callRate={callRate}
+                      onRateChange={updateCallRate}
+                    />
+                  </CardContent>
+                </Card>
               </div>
-            </Tabs>
+            </div>
           </div>
         </div>
 
-        {/* Collapsible Sidebar */}
+        {/* Collapsible Sidebar - Agent Tools */}
         {sidebarOpen && (
           <div className="fixed right-0 top-0 h-full w-80 bg-white border-l shadow-lg z-10 flex flex-col">
             <div className="p-4 border-b">
               <h3 className="font-semibold text-lg">Agent Tools</h3>
-              <p className="text-sm text-gray-600">Quick access to agent settings and tools</p>
+              <p className="text-sm text-gray-600">Script, voice testing, and AI assistance</p>
             </div>
             
             <div className="flex-1 overflow-auto p-4 space-y-4">
-              {/* Agent Voice Test */}
+              {/* Voice Test */}
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm flex items-center gap-2">
-                    <Headphones className="h-4 w-4" />
+                    <Volume2 className="h-4 w-4" />
                     Voice Test
                   </CardTitle>
                 </CardHeader>
@@ -349,12 +392,12 @@ const LiveCallCenter = () => {
                 </CardContent>
               </Card>
 
-              {/* Script Preview */}
+              {/* Script Breakdown */}
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="text-sm flex items-center gap-2">
                     <FileText className="h-4 w-4" />
-                    Script Breakdown
+                    Script Guide
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -372,30 +415,16 @@ const LiveCallCenter = () => {
 
               {/* AI Assistant */}
               <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-sm flex items-center gap-2">
+                    <Bot className="h-4 w-4" />
+                    AI Assistant
+                  </CardTitle>
+                </CardHeader>
                 <CardContent className="p-0">
                   <AIAssistantPanel />
                 </CardContent>
               </Card>
-
-              {/* Quick Edit Actions */}
-              <div className="space-y-2">
-                <Button
-                  variant="outline"
-                  onClick={() => setIsEditAgentOpen(true)}
-                  className="w-full flex items-center gap-2"
-                >
-                  <Bot className="h-4 w-4" />
-                  Edit Agent Settings
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsScriptEditorOpen(true)}
-                  className="w-full flex items-center gap-2"
-                >
-                  <FileText className="h-4 w-4" />
-                  Edit Script & Personality
-                </Button>
-              </div>
             </div>
           </div>
         )}
