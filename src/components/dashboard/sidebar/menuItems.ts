@@ -11,7 +11,8 @@ import {
   Settings,
   Phone,
   Headphones,
-  User
+  User,
+  Rocket
 } from "lucide-react";
 
 export interface MenuItem {
@@ -42,14 +43,9 @@ export const getAgentBuilderItems = (userAgent: any, onboardingData: any): MenuI
     id: "your-agent",
   }] : []),
   {
-    name: userAgent ? "Agent Configuration" : "Create Agent",
-    icon: userAgent ? Settings : Bot,
-    id: "agent-setup",
-  },
-  {
-    name: "Outreach System",
-    icon: Target,
-    id: "outreach-system",
+    name: "AI Campaign Builder",
+    icon: Rocket,
+    id: "ai-campaign-builder",
   },
   {
     name: "Call Center",

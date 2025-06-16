@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -19,6 +18,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Rocket, ArrowRight, CheckCircle } from "lucide-react";
 import CallynOutreachSystem from "@/components/dashboard/CallynOutreachSystem";
+import AICampaignBuilder from "@/components/dashboard/AICampaignBuilder";
 
 const Dashboard = () => {
   const { isAuthenticated, userAgent, hasCompletedSetup, onboardingData } = useAuth();
@@ -89,13 +89,9 @@ const Dashboard = () => {
       case "settings-integrations":
         return <SettingsIntegrationsSection />;
       
-      // Agent Configuration (replaces agent-setup)
-      case "agent-setup":
-        return <AgentConfigurationDashboard />;
-      
-      // Outreach System (replaces actions)
-      case "outreach-system":
-        return <CallynOutreachSystem />;
+      // NEW: AI Campaign Builder (replaces agent-setup and outreach-system)
+      case "ai-campaign-builder":
+        return <AICampaignBuilder />;
       
       // Elite Call Interface
       case "elite-call-interface":
@@ -111,9 +107,11 @@ const Dashboard = () => {
       case "analytics":
         return <DashboardCampaignManager />;
       
-      // Legacy actions route (now redirects to outreach-system)
+      // Legacy routes (redirect to new AI Campaign Builder)
+      case "agent-setup":
+      case "outreach-system":
       case "actions":
-        return <CallynOutreachSystem />;
+        return <AICampaignBuilder />;
       
       default:
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;

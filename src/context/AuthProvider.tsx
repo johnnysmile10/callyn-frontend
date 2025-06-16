@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { User, OnboardingData, UserAgent, AuthContextType } from './types/authTypes';
 import { OutreachData } from '@/components/dashboard/outreach/types';
@@ -13,6 +12,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [onboardingData, setOnboardingData] = useLocalStorage<OnboardingData>('onboarding_data');
   const [outreachData, setOutreachData] = useLocalStorage<OutreachData>('outreach_data');
   const [setupCompleted, setSetupCompleted] = useState(false);
+  const [campaignBuilderData, setCampaignBuilderData] = useLocalStorage('campaignBuilderData', {});
 
   const isAuthenticated = !!user;
 
@@ -64,26 +64,30 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.setItem('setup_completed', 'true');
   };
 
+  const value = {
+    user,
+    onboardingData,
+    userAgent,
+    outreachData,
+    setupCompleted,
+    isAuthenticated,
+    login,
+    googleLogin,
+    signup,
+    logout,
+    setOnboardingData,
+    setUserAgent,
+    setOutreachData,
+    createUserAgent,
+    hasCompletedSetup,
+    markSetupCompleted,
+    campaignBuilderData,
+    setCampaignBuilderData,
+  };
+
   return (
     <AuthContext.Provider
-      value={{
-        user,
-        onboardingData,
-        userAgent,
-        outreachData,
-        setupCompleted,
-        isAuthenticated,
-        login,
-        googleLogin,
-        signup,
-        logout,
-        setOnboardingData,
-        setUserAgent,
-        setOutreachData,
-        createUserAgent,
-        hasCompletedSetup,
-        markSetupCompleted,
-      }}
+      value={value}
     >
       {children}
     </AuthContext.Provider>
