@@ -22,8 +22,6 @@ export const useOutreachFlow = () => {
       case 4:
         return !!(outreachData?.scheduling?.timezone);
       case 5:
-        return !!(outreachData?.testResults?.callCount);
-      case 6:
         return true;
       default:
         return false;
