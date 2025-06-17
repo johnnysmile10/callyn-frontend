@@ -12,7 +12,8 @@ import SidebarLogoutFooter from "./sidebar/SidebarLogoutFooter";
 import { 
   getMainMenuItems, 
   getAgentBuilderItems, 
-  getCampaignManagerItems, 
+  getCampaignManagerItems,
+  getCallCenterItems,
   getSettingsItems 
 } from "./sidebar/menuItems";
 
@@ -32,7 +33,8 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
   
   const mainMenuItems = getMainMenuItems();
   const agentBuilderItems = getAgentBuilderItems(userAgent, onboardingData);
-  const campaignManagerItems = getCampaignManagerItems();
+  const campaignManagerItems = getCampaignManagerItems(userAgent);
+  const callCenterItems = getCallCenterItems(userAgent);
   const settingsItems = getSettingsItems(userAgent, onboardingData);
   
   return (
@@ -46,6 +48,7 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
           items={mainMenuItems}
           activeTab={activeTab}
           onTabChange={setActiveTab}
+          userAgent={userAgent}
         />
 
         <SidebarMenuSection
@@ -53,6 +56,7 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
           items={agentBuilderItems}
           activeTab={activeTab}
           onTabChange={setActiveTab}
+          userAgent={userAgent}
         />
 
         <SidebarMenuSection
@@ -60,12 +64,22 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
           items={campaignManagerItems}
           activeTab={activeTab}
           onTabChange={setActiveTab}
+          userAgent={userAgent}
+        />
+
+        <SidebarMenuSection
+          title="Call Center"
+          items={callCenterItems}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          userAgent={userAgent}
         />
 
         <SidebarMenuSection
           items={settingsItems}
           activeTab={activeTab}
           onTabChange={setActiveTab}
+          userAgent={userAgent}
         />
       </SidebarContent>
       

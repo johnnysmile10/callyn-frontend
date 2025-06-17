@@ -10,6 +10,7 @@ import CallControlBar from "@/components/dashboard/CallControlBar";
 import CallLogView from "@/components/dashboard/CallLogView";
 import YourAgentSection from "@/components/dashboard/agent/YourAgentSection";
 import SettingsIntegrationsSection from "@/components/dashboard/settings/SettingsIntegrationsSection";
+import UserDatabaseSection from "@/components/dashboard/settings/UserDatabaseSection";
 import CallCenterDashboard from "@/components/dashboard/callcenter/CallCenterDashboard";
 import EliteCallInterface from "@/components/dashboard/callcenter/EliteCallInterface";
 import PersonalAgentManager from "@/components/dashboard/PersonalAgentManager";
@@ -78,7 +79,7 @@ const Dashboard = () => {
       case "call-log":
         return <CallLogView />;
       
-      // My Agent section - NEW
+      // My Agent section
       case "my-agent":
         return <PersonalAgentManager />;
       
@@ -86,21 +87,25 @@ const Dashboard = () => {
       case "your-agent":
         return <YourAgentSection />;
       
-      // User Database section - NEW
+      // User Database section
       case "user-database":
-        return <SettingsIntegrationsSection />;
+        return <UserDatabaseSection />;
       
       // Settings & Integrations section
       case "settings-integrations":
         return <SettingsIntegrationsSection />;
       
-      // NEW: AI Campaign Builder (replaces agent-setup and outreach-system)
+      // AI Campaign Builder
       case "ai-campaign-builder":
         return <AICampaignBuilder />;
       
-      // NEW: Live Call Center (replaces call-center and elite-call-interface)
+      // Live Call Center
       case "live-call-center":
         return <LiveCallCenter />;
+      
+      // Call Analytics (new)
+      case "call-analytics":
+        return <CallLogView />;
       
       // Campaign Manager - Updated to handle all campaign-related functionality
       case "campaigns":
