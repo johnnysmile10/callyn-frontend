@@ -42,16 +42,32 @@ const Step5LaunchCampaign = ({ data, onUpdate, outreachData, onLaunch }: Step5La
     }, 2000);
   };
 
-  // Mock data for demonstration
+  // Helper function to render target audience
+  const renderTargetAudience = (audience: any): string => {
+    if (typeof audience === 'string') {
+      return audience;
+    }
+    if (audience && typeof audience === 'object') {
+      // Convert TargetAudience object to readable string
+      const parts = [];
+      if (audience.industry?.length) parts.push(`${audience.industry.join(', ')} industry`);
+      if (audience.jobTitles?.length) parts.push(`${audience.jobTitles.join(', ')} roles`);
+      if (audience.companySize?.length) parts.push(`${audience.companySize.join(', ')} companies`);
+      return parts.length > 0 ? parts.join(', ') : 'General business audience';
+    }
+    return "Business owners in tech industry";
+  };
+
+  // Mock data for demonstration with proper property names
   const campaignSummary = {
-    targetAudience: outreachData?.targetAudience || "Business owners in tech industry",
+    targetAudience: renderTargetAudience(outreachData?.targetAudience),
     leadCount: outreachData?.leadList?.length || 150,
-    scriptType: outreachData?.scriptLanguage?.scriptType || "conversational",
-    language: outreachData?.scriptLanguage?.language || "English",
+    scriptType: outreachData?.script?.tone || "conversational",
+    language: outreachData?.script?.language || "English",
     callScheduling: {
-      timezone: outreachData?.callScheduling?.timezone || "EST",
-      hours: outreachData?.callScheduling?.operatingHours || "9 AM - 5 PM",
-      daysPerWeek: outreachData?.callScheduling?.daysPerWeek || "Monday - Friday"
+      timezone: outreachData?.scheduling?.timezone || "EST",
+      hours: "9 AM - 5 PM", // Default hours since operatingHours is complex object
+      daysPerWeek: "Monday - Friday"
     }
   };
 
@@ -68,12 +84,12 @@ const Step5LaunchCampaign = ({ data, onUpdate, outreachData, onLaunch }: Step5La
     },
     { 
       item: "Script & Language", 
-      status: !!outreachData?.scriptLanguage, 
+      status: !!outreachData?.script, 
       description: `${campaignSummary.scriptType} script in ${campaignSummary.language}` 
     },
     { 
       item: "Call Scheduling", 
-      status: !!outreachData?.callScheduling, 
+      status: !!outreachData?.scheduling, 
       description: `${campaignSummary.callScheduling.hours}, ${campaignSummary.callScheduling.daysPerWeek}` 
     },
   ];

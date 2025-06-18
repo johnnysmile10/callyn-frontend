@@ -158,8 +158,8 @@ const CSVLeadImporter = ({ onLeadsImported }: CSVLeadImporterProps) => {
 
           {importStep === 'complete' && importResult && (
             <CompleteStep
-              importResult={importResult}
-              onReset={resetImport}
+              importedCount={importResult.successful}
+              onStartOver={resetImport}
             />
           )}
         </CardContent>
