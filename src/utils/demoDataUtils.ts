@@ -7,8 +7,7 @@ export const createDemoOutreachData = (): OutreachData => {
       industry: ['Technology', 'SaaS'],
       jobTitles: ['CEO', 'CTO', 'Founder'],
       companySize: ['10-50 employees', '50-200 employees'],
-      location: ['United States', 'Canada'],
-      description: 'Tech startup founders and executives'
+      location: ['United States', 'Canada']
     },
     leadList: [
       {
@@ -17,8 +16,8 @@ export const createDemoOutreachData = (): OutreachData => {
         company: 'TechCorp Inc',
         email: 'john@techcorp.com',
         phone: '+1-555-0123',
-        jobTitle: 'CEO',
-        industry: 'Technology'
+        title: 'CEO',
+        status: 'new'
       },
       {
         id: '2',
@@ -26,20 +25,19 @@ export const createDemoOutreachData = (): OutreachData => {
         company: 'InnovateLab',
         email: 'sarah@innovatelab.com',
         phone: '+1-555-0124',
-        jobTitle: 'CTO',
-        industry: 'SaaS'
+        title: 'CTO',
+        status: 'new'
       }
     ],
     script: {
       greeting: 'Hi, this is your AI assistant calling about...',
       mainPitch: 'I wanted to discuss how our solution can help your business...',
-      objectionHandling: 'I understand your concerns, let me address that...',
-      closing: 'Would you be interested in scheduling a brief call to learn more?',
+      objectionHandling: ['I understand your concerns, let me address that...'],
+      closingStatement: 'Would you be interested in scheduling a brief call to learn more?',
       tone: 'professional',
       language: 'English'
     },
     scheduling: {
-      timezone: 'America/New_York',
       operatingHours: {
         monday: { start: '09:00', end: '17:00', enabled: true },
         tuesday: { start: '09:00', end: '17:00', enabled: true },
@@ -49,8 +47,10 @@ export const createDemoOutreachData = (): OutreachData => {
         saturday: { start: '09:00', end: '17:00', enabled: false },
         sunday: { start: '09:00', end: '17:00', enabled: false }
       },
-      maxCallsPerDay: 50,
-      callInterval: 5
+      timezone: 'America/New_York',
+      bufferTime: 5,
+      retryDelay: 10,
+      weekendCalling: false
     }
   };
 };
