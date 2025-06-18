@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/context";
@@ -16,7 +17,7 @@ const SaveSettingsButton = ({
   enthusiasm, 
   languageConfig 
 }: SaveSettingsButtonProps) => {
-  const { onboardingData, setOnboardingData } = useAuth();
+  const { onboardingData, setOnboardingData, updateProgressState } = useAuth();
   const { toast } = useToast();
 
   const handleSaveSettings = () => {
@@ -29,6 +30,9 @@ const SaveSettingsButton = ({
     };
 
     setOnboardingData(updatedData);
+    
+    // Mark voice as configured when settings are saved
+    updateProgressState({ hasVoiceIntegration: true });
     
     toast({
       title: "Settings Saved",

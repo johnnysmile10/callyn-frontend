@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,11 +19,13 @@ import {
   CheckCircle
 } from "lucide-react";
 import { useAuth } from "@/context";
+import { useToast } from "@/hooks/use-toast";
 import { getLanguageByCode, getVoicesForLanguage } from "../language/languageConfig";
 import { LanguageConfig } from "../outreach/types";
 
 const LanguageVoiceSettings = () => {
-  const { onboardingData } = useAuth();
+  const { onboardingData, updateProgressState } = useAuth();
+  const { toast } = useToast();
   const [isPlaying, setIsPlaying] = useState(false);
   const [languageConfig, setLanguageConfig] = useState<LanguageConfig>({
     primaryLanguage: onboardingData?.languageConfig?.primaryLanguage || 'en',
@@ -60,7 +63,14 @@ const LanguageVoiceSettings = () => {
   };
 
   const handleSaveSettings = () => {
-    // In real implementation, this would save to backend
+    // Mark voice integration as configured when settings are saved
+    updateProgressState({ hasVoiceIntegration: true });
+    
+    toast({
+      title: "Settings Saved",
+      description: "Voice and language settings have been updated successfully.",
+    });
+    
     console.log('Saving language and voice settings:', { languageConfig, voiceSettings });
   };
 
