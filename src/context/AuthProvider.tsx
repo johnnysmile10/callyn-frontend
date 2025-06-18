@@ -1,7 +1,9 @@
+
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
-import { User, OnboardingData, UserAgent, AuthContextType } from './types/authTypes';
+import { User, OnboardingData, UserAgent, AuthContextType, ProgressState } from './types/authTypes';
 import { OutreachData } from '@/components/dashboard/outreach/types';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { useProgressState } from './hooks/useProgressState';
 import { authService } from './services/authService';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -14,15 +16,38 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [setupCompleted, setSetupCompleted] = useState(false);
   const [campaignBuilderData, setCampaignBuilderData] = useLocalStorage('campaignBuilderData', {});
 
+  const {
+    progressState,
+    updateProgressState,
+    markLeadsImported,
+    markVoiceConfigured,
+    markCampaignCreated,
+    setAgentConfigurationLevel
+  } = useProgressState();
+
   const isAuthenticated = !!user;
 
-  // Load setup completion status
+  // Load setup completion status and update agent configuration level
   useEffect(() => {
     const storedSetupCompleted = localStorage.getItem('setup_completed');
     if (storedSetupCompleted === 'true') {
       setSetupCompleted(true);
     }
-  }, []);
+
+    // Update agent configuration level based on userAgent status
+    if (userAgent) {
+      const hasBasicConfig = userAgent.configuration?.businessInfo?.name && userAgent.configuration?.voice;
+      const hasCompleteConfig = hasBasicConfig && userAgent.configuration?.script && userAgent.configuration?.personality;
+      
+      if (hasCompleteConfig) {
+        setAgentConfigurationLevel('complete');
+      } else if (hasBasicConfig) {
+        setAgentConfigurationLevel('basic');
+      }
+    } else {
+      setAgentConfigurationLevel('none');
+    }
+  }, [userAgent, setAgentConfigurationLevel]);
 
   const login = async (email: string, password: string) => {
     const loggedInUser = await authService.login(email, password);
@@ -46,12 +71,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setOnboardingData(null);
     setOutreachData(null);
     setSetupCompleted(false);
+    updateProgressState({
+      hasLeads: false,
+      hasVoiceIntegration: false,
+      hasCampaigns: false,
+      agentConfigurationLevel: 'none'
+    });
   };
 
   const createUserAgent = async (data: OnboardingData): Promise<UserAgent> => {
     const newAgent = await authService.createUserAgent(data);
     setUserAgent(newAgent);
     setSetupCompleted(true);
+    setAgentConfigurationLevel('basic');
     return newAgent;
   };
 
@@ -70,6 +102,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     userAgent,
     outreachData,
     setupCompleted,
+    progressState,
     isAuthenticated,
     login,
     googleLogin,
@@ -83,6 +116,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     markSetupCompleted,
     campaignBuilderData,
     setCampaignBuilderData,
+    updateProgressState,
   };
 
   return (

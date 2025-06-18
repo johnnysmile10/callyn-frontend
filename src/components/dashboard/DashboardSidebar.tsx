@@ -23,7 +23,7 @@ interface DashboardSidebarProps {
 }
 
 const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) => {
-  const { user, logout, userAgent, onboardingData } = useAuth();
+  const { user, logout, userAgent, progressState } = useAuth();
   const navigate = useNavigate();
   
   const handleLogout = () => {
@@ -32,10 +32,10 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
   };
   
   const mainMenuItems = getMainMenuItems();
-  const agentBuilderItems = getAgentBuilderItems(userAgent, onboardingData);
-  const campaignManagerItems = getCampaignManagerItems(userAgent);
-  const callCenterItems = getCallCenterItems(userAgent);
-  const settingsItems = getSettingsItems(userAgent, onboardingData);
+  const agentBuilderItems = getAgentBuilderItems();
+  const campaignManagerItems = getCampaignManagerItems();
+  const callCenterItems = getCallCenterItems();
+  const settingsItems = getSettingsItems();
   
   return (
     <Sidebar>
@@ -49,6 +49,7 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
           activeTab={activeTab}
           onTabChange={setActiveTab}
           userAgent={userAgent}
+          progressState={progressState}
         />
 
         <SidebarMenuSection
@@ -57,6 +58,7 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
           activeTab={activeTab}
           onTabChange={setActiveTab}
           userAgent={userAgent}
+          progressState={progressState}
         />
 
         <SidebarMenuSection
@@ -65,6 +67,7 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
           activeTab={activeTab}
           onTabChange={setActiveTab}
           userAgent={userAgent}
+          progressState={progressState}
         />
 
         <SidebarMenuSection
@@ -73,6 +76,7 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
           activeTab={activeTab}
           onTabChange={setActiveTab}
           userAgent={userAgent}
+          progressState={progressState}
         />
 
         <SidebarMenuSection
@@ -80,6 +84,7 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
           activeTab={activeTab}
           onTabChange={setActiveTab}
           userAgent={userAgent}
+          progressState={progressState}
         />
       </SidebarContent>
       

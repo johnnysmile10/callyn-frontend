@@ -15,12 +15,13 @@ import {
   Database,
   HeadphonesIcon
 } from "lucide-react";
+import { UnlockCondition } from './unlockConditions';
 
 export interface MenuItem {
   name: string;
   icon: any;
   id: string;
-  requiresAgent?: boolean;
+  unlockConditions?: UnlockCondition[];
 }
 
 export const getMainMenuItems = (): MenuItem[] => [
@@ -28,69 +29,88 @@ export const getMainMenuItems = (): MenuItem[] => [
     name: "Overview",
     icon: LayoutDashboard,
     id: "overview",
+    unlockConditions: []
   }
 ];
 
-export const getAgentBuilderItems = (userAgent: any, onboardingData: any): MenuItem[] => [
+export const getAgentBuilderItems = (): MenuItem[] => [
   {
     name: "Your Agent",
     icon: Eye,
     id: "your-agent",
+    unlockConditions: []
   },
   {
     name: "My Agent",
     icon: User,
     id: "my-agent",
-    requiresAgent: true,
+    unlockConditions: [
+      { type: 'agent', description: 'Create your AI agent first' }
+    ]
   },
   {
     name: "AI Campaign Builder",
     icon: Rocket,
     id: "ai-campaign-builder",
-    requiresAgent: true,
+    unlockConditions: [
+      { type: 'config_level', requirement: 'basic', description: 'Complete basic agent setup' }
+    ]
   }
 ];
 
-export const getCampaignManagerItems = (userAgent: any): MenuItem[] => [
+export const getCampaignManagerItems = (): MenuItem[] => [
   {
     name: "Campaign Manager",
     icon: Target,
     id: "campaigns",
-    requiresAgent: true,
+    unlockConditions: [
+      { type: 'config_level', requirement: 'basic', description: 'Complete basic agent setup' },
+      { type: 'leads', description: 'Import leads to your database' }
+    ]
   },
   {
     name: "Call Log",
     icon: PhoneCall,
     id: "call-log",
-    requiresAgent: true,
+    unlockConditions: [
+      { type: 'agent', description: 'Create your AI agent first' }
+    ]
   }
 ];
 
-export const getCallCenterItems = (userAgent: any): MenuItem[] => [
+export const getCallCenterItems = (): MenuItem[] => [
   {
     name: "Live Call Center",
     icon: Phone,
     id: "live-call-center",
-    requiresAgent: true,
+    unlockConditions: [
+      { type: 'config_level', requirement: 'complete', description: 'Complete full agent configuration' },
+      { type: 'voice', description: 'Configure voice settings' }
+    ]
   },
   {
     name: "Call Analytics",
     icon: BarChart,
     id: "call-analytics",
-    requiresAgent: true,
+    unlockConditions: [
+      { type: 'campaigns', description: 'Create your first campaign' }
+    ]
   }
 ];
 
-export const getSettingsItems = (userAgent: any, onboardingData: any): MenuItem[] => [
+export const getSettingsItems = (): MenuItem[] => [
   {
     name: "User Database",
     icon: Database,
     id: "user-database",
+    unlockConditions: []
   },
   {
     name: "Settings & Integrations",
     icon: Settings,
     id: "settings-integrations",
-    requiresAgent: true,
+    unlockConditions: [
+      { type: 'agent', description: 'Create your AI agent first' }
+    ]
   }
 ];

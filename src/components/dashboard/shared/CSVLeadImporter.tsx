@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/context";
 import { CSVRow, FieldMapping, ImportResult, ImportStep, CSVLeadImporterProps } from './csv-importer/types';
 import { REQUIRED_FIELDS } from './csv-importer/constants';
 import UploadStep from './csv-importer/UploadStep';
@@ -11,6 +12,7 @@ import PreviewStep from './csv-importer/PreviewStep';
 import CompleteStep from './csv-importer/CompleteStep';
 
 const CSVLeadImporter = ({ onLeadsImported }: CSVLeadImporterProps) => {
+  const { updateProgressState } = useAuth();
   const [csvData, setCsvData] = useState<CSVRow[]>([]);
   const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
   const [fieldMappings, setFieldMappings] = useState<FieldMapping[]>([]);
@@ -83,6 +85,11 @@ const CSVLeadImporter = ({ onLeadsImported }: CSVLeadImporterProps) => {
     setImportResult(result);
     setImportStep('complete');
     setIsProcessing(false);
+
+    // Update progress state when leads are successfully imported
+    if (successful > 0) {
+      updateProgressState({ hasLeads: true });
+    }
 
     // Call the callback to notify parent component
     if (onLeadsImported && successful > 0) {

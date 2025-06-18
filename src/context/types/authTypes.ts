@@ -64,6 +64,13 @@ export interface UserAgent {
   };
 }
 
+export interface ProgressState {
+  hasLeads: boolean;
+  hasVoiceIntegration: boolean;
+  hasCampaigns: boolean;
+  agentConfigurationLevel: 'none' | 'basic' | 'complete';
+}
+
 export interface AuthContextType {
   user: User | null;
   onboardingData: OnboardingData | null;
@@ -71,6 +78,7 @@ export interface AuthContextType {
   outreachData: OutreachData | null;
   campaignBuilderData: any;
   setupCompleted: boolean;
+  progressState: ProgressState;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   googleLogin: () => Promise<void>;
@@ -80,6 +88,7 @@ export interface AuthContextType {
   setUserAgent: (agent: UserAgent) => void;
   setOutreachData: (data: OutreachData) => void;
   setCampaignBuilderData: (data: any) => void;
+  updateProgressState: (updates: Partial<ProgressState>) => void;
   createUserAgent: (onboardingData: OnboardingData) => Promise<UserAgent>;
   hasCompletedSetup: () => boolean;
   markSetupCompleted: () => void;
