@@ -1,0 +1,55 @@
+
+import { FC } from "react";
+import { pricingPlans, addOns, faqData } from "../pricing/pricingPlansData";
+import EnhancedPricingCard from "../pricing/EnhancedPricingCard";
+import FeatureMatrix from "../pricing/FeatureMatrix";
+import FAQSection from "../pricing/FAQSection";
+import PsychologicalFraming from "../pricing/PsychologicalFraming";
+import AddOnsSection from "../pricing/AddOnsSection";
+import HybridModeExplainer from "../pricing/HybridModeExplainer";
+
+const DashboardPricingTable: FC = () => {
+  return (
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="text-center">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          Choose Your Plan
+        </h1>
+        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          Callyn helps you follow up, qualify, and book 24/7 — so you never miss a close. 
+          Every plan includes AI voice calls, SMS follow-ups, and transcripts.
+        </p>
+      </div>
+
+      {/* Psychological Framing */}
+      <PsychologicalFraming />
+
+      {/* Pricing Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {pricingPlans.map((plan, index) => (
+          <EnhancedPricingCard key={index} plan={plan} />
+        ))}
+      </div>
+      
+      {/* Upgrade/Cancel Anytime text */}
+      <div className="text-center text-gray-600">
+        <p className="text-lg">✓ Upgrade or cancel anytime • ✓ No long-term contracts • ✓ 45-minute free trial</p>
+      </div>
+      
+      {/* Feature Matrix */}
+      <FeatureMatrix plans={pricingPlans} />
+      
+      {/* Hybrid Mode Explainer */}
+      <HybridModeExplainer />
+
+      {/* Add-ons section */}
+      <AddOnsSection addOns={addOns} />
+      
+      {/* FAQ Section */}
+      <FAQSection faqs={faqData} />
+    </div>
+  );
+};
+
+export default DashboardPricingTable;

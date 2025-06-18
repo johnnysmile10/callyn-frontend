@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -16,7 +15,7 @@ import CallCenterDashboard from "@/components/dashboard/callcenter/CallCenterDas
 import EliteCallInterface from "@/components/dashboard/callcenter/EliteCallInterface";
 import PersonalAgentManager from "@/components/dashboard/PersonalAgentManager";
 import LiveCallCenter from "@/components/dashboard/callcenter/LiveCallCenter";
-import PricingTable from "@/components/PricingTable";
+import DashboardPricingTable from "@/components/dashboard/DashboardPricingTable";
 import { useAuth } from "@/context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -106,7 +105,7 @@ const Dashboard = () => {
       
       // Price Plan section
       case "price-plan":
-        return <PricingTable />;
+        return <DashboardPricingTable />;
       
       // AI Campaign Builder
       case "ai-campaign-builder":
