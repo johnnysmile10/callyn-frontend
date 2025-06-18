@@ -12,8 +12,14 @@ export const useProgressState = () => {
   });
 
   const updateProgressState = useCallback((updates: Partial<ProgressState>) => {
-    setProgressState(prev => ({ ...prev, ...updates }));
-  }, [setProgressState]);
+    const currentState = progressState || {
+      hasLeads: false,
+      hasVoiceIntegration: false,
+      hasCampaigns: false,
+      agentConfigurationLevel: 'none' as const
+    };
+    setProgressState({ ...currentState, ...updates });
+  }, [progressState, setProgressState]);
 
   const markLeadsImported = useCallback(() => {
     updateProgressState({ hasLeads: true });
