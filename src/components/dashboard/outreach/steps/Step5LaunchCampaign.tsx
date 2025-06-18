@@ -7,6 +7,7 @@ import LaunchHeader from "./components/LaunchHeader";
 import ReadinessCheckList from "./components/ReadinessCheckList";
 import CampaignSummary from "./components/CampaignSummary";
 import LaunchSection from "./components/LaunchSection";
+import { createCampaignSummary } from "./components/campaignSummaryUtils";
 
 interface Step5LaunchCampaignProps {
   data: any;
@@ -32,18 +33,7 @@ const Step5LaunchCampaign = ({ data, onUpdate, outreachData, onLaunch }: Step5La
     }, 2000);
   };
 
-  // Mock data for demonstration with proper property names
-  const campaignSummary = {
-    targetAudience: renderTargetAudience(outreachData?.targetAudience),
-    leadCount: outreachData?.leadList?.length || 150,
-    scriptType: outreachData?.script?.tone || "conversational",
-    language: outreachData?.script?.language || "English",
-    callScheduling: {
-      timezone: outreachData?.scheduling?.timezone || "EST",
-      hours: "9 AM - 5 PM", // Default hours since operatingHours is complex object
-      daysPerWeek: "Monday - Friday"
-    }
-  };
+  const campaignSummary = createCampaignSummary(outreachData);
 
   const readinessChecks = [
     { 
