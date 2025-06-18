@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import VisualDemo from "@/components/VisualDemo";
 import ComparisonTable from "@/components/ComparisonTable";
 import HowItWorks from "@/components/HowItWorks";
 import Footer from "@/components/Footer";
@@ -20,6 +21,9 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <Hero />
+      
+      {/* Visual Demo Section - NEW */}
+      <VisualDemo />
       
       {/* Moved PricingPlans section here based on user's request */}
       <PricingPlans />
