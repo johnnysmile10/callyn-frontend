@@ -13,7 +13,8 @@ import {
   User,
   Rocket,
   Database,
-  HeadphonesIcon
+  HeadphonesIcon,
+  CreditCard
 } from "lucide-react";
 import { UnlockCondition } from './unlockConditions';
 
@@ -110,5 +111,11 @@ export const getSettingsItems = (): MenuItem[] => [
     unlockConditions: [
       { type: 'agent', description: 'Create your AI agent first' }
     ]
+  },
+  {
+    name: "Price Plan",
+    icon: CreditCard,
+    id: "price-plan",
+    unlockConditions: []
   }
 ];
