@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -26,6 +25,10 @@ interface ImportResult {
   errors: string[];
 }
 
+interface CSVLeadImporterProps {
+  onLeadsImported?: (count: number) => void;
+}
+
 const REQUIRED_FIELDS = [
   { id: "name", label: "Contact Name", required: true },
   { id: "phone", label: "Phone Number", required: true },
@@ -36,7 +39,7 @@ const REQUIRED_FIELDS = [
   { id: "notes", label: "Notes", required: false },
 ];
 
-const CSVLeadImporter = () => {
+const CSVLeadImporter = ({ onLeadsImported }: CSVLeadImporterProps) => {
   const [csvData, setCsvData] = useState<CSVRow[]>([]);
   const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
   const [fieldMappings, setFieldMappings] = useState<FieldMapping[]>([]);
@@ -181,6 +184,11 @@ const CSVLeadImporter = () => {
     setImportResult(result);
     setImportStep('complete');
     setIsProcessing(false);
+
+    // Call the callback to notify parent component
+    if (onLeadsImported && successful > 0) {
+      onLeadsImported(successful);
+    }
 
     toast({
       title: "Import Complete",
