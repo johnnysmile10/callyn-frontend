@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -21,9 +22,10 @@ import { Button } from "@/components/ui/button";
 import { Rocket, ArrowRight, CheckCircle } from "lucide-react";
 import CallynOutreachSystem from "@/components/dashboard/CallynOutreachSystem";
 import AICampaignBuilder from "@/components/dashboard/AICampaignBuilder";
+import { initializeDemoData } from "@/utils/demoDataUtils";
 
 const Dashboard = () => {
-  const { isAuthenticated, userAgent, hasCompletedSetup, onboardingData } = useAuth();
+  const { isAuthenticated, userAgent, hasCompletedSetup, onboardingData, outreachData, updateProgressState, setOutreachData } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -67,7 +69,13 @@ const Dashboard = () => {
     if (location.state?.activeTab && location.state.activeTab !== activeTab) {
       setActiveTab(location.state.activeTab);
     }
-  }, [isAuthenticated, userAgent, navigate, activeTab, location.state]);
+
+    // Initialize demo data if user has an agent but no outreach data (for testing unlock system)
+    if (userAgent && !outreachData) {
+      console.log('Initializing demo data for unlock system testing');
+      initializeDemoData(updateProgressState, setOutreachData);
+    }
+  }, [isAuthenticated, userAgent, navigate, activeTab, location.state, outreachData, updateProgressState, setOutreachData]);
 
   if (!isAuthenticated) return null;
 

@@ -22,7 +22,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     markLeadsImported,
     markVoiceConfigured,
     markCampaignCreated,
-    setAgentConfigurationLevel
+    setAgentConfigurationLevel,
+    detectProgressFromData
   } = useProgressState();
 
   const isAuthenticated = !!user;
@@ -47,7 +48,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     } else {
       setAgentConfigurationLevel('none');
     }
-  }, [userAgent, setAgentConfigurationLevel]);
+
+    // Run smart detection to update progress state based on existing data
+    detectProgressFromData(userAgent, onboardingData, outreachData);
+  }, [userAgent, onboardingData, outreachData, setAgentConfigurationLevel, detectProgressFromData]);
 
   const login = async (email: string, password: string) => {
     const loggedInUser = await authService.login(email, password);

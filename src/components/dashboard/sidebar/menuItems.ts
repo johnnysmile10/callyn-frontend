@@ -53,7 +53,7 @@ export const getAgentBuilderItems = (): MenuItem[] => [
     icon: Rocket,
     id: "ai-campaign-builder",
     unlockConditions: [
-      { type: 'config_level', requirement: 'basic', description: 'Complete basic agent setup' }
+      { type: 'agent', description: 'Create your AI agent first' }
     ]
   }
 ];
@@ -64,8 +64,7 @@ export const getCampaignManagerItems = (): MenuItem[] => [
     icon: Target,
     id: "campaigns",
     unlockConditions: [
-      { type: 'config_level', requirement: 'basic', description: 'Complete basic agent setup' },
-      { type: 'leads', description: 'Import leads to your database' }
+      { type: 'agent', description: 'Create your AI agent first' }
     ]
   },
   {
@@ -84,8 +83,7 @@ export const getCallCenterItems = (): MenuItem[] => [
     icon: Phone,
     id: "live-call-center",
     unlockConditions: [
-      { type: 'config_level', requirement: 'complete', description: 'Complete full agent configuration' },
-      { type: 'voice', description: 'Configure voice settings' }
+      { type: 'agent', description: 'Create your AI agent first' }
     ]
   },
   {
@@ -93,7 +91,7 @@ export const getCallCenterItems = (): MenuItem[] => [
     icon: BarChart,
     id: "call-analytics",
     unlockConditions: [
-      { type: 'campaigns', description: 'Create your first campaign' }
+      { type: 'agent', description: 'Create your AI agent first' }
     ]
   }
 ];

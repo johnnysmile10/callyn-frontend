@@ -22,18 +22,20 @@ export const checkUnlockConditions = (
         }
         break;
       case 'leads':
-        if (!progressState.hasLeads) {
-          missingRequirements.push('Import leads to your database');
+        // More lenient - if they have an agent, they can access campaign manager to import leads
+        if (!userAgent) {
+          missingRequirements.push('Create your AI agent first');
         }
         break;
       case 'voice':
-        if (!progressState.hasVoiceIntegration) {
+        if (!progressState.hasVoiceIntegration && !userAgent) {
           missingRequirements.push('Configure voice settings');
         }
         break;
       case 'campaigns':
-        if (!progressState.hasCampaigns) {
-          missingRequirements.push('Create your first campaign');
+        // More lenient - allow access if they have basic agent setup
+        if (!userAgent) {
+          missingRequirements.push('Create your AI agent first');
         }
         break;
       case 'config_level':
