@@ -1,4 +1,3 @@
-
 import { 
   LayoutDashboard, 
   Bot, 
@@ -40,14 +39,6 @@ export const getAgentBuilderItems = (): MenuItem[] => [
     icon: Eye,
     id: "your-agent",
     unlockConditions: []
-  },
-  {
-    name: "My Agent",
-    icon: User,
-    id: "my-agent",
-    unlockConditions: [
-      { type: 'agent', description: 'Create your AI agent first' }
-    ]
   },
   {
     name: "AI Campaign Builder",

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -87,10 +86,6 @@ const Dashboard = () => {
       
       case "call-log":
         return <CallLogView />;
-      
-      // My Agent section
-      case "my-agent":
-        return <PersonalAgentManager />;
       
       // Your Agent section
       case "your-agent":
