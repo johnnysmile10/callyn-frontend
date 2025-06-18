@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -26,19 +27,10 @@ const Index = () => {
       {/* New Zig-Zag Comparison Layout */}
       <ComparisonZigZag />
       
-      {/* Optional: Keep the old comparison components if needed */}
-      {/* <ComparisonTable />
-      <ComparisonColumns /> */}
+      {/* Enhanced Pricing Table - Now the main pricing section */}
+      <PricingTable />
       
       <HowItWorks />
-      
-      {/* Pricing Tab and Table */}
-      <section className="bg-gray-900 pt-16">
-        <div className="container mx-auto">
-          <PricingAudienceTabs />
-        </div>
-      </section>
-      <PricingTable />
       
       {/* Contact Form */}
       <ContactForm />
