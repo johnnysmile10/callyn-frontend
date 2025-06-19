@@ -3,9 +3,10 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, ArrowRight, CheckCircle, Clock, Users } from "lucide-react";
+import { Rocket, ArrowRight, CheckCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import QuickStartWizard from "../shared/QuickStartWizard";
+import QuickStartErrorBoundary from "../shared/QuickStartErrorBoundary";
 
 interface QuickStartIntegrationProps {
   hasAgent?: boolean;
@@ -14,11 +15,9 @@ interface QuickStartIntegrationProps {
 
 const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartIntegrationProps) => {
   const [showWizard, setShowWizard] = useState(false);
-  const [completionStep, setCompletionStep] = useState(0);
 
   const handleWizardComplete = (data: any) => {
     console.log("Quick Start completed with data:", data);
-    setCompletionStep(5);
     setShowWizard(false);
     
     toast({
@@ -39,12 +38,20 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
     });
   };
 
+  const handleRetryWizard = () => {
+    setShowWizard(false);
+    // Small delay before showing wizard again
+    setTimeout(() => setShowWizard(true), 100);
+  };
+
   if (showWizard) {
     return (
-      <QuickStartWizard 
-        onComplete={handleWizardComplete}
-        onSkip={handleWizardSkip}
-      />
+      <QuickStartErrorBoundary onRetry={handleRetryWizard}>
+        <QuickStartWizard 
+          onComplete={handleWizardComplete}
+          onSkip={handleWizardSkip}
+        />
+      </QuickStartErrorBoundary>
     );
   }
 
