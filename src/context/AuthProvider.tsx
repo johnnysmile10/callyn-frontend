@@ -37,6 +37,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     // Update agent configuration level based on userAgent status
     if (userAgent) {
+      console.log("AuthProvider: User agent detected, updating configuration level", userAgent);
       const hasBasicConfig = userAgent.configuration?.businessInfo?.name && userAgent.configuration?.voice;
       const hasCompleteConfig = hasBasicConfig && userAgent.configuration?.script && userAgent.configuration?.personality;
       
@@ -46,6 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setAgentConfigurationLevel('basic');
       }
     } else {
+      console.log("AuthProvider: No user agent found, setting configuration level to none");
       setAgentConfigurationLevel('none');
     }
 
@@ -84,18 +86,37 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const createUserAgent = async (data: OnboardingData): Promise<UserAgent> => {
-    const newAgent = await authService.createUserAgent(data);
-    setUserAgent(newAgent);
-    setSetupCompleted(true);
-    setAgentConfigurationLevel('basic');
-    return newAgent;
+    console.log("AuthProvider: Creating user agent with data:", data);
+    
+    try {
+      const newAgent = await authService.createUserAgent(data);
+      console.log("AuthProvider: Successfully created agent:", newAgent);
+      
+      setUserAgent(newAgent);
+      setSetupCompleted(true);
+      setAgentConfigurationLevel('basic');
+      
+      // Update progress state
+      updateProgressState({
+        hasVoiceIntegration: !!data.selectedVoice,
+        agentConfigurationLevel: 'basic'
+      });
+      
+      return newAgent;
+    } catch (error) {
+      console.error("AuthProvider: Error creating user agent:", error);
+      throw error;
+    }
   };
 
   const hasCompletedSetup = (): boolean => {
-    return setupCompleted && !!userAgent;
+    const completed = setupCompleted && !!userAgent;
+    console.log("AuthProvider: hasCompletedSetup check:", { setupCompleted, userAgent: !!userAgent, result: completed });
+    return completed;
   };
 
   const markSetupCompleted = () => {
+    console.log("AuthProvider: Marking setup as completed");
     setSetupCompleted(true);
     localStorage.setItem('setup_completed', 'true');
   };

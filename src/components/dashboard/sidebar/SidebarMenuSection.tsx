@@ -36,6 +36,14 @@ const SidebarMenuSection = ({
 }: SidebarMenuSectionProps) => {
   if (items.length === 0) return null;
 
+  console.log("SidebarMenuSection render:", {
+    title,
+    userAgent: !!userAgent,
+    agentId: userAgent?.id,
+    progressState,
+    itemCount: items.length
+  });
+
   return (
     <SidebarGroup>
       {title && <SidebarGroupLabel>{title}</SidebarGroupLabel>}
@@ -52,6 +60,12 @@ const SidebarMenuSection = ({
             const tooltipText = isUnlocked 
               ? item.name 
               : `Unlock by: ${unlockResult.missingRequirements.join(', ')}`;
+            
+            console.log(`Sidebar item ${item.name}:`, {
+              hasUnlockConditions: !!(item.unlockConditions && item.unlockConditions.length > 0),
+              isUnlocked,
+              missingRequirements: unlockResult.missingRequirements
+            });
             
             return (
               <SidebarMenuItem key={item.name}>

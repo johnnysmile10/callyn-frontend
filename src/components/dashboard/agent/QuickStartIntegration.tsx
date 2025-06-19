@@ -3,8 +3,10 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, ArrowRight, CheckCircle } from "lucide-react";
+import { Rocket, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/context";
+import { OnboardingData } from "@/context/types/authTypes";
 import QuickStartWizard from "../shared/QuickStartWizard";
 import QuickStartErrorBoundary from "../shared/QuickStartErrorBoundary";
 
@@ -15,18 +17,67 @@ interface QuickStartIntegrationProps {
 
 const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartIntegrationProps) => {
   const [showWizard, setShowWizard] = useState(false);
+  const [isCreatingAgent, setIsCreatingAgent] = useState(false);
+  const { createUserAgent, markSetupCompleted, setOnboardingData } = useAuth();
 
-  const handleWizardComplete = (data: any) => {
-    console.log("Quick Start completed with data:", data);
-    setShowWizard(false);
+  const convertQuickStartToOnboardingData = (data: any): OnboardingData => {
+    console.log("Converting Quick Start data to OnboardingData:", data);
     
-    toast({
-      title: "Agent Created Successfully!",
-      description: "Your AI calling agent is ready to start making calls.",
-    });
+    return {
+      businessName: data.businessName || "",
+      industry: data.industry || "",
+      selectedVoice: data.selectedVoice || "",
+      customScript: data.script || "",
+      scriptMethod: "custom",
+      personality: "professional",
+      speakingSpeed: 1,
+      enthusiasm: 0.5,
+      useSmallTalk: true,
+      handleObjections: true,
+      targetAudience: "prospects",
+      mainGoal: "generate leads"
+    };
+  };
 
-    if (onAgentCreated) {
-      onAgentCreated();
+  const handleWizardComplete = async (data: any) => {
+    console.log("Quick Start wizard completed with data:", data);
+    setIsCreatingAgent(true);
+    
+    try {
+      // Convert Quick Start data to OnboardingData format
+      const onboardingData = convertQuickStartToOnboardingData(data);
+      console.log("Converted onboarding data:", onboardingData);
+      
+      // Set onboarding data first
+      setOnboardingData(onboardingData);
+      
+      // Create the user agent
+      const newAgent = await createUserAgent(onboardingData);
+      console.log("Created user agent:", newAgent);
+      
+      // Mark setup as completed
+      markSetupCompleted();
+      
+      // Close wizard
+      setShowWizard(false);
+      
+      toast({
+        title: "Agent Created Successfully!",
+        description: "Your AI calling agent is ready to start making calls.",
+      });
+
+      if (onAgentCreated) {
+        onAgentCreated();
+      }
+    } catch (error) {
+      console.error("Error creating agent:", error);
+      toast({
+        title: "Error Creating Agent",
+        description: "Something went wrong while creating your agent. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsCreatingAgent(false);
     }
   };
 
@@ -40,6 +91,7 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
 
   const handleRetryWizard = () => {
     setShowWizard(false);
+    setIsCreatingAgent(false);
     // Small delay before showing wizard again
     setTimeout(() => setShowWizard(true), 100);
   };
@@ -47,10 +99,25 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
   if (showWizard) {
     return (
       <QuickStartErrorBoundary onRetry={handleRetryWizard}>
-        <QuickStartWizard 
-          onComplete={handleWizardComplete}
-          onSkip={handleWizardSkip}
-        />
+        <div className={isCreatingAgent ? "pointer-events-none opacity-50" : ""}>
+          <QuickStartWizard 
+            onComplete={handleWizardComplete}
+            onSkip={handleWizardSkip}
+          />
+        </div>
+        {isCreatingAgent && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <Card className="p-6">
+              <div className="flex items-center gap-3">
+                <Loader2 className="h-6 w-6 animate-spin" />
+                <div>
+                  <p className="font-medium">Creating Your Agent...</p>
+                  <p className="text-sm text-gray-600">This will just take a moment</p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        )}
       </QuickStartErrorBoundary>
     );
   }
@@ -104,13 +171,23 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
             <div className="flex gap-2">
               <Button 
                 onClick={() => setShowWizard(true)}
+                disabled={isCreatingAgent}
                 className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
               >
-                <Rocket className="h-4 w-4" />
-                Start Quick Setup
-                <ArrowRight className="h-4 w-4" />
+                {isCreatingAgent ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Creating Agent...
+                  </>
+                ) : (
+                  <>
+                    <Rocket className="h-4 w-4" />
+                    Start Quick Setup
+                    <ArrowRight className="h-4 w-4" />
+                  </>
+                )}
               </Button>
-              <Button variant="outline" onClick={handleWizardSkip}>
+              <Button variant="outline" onClick={handleWizardSkip} disabled={isCreatingAgent}>
                 Skip for Now
               </Button>
             </div>
@@ -153,6 +230,7 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
                 onClick={() => setShowWizard(true)}
                 variant="outline"
                 size="sm"
+                disabled={isCreatingAgent}
               >
                 Update Settings
               </Button>
