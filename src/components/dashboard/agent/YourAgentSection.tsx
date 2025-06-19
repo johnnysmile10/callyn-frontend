@@ -109,7 +109,7 @@ const YourAgentSection = () => {
                   </p>
                 </div>
               </div>
-            </Card>
+            </CardContent>
           </Card>
 
           {/* Agent Overview for Existing Users */}
