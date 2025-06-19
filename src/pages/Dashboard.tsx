@@ -47,6 +47,7 @@ const Dashboard = () => {
   const [campaignActive, setCampaignActive] = useState(false);
   const [showOnboardingSuccess, setShowOnboardingSuccess] = useState(false);
   const [dashboardKey, setDashboardKey] = useState(0);
+  const [isInitialized, setIsInitialized] = useState(false);
   
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -55,38 +56,47 @@ const Dashboard = () => {
       return;
     }
 
-    // Check if user just completed onboarding
-    if (location.state?.fromOnboarding && userAgent) {
-      setShowOnboardingSuccess(true);
-      // Auto-hide after 5 seconds
-      setTimeout(() => setShowOnboardingSuccess(false), 5000);
-    }
+    // Initialize dashboard once
+    if (!isInitialized) {
+      console.log("Dashboard: Initializing");
+      
+      // Check if user just completed onboarding
+      if (location.state?.fromOnboarding && userAgent) {
+        setShowOnboardingSuccess(true);
+        // Auto-hide after 5 seconds
+        setTimeout(() => setShowOnboardingSuccess(false), 5000);
+      }
 
-    // Update active tab based on agent status if needed
-    if (!userAgent && activeTab === "overview") {
-      setActiveTab("your-agent");
-    }
+      // Update active tab based on agent status if needed
+      if (!userAgent && activeTab === "overview") {
+        setActiveTab("your-agent");
+      }
 
-    // Handle navigation state for tab switching
-    if (location.state?.activeTab && location.state.activeTab !== activeTab) {
-      setActiveTab(location.state.activeTab);
-    }
+      // Handle navigation state for tab switching
+      if (location.state?.activeTab && location.state.activeTab !== activeTab) {
+        setActiveTab(location.state.activeTab);
+      }
 
-    // Initialize demo data if user has an agent but no outreach data (for testing unlock system)
-    if (userAgent && !outreachData) {
-      console.log('Initializing demo data for unlock system testing');
-      initializeDemoData(updateProgressState, setOutreachData);
+      // Initialize demo data if user has an agent but no outreach data (for testing unlock system)
+      if (userAgent && !outreachData) {
+        console.log('Initializing demo data for unlock system testing');
+        initializeDemoData(updateProgressState, setOutreachData);
+      }
+      
+      setIsInitialized(true);
     }
-  }, [isAuthenticated, userAgent, navigate, activeTab, location.state, outreachData, updateProgressState, setOutreachData]);
+  }, [isAuthenticated, userAgent, navigate, activeTab, location.state, outreachData, updateProgressState, setOutreachData, isInitialized]);
 
-  // Force dashboard refresh when userAgent changes
+  // Force dashboard refresh when userAgent changes (but only after initialization)
   useEffect(() => {
-    console.log("Dashboard: UserAgent changed, forcing refresh", {
-      hasAgent: !!userAgent,
-      agentId: userAgent?.id
-    });
-    setDashboardKey(prev => prev + 1);
-  }, [userAgent]);
+    if (isInitialized) {
+      console.log("Dashboard: UserAgent changed, forcing refresh", {
+        hasAgent: !!userAgent,
+        agentId: userAgent?.id
+      });
+      setDashboardKey(prev => prev + 1);
+    }
+  }, [userAgent, isInitialized]);
 
   if (!isAuthenticated) return null;
 
@@ -162,27 +172,6 @@ const Dashboard = () => {
                   <AlertDescription className="text-green-700">
                     Your AI agent "{userAgent.name}" is now live and ready to start making calls. 
                     Set up your first campaign below to begin generating leads.
-                  </AlertDescription>
-                </Alert>
-              </div>
-            )}
-
-            {/* Welcome Banner for New Users - Updated */}
-            {!userAgent && (
-              <div className="mb-8">
-                <Alert className="bg-blue-50 border-blue-200">
-                  <Rocket className="h-4 w-4 text-blue-600" />
-                  <AlertTitle className="text-blue-800">Welcome to Callyn!</AlertTitle>
-                  <AlertDescription className="text-blue-700 flex items-center justify-between">
-                    <span>Create your first AI calling agent in just 6 minutes with our Quick Start wizard.</span>
-                    <Button 
-                      onClick={() => setActiveTab('your-agent')} 
-                      size="sm" 
-                      className="bg-blue-600 hover:bg-blue-700 text-white ml-4"
-                    >
-                      Get Started
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
                   </AlertDescription>
                 </Alert>
               </div>

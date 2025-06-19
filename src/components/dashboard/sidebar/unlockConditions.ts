@@ -54,7 +54,7 @@ export const checkUnlockConditions = (
         break;
         
       case 'leads':
-        // Check for leads more comprehensively
+        // Check for leads - allow access if agent exists for now
         const hasValidAgentForLeads = userAgent && userAgent.id && userAgent.id.trim() !== '';
         if (!hasValidAgentForLeads) {
           console.log("Leads condition failed: No user agent found");
@@ -68,7 +68,7 @@ export const checkUnlockConditions = (
         const hasValidAgentForVoice = userAgent && userAgent.id && userAgent.id.trim() !== '';
         if (!progressState.hasVoiceIntegration && !hasValidAgentForVoice) {
           console.log("Voice condition failed: No voice integration and no agent");
-          missingRequirements.push('Configure voice settings');
+          missingRequirements.push('Complete agent setup first');
         } else {
           console.log("Voice condition passed");
         }

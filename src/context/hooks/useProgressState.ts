@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { ProgressState } from '../types/authTypes';
 import { useLocalStorage } from './useLocalStorage';
 
@@ -11,6 +11,9 @@ export const useProgressState = () => {
     agentConfigurationLevel: 'none'
   });
 
+  // Use ref to track if we've already run detection to prevent loops
+  const detectionRunRef = useRef(false);
+
   const updateProgressState = useCallback((updates: Partial<ProgressState>) => {
     const currentState = progressState || {
       hasLeads: false,
@@ -18,7 +21,16 @@ export const useProgressState = () => {
       hasCampaigns: false,
       agentConfigurationLevel: 'none' as const
     };
-    setProgressState({ ...currentState, ...updates });
+    
+    // Only update if there are actual changes
+    const hasChanges = Object.entries(updates).some(([key, value]) => 
+      currentState[key as keyof ProgressState] !== value
+    );
+    
+    if (hasChanges) {
+      console.log("Progress state updating:", { current: currentState, updates });
+      setProgressState({ ...currentState, ...updates });
+    }
   }, [progressState, setProgressState]);
 
   const markLeadsImported = useCallback(() => {
@@ -34,11 +46,20 @@ export const useProgressState = () => {
   }, [updateProgressState]);
 
   const setAgentConfigurationLevel = useCallback((level: 'none' | 'basic' | 'complete') => {
-    updateProgressState({ agentConfigurationLevel: level });
-  }, [updateProgressState]);
+    if (progressState?.agentConfigurationLevel !== level) {
+      updateProgressState({ agentConfigurationLevel: level });
+    }
+  }, [progressState?.agentConfigurationLevel, updateProgressState]);
 
   // Smart detection function to check if conditions should be met
   const detectProgressFromData = useCallback((userAgent: any, onboardingData: any, outreachData: any) => {
+    // Prevent multiple runs
+    if (detectionRunRef.current) {
+      return;
+    }
+    
+    detectionRunRef.current = true;
+    
     const updates: Partial<ProgressState> = {};
     
     // Check if voice should be marked as configured
@@ -58,8 +79,14 @@ export const useProgressState = () => {
     
     // Apply updates if any were detected
     if (Object.keys(updates).length > 0) {
+      console.log("Smart detection found updates:", updates);
       updateProgressState(updates);
     }
+    
+    // Reset detection flag after a delay
+    setTimeout(() => {
+      detectionRunRef.current = false;
+    }, 1000);
   }, [updateProgressState]);
 
   return {

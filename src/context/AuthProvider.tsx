@@ -1,5 +1,5 @@
 
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { User, OnboardingData, UserAgent, AuthContextType, ProgressState } from './types/authTypes';
 import { OutreachData } from '@/components/dashboard/outreach/types';
 import { useLocalStorage } from './hooks/useLocalStorage';
@@ -18,6 +18,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Add local state to ensure immediate UI updates
   const [localUserAgent, setLocalUserAgent] = useState<UserAgent | null>(userAgent);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const {
     progressState,
@@ -31,27 +32,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const isAuthenticated = !!user;
 
-  // Sync local state with storage state
+  // Initialize state only once
   useEffect(() => {
-    if (userAgent !== localUserAgent) {
-      console.log("AuthProvider: Syncing user agent state", { stored: !!userAgent, local: !!localUserAgent });
+    if (!isInitialized) {
+      console.log("AuthProvider: Initializing state");
+      
+      // Initialize setup completion status
+      const storedSetupCompleted = localStorage.getItem('setup_completed');
+      if (storedSetupCompleted === 'true') {
+        setSetupCompleted(true);
+      }
+
+      // Initialize local user agent
       setLocalUserAgent(userAgent);
+      setIsInitialized(true);
     }
-  }, [userAgent, localUserAgent]);
+  }, [isInitialized, userAgent]);
 
-  // Load setup completion status and update agent configuration level
-  useEffect(() => {
-    const storedSetupCompleted = localStorage.getItem('setup_completed');
-    if (storedSetupCompleted === 'true') {
-      setSetupCompleted(true);
-    }
-
-    // Update agent configuration level based on userAgent status
-    const currentAgent = localUserAgent || userAgent;
-    if (currentAgent && currentAgent.id) {
-      console.log("AuthProvider: User agent detected, updating configuration level", currentAgent);
-      const hasBasicConfig = currentAgent.configuration?.businessInfo?.name && currentAgent.configuration?.voice;
-      const hasCompleteConfig = hasBasicConfig && currentAgent.configuration?.script && currentAgent.configuration?.personality;
+  // Update agent configuration level when user agent changes
+  const updateAgentConfigLevel = useCallback((agent: UserAgent | null) => {
+    if (agent && agent.id) {
+      console.log("AuthProvider: User agent detected, updating configuration level", agent);
+      const hasBasicConfig = agent.configuration?.businessInfo?.name && agent.configuration?.voice;
+      const hasCompleteConfig = hasBasicConfig && agent.configuration?.script && agent.configuration?.personality;
       
       if (hasCompleteConfig) {
         setAgentConfigurationLevel('complete');
@@ -64,10 +67,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.log("AuthProvider: No user agent found, setting configuration level to none");
       setAgentConfigurationLevel('none');
     }
+  }, [setAgentConfigurationLevel]);
 
-    // Run smart detection to update progress state based on existing data
-    detectProgressFromData(currentAgent, onboardingData, outreachData);
-  }, [localUserAgent, userAgent, onboardingData, outreachData, setAgentConfigurationLevel, detectProgressFromData]);
+  // Update agent configuration level when userAgent changes
+  useEffect(() => {
+    if (isInitialized) {
+      updateAgentConfigLevel(localUserAgent || userAgent);
+    }
+  }, [isInitialized, localUserAgent, userAgent, updateAgentConfigLevel]);
+
+  // Run smart detection only when data changes and we're initialized
+  useEffect(() => {
+    if (isInitialized && (localUserAgent || userAgent || onboardingData || outreachData)) {
+      detectProgressFromData(localUserAgent || userAgent, onboardingData, outreachData);
+    }
+  }, [isInitialized, localUserAgent, userAgent, onboardingData, outreachData, detectProgressFromData]);
+
+  // Sync local state with storage state
+  useEffect(() => {
+    if (isInitialized && userAgent !== localUserAgent) {
+      console.log("AuthProvider: Syncing user agent state", { stored: !!userAgent, local: !!localUserAgent });
+      setLocalUserAgent(userAgent);
+    }
+  }, [isInitialized, userAgent, localUserAgent]);
 
   const login = async (email: string, password: string) => {
     const loggedInUser = await authService.login(email, password);
@@ -92,6 +114,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setOnboardingData(null);
     setOutreachData(null);
     setSetupCompleted(false);
+    setIsInitialized(false);
     updateProgressState({
       hasLeads: false,
       hasVoiceIntegration: false,
@@ -110,7 +133,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setUserAgentStorage(newAgent);
       setLocalUserAgent(newAgent);
       setSetupCompleted(true);
-      setAgentConfigurationLevel('basic');
       
       // Update progress state
       updateProgressState({
