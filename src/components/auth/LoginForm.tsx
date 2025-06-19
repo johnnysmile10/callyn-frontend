@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -29,15 +30,22 @@ const LoginForm = () => {
     },
   });
 
-  // Instead of submitting, redirect on click
-  const handleLoginRedirect = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    window.location.href = "https://callyn-frontend-d3dtd7fqhxagczax.norwayeast-01.azurewebsites.net";
+  const onSubmit = async (data: FormValues) => {
+    setLoading(true);
+    try {
+      await login(data.email, data.password);
+      toast.success("Login successful!");
+      navigate("/dashboard");
+    } catch (error) {
+      toast.error("Login failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <Form {...form}>
-      <form className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="email"
@@ -50,7 +58,6 @@ const LoginForm = () => {
                   placeholder="you@example.com" 
                   {...field} 
                   className="rounded-md py-5"
-                  disabled
                 />
               </FormControl>
               <FormMessage />
@@ -70,7 +77,6 @@ const LoginForm = () => {
                   placeholder="Enter your password" 
                   {...field} 
                   className="rounded-md py-5"
-                  disabled
                 />
               </FormControl>
               <FormMessage />
@@ -79,11 +85,11 @@ const LoginForm = () => {
         />
 
         <Button 
-          type="button"
+          type="submit"
           className="w-full bg-callyn-blue hover:bg-callyn-darkBlue text-white rounded-full py-6 text-base font-medium"
-          onClick={handleLoginRedirect}
+          disabled={loading}
         >
-          Log In
+          {loading ? "Logging in..." : "Log In"}
         </Button>
       </form>
     </Form>
