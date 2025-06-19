@@ -36,12 +36,15 @@ const SidebarMenuSection = ({
 }: SidebarMenuSectionProps) => {
   if (items.length === 0) return null;
 
+  // Enhanced logging for debugging
   console.log("SidebarMenuSection render:", {
     title,
     userAgent: !!userAgent,
     agentId: userAgent?.id,
+    agentStatus: userAgent?.status,
     progressState,
-    itemCount: items.length
+    itemCount: items.length,
+    timestamp: new Date().toISOString()
   });
 
   return (
@@ -63,8 +66,11 @@ const SidebarMenuSection = ({
             
             console.log(`Sidebar item ${item.name}:`, {
               hasUnlockConditions: !!(item.unlockConditions && item.unlockConditions.length > 0),
+              unlockConditions: item.unlockConditions,
               isUnlocked,
-              missingRequirements: unlockResult.missingRequirements
+              missingRequirements: unlockResult.missingRequirements,
+              userAgentExists: !!userAgent,
+              agentId: userAgent?.id
             });
             
             return (

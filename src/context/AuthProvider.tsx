@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     // Update agent configuration level based on userAgent status
-    if (userAgent) {
+    if (userAgent && userAgent.id) {
       console.log("AuthProvider: User agent detected, updating configuration level", userAgent);
       const hasBasicConfig = userAgent.configuration?.businessInfo?.name && userAgent.configuration?.voice;
       const hasCompleteConfig = hasBasicConfig && userAgent.configuration?.script && userAgent.configuration?.personality;
@@ -45,6 +45,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setAgentConfigurationLevel('complete');
       } else if (hasBasicConfig) {
         setAgentConfigurationLevel('basic');
+      } else {
+        setAgentConfigurationLevel('basic'); // Give benefit of the doubt if agent exists
       }
     } else {
       console.log("AuthProvider: No user agent found, setting configuration level to none");
@@ -109,9 +111,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  // Enhanced setUserAgent function that updates related state
+  const enhancedSetUserAgent = (agent: UserAgent | null) => {
+    console.log("AuthProvider: Setting user agent:", agent);
+    setUserAgent(agent);
+    
+    if (agent) {
+      // Update progress state when agent is set
+      updateProgressState({
+        hasVoiceIntegration: !!agent.configuration?.voice,
+        agentConfigurationLevel: 'basic'
+      });
+    }
+  };
+
   const hasCompletedSetup = (): boolean => {
-    const completed = setupCompleted && !!userAgent;
-    console.log("AuthProvider: hasCompletedSetup check:", { setupCompleted, userAgent: !!userAgent, result: completed });
+    const completed = setupCompleted && !!userAgent && !!userAgent.id;
+    console.log("AuthProvider: hasCompletedSetup check:", { 
+      setupCompleted, 
+      userAgent: !!userAgent, 
+      agentId: userAgent?.id,
+      result: completed 
+    });
     return completed;
   };
 
@@ -134,7 +155,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     signup,
     logout,
     setOnboardingData,
-    setUserAgent,
+    setUserAgent: enhancedSetUserAgent,
     setOutreachData,
     createUserAgent,
     hasCompletedSetup,

@@ -17,23 +17,38 @@ export const checkUnlockConditions = (
   console.log("Checking unlock conditions:", {
     conditions,
     userAgent: !!userAgent,
+    userAgentId: userAgent?.id,
+    userAgentStatus: userAgent?.status,
     progressState,
-    agentId: userAgent?.id
+    timestamp: new Date().toISOString()
   });
+
+  // If no conditions, always unlocked
+  if (!conditions || conditions.length === 0) {
+    console.log("No unlock conditions - always unlocked");
+    return { isUnlocked: true, missingRequirements: [] };
+  }
 
   for (const condition of conditions) {
     switch (condition.type) {
       case 'agent':
-        if (!userAgent) {
-          console.log("Agent condition failed: No user agent found");
+        // Check if user agent exists with valid ID
+        if (!userAgent || !userAgent.id) {
+          console.log("Agent condition failed: No user agent found or missing ID", {
+            hasUserAgent: !!userAgent,
+            agentId: userAgent?.id
+          });
           missingRequirements.push('Create your AI agent first');
         } else {
-          console.log("Agent condition passed: User agent exists", userAgent.id);
+          console.log("Agent condition passed: User agent exists with ID", {
+            agentId: userAgent.id,
+            agentStatus: userAgent.status
+          });
         }
         break;
       case 'leads':
         // More lenient - if they have an agent, they can access campaign manager to import leads
-        if (!userAgent) {
+        if (!userAgent || !userAgent.id) {
           console.log("Leads condition failed: No user agent found");
           missingRequirements.push('Create your AI agent first');
         } else {
@@ -41,7 +56,7 @@ export const checkUnlockConditions = (
         }
         break;
       case 'voice':
-        if (!progressState.hasVoiceIntegration && !userAgent) {
+        if (!progressState.hasVoiceIntegration && (!userAgent || !userAgent.id)) {
           console.log("Voice condition failed: No voice integration and no agent");
           missingRequirements.push('Configure voice settings');
         } else {
@@ -50,7 +65,7 @@ export const checkUnlockConditions = (
         break;
       case 'campaigns':
         // More lenient - allow access if they have basic agent setup
-        if (!userAgent) {
+        if (!userAgent || !userAgent.id) {
           console.log("Campaigns condition failed: No user agent found");
           missingRequirements.push('Create your AI agent first');
         } else {
@@ -68,10 +83,15 @@ export const checkUnlockConditions = (
           requiredLevel,
           currentLevel,
           currentIndex,
-          requiredIndex
+          requiredIndex,
+          hasUserAgent: !!userAgent
         });
         
-        if (currentIndex < requiredIndex) {
+        // If we have a user agent, upgrade to at least basic level
+        if (userAgent && userAgent.id && currentIndex < 1) {
+          console.log("Upgrading config level to basic due to agent existence");
+          // Don't fail the condition if agent exists
+        } else if (currentIndex < requiredIndex) {
           console.log("Config level condition failed");
           missingRequirements.push(condition.description);
         } else {

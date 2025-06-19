@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Rocket, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/context";
-import { OnboardingData } from "@/context/types/authTypes";
+import { OnboardingData, UserAgent } from "@/context/types/authTypes";
 import QuickStartWizard from "../shared/QuickStartWizard";
 import QuickStartErrorBoundary from "../shared/QuickStartErrorBoundary";
 
@@ -18,7 +18,34 @@ interface QuickStartIntegrationProps {
 const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartIntegrationProps) => {
   const [showWizard, setShowWizard] = useState(false);
   const [isCreatingAgent, setIsCreatingAgent] = useState(false);
-  const { createUserAgent, markSetupCompleted, setOnboardingData } = useAuth();
+  const { createUserAgent, markSetupCompleted, setOnboardingData, setUserAgent, updateProgressState } = useAuth();
+
+  const createUserAgentFromQuickStart = (data: any): UserAgent => {
+    const agentId = `agent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    console.log("Creating UserAgent from Quick Start data:", { data, agentId });
+    
+    const userAgent: UserAgent = {
+      id: agentId,
+      name: data.businessName || "My AI Agent",
+      status: 'active',
+      createdAt: new Date().toISOString(),
+      configuration: {
+        voice: data.selectedVoice || "default",
+        personality: "professional",
+        script: data.script || "",
+        businessInfo: {
+          name: data.businessName || "",
+          industry: data.industry || "",
+          targetAudience: "prospects",
+          mainGoal: "generate leads"
+        }
+      }
+    };
+
+    console.log("Created UserAgent object:", userAgent);
+    return userAgent;
+  };
 
   const convertQuickStartToOnboardingData = (data: any): OnboardingData => {
     console.log("Converting Quick Start data to OnboardingData:", data);
@@ -48,12 +75,19 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
       const onboardingData = convertQuickStartToOnboardingData(data);
       console.log("Converted onboarding data:", onboardingData);
       
-      // Set onboarding data first
-      setOnboardingData(onboardingData);
+      // Create UserAgent object directly
+      const newAgent = createUserAgentFromQuickStart(data);
+      console.log("Created user agent object:", newAgent);
       
-      // Create the user agent
-      const newAgent = await createUserAgent(onboardingData);
-      console.log("Created user agent:", newAgent);
+      // Set both onboarding data and user agent
+      setOnboardingData(onboardingData);
+      setUserAgent(newAgent);
+      
+      // Update progress state to reflect that an agent exists
+      updateProgressState({
+        hasVoiceIntegration: !!data.selectedVoice,
+        agentConfigurationLevel: 'basic'
+      });
       
       // Mark setup as completed
       markSetupCompleted();
