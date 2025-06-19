@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -45,6 +46,7 @@ const Dashboard = () => {
   });
   const [campaignActive, setCampaignActive] = useState(false);
   const [showOnboardingSuccess, setShowOnboardingSuccess] = useState(false);
+  const [dashboardKey, setDashboardKey] = useState(0);
   
   useEffect(() => {
     // Redirect to login if not authenticated
@@ -62,7 +64,7 @@ const Dashboard = () => {
 
     // Update active tab based on agent status if needed
     if (!userAgent && activeTab === "overview") {
-      setActiveTab("agent-setup");
+      setActiveTab("your-agent");
     }
 
     // Handle navigation state for tab switching
@@ -76,6 +78,15 @@ const Dashboard = () => {
       initializeDemoData(updateProgressState, setOutreachData);
     }
   }, [isAuthenticated, userAgent, navigate, activeTab, location.state, outreachData, updateProgressState, setOutreachData]);
+
+  // Force dashboard refresh when userAgent changes
+  useEffect(() => {
+    console.log("Dashboard: UserAgent changed, forcing refresh", {
+      hasAgent: !!userAgent,
+      agentId: userAgent?.id
+    });
+    setDashboardKey(prev => prev + 1);
+  }, [userAgent]);
 
   if (!isAuthenticated) return null;
 
@@ -138,7 +149,7 @@ const Dashboard = () => {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
+      <div key={dashboardKey} className="min-h-screen flex w-full bg-gray-50">
         <DashboardSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="flex-1 overflow-auto">
           <div className="container mx-auto py-8 px-4">

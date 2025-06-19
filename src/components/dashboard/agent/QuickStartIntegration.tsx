@@ -18,79 +18,70 @@ interface QuickStartIntegrationProps {
 const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartIntegrationProps) => {
   const [showWizard, setShowWizard] = useState(false);
   const [isCreatingAgent, setIsCreatingAgent] = useState(false);
-  const { createUserAgent, markSetupCompleted, setOnboardingData, setUserAgent, updateProgressState } = useAuth();
-
-  const createUserAgentFromQuickStart = (data: any): UserAgent => {
-    const agentId = `agent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
-    console.log("Creating UserAgent from Quick Start data:", { data, agentId });
-    
-    const userAgent: UserAgent = {
-      id: agentId,
-      name: data.businessName || "My AI Agent",
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      configuration: {
-        voice: data.selectedVoice || "default",
-        personality: "professional",
-        script: data.script || "",
-        businessInfo: {
-          name: data.businessName || "",
-          industry: data.industry || "",
-          targetAudience: "prospects",
-          mainGoal: "generate leads"
-        }
-      }
-    };
-
-    console.log("Created UserAgent object:", userAgent);
-    return userAgent;
-  };
-
-  const convertQuickStartToOnboardingData = (data: any): OnboardingData => {
-    console.log("Converting Quick Start data to OnboardingData:", data);
-    
-    return {
-      businessName: data.businessName || "",
-      industry: data.industry || "",
-      selectedVoice: data.selectedVoice || "",
-      customScript: data.script || "",
-      scriptMethod: "custom",
-      personality: "professional",
-      speakingSpeed: 1,
-      enthusiasm: 0.5,
-      useSmallTalk: true,
-      handleObjections: true,
-      targetAudience: "prospects",
-      mainGoal: "generate leads"
-    };
-  };
+  const { setUserAgent, setOnboardingData, markSetupCompleted, updateProgressState } = useAuth();
 
   const handleWizardComplete = async (data: any) => {
     console.log("Quick Start wizard completed with data:", data);
     setIsCreatingAgent(true);
     
     try {
-      // Convert Quick Start data to OnboardingData format
-      const onboardingData = convertQuickStartToOnboardingData(data);
-      console.log("Converted onboarding data:", onboardingData);
+      // Create a proper UserAgent object with all required fields
+      const agentId = `agent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const currentTime = new Date().toISOString();
       
-      // Create UserAgent object directly
-      const newAgent = createUserAgentFromQuickStart(data);
-      console.log("Created user agent object:", newAgent);
-      
-      // Set both onboarding data and user agent
+      const newAgent: UserAgent = {
+        id: agentId,
+        name: data.businessName || "My AI Agent",
+        status: 'active',
+        createdAt: currentTime,
+        configuration: {
+          voice: data.selectedVoice || "default",
+          personality: "professional",
+          script: data.script || "",
+          businessInfo: {
+            name: data.businessName || "",
+            industry: data.industry || "",
+            targetAudience: "prospects",
+            mainGoal: "generate leads"
+          }
+        }
+      };
+
+      console.log("Created UserAgent object:", newAgent);
+
+      // Create corresponding OnboardingData
+      const onboardingData: OnboardingData = {
+        businessName: data.businessName || "",
+        industry: data.industry || "",
+        selectedVoice: data.selectedVoice || "",
+        customScript: data.script || "",
+        scriptMethod: "custom",
+        personality: "professional",
+        speakingSpeed: 1,
+        enthusiasm: 0.5,
+        useSmallTalk: true,
+        handleObjections: true,
+        targetAudience: "prospects",
+        mainGoal: "generate leads"
+      };
+
+      console.log("Setting onboarding data:", onboardingData);
+      console.log("Setting user agent:", newAgent);
+
+      // Store both pieces of data
       setOnboardingData(onboardingData);
       setUserAgent(newAgent);
       
-      // Update progress state to reflect that an agent exists
+      // Mark setup as completed
+      markSetupCompleted();
+      
+      // Update progress state
       updateProgressState({
         hasVoiceIntegration: !!data.selectedVoice,
         agentConfigurationLevel: 'basic'
       });
       
-      // Mark setup as completed
-      markSetupCompleted();
+      console.log("Agent creation completed successfully");
       
       // Close wizard
       setShowWizard(false);
@@ -100,9 +91,13 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
         description: "Your AI calling agent is ready to start making calls.",
       });
 
-      if (onAgentCreated) {
-        onAgentCreated();
-      }
+      // Force a small delay to ensure state updates propagate
+      setTimeout(() => {
+        if (onAgentCreated) {
+          onAgentCreated();
+        }
+      }, 100);
+
     } catch (error) {
       console.error("Error creating agent:", error);
       toast({
@@ -126,7 +121,6 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
   const handleRetryWizard = () => {
     setShowWizard(false);
     setIsCreatingAgent(false);
-    // Small delay before showing wizard again
     setTimeout(() => setShowWizard(true), 100);
   };
 

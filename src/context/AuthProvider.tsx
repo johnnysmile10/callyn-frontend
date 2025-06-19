@@ -10,11 +10,14 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useLocalStorage<User>('user');
-  const [userAgent, setUserAgent] = useLocalStorage<UserAgent>('user_agent');
+  const [userAgent, setUserAgentStorage] = useLocalStorage<UserAgent>('user_agent');
   const [onboardingData, setOnboardingData] = useLocalStorage<OnboardingData>('onboarding_data');
   const [outreachData, setOutreachData] = useLocalStorage<OutreachData>('outreach_data');
   const [setupCompleted, setSetupCompleted] = useState(false);
   const [campaignBuilderData, setCampaignBuilderData] = useLocalStorage('campaignBuilderData', {});
+
+  // Add local state to ensure immediate UI updates
+  const [localUserAgent, setLocalUserAgent] = useState<UserAgent | null>(userAgent);
 
   const {
     progressState,
@@ -28,6 +31,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const isAuthenticated = !!user;
 
+  // Sync local state with storage state
+  useEffect(() => {
+    if (userAgent !== localUserAgent) {
+      console.log("AuthProvider: Syncing user agent state", { stored: !!userAgent, local: !!localUserAgent });
+      setLocalUserAgent(userAgent);
+    }
+  }, [userAgent, localUserAgent]);
+
   // Load setup completion status and update agent configuration level
   useEffect(() => {
     const storedSetupCompleted = localStorage.getItem('setup_completed');
@@ -36,10 +47,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     // Update agent configuration level based on userAgent status
-    if (userAgent && userAgent.id) {
-      console.log("AuthProvider: User agent detected, updating configuration level", userAgent);
-      const hasBasicConfig = userAgent.configuration?.businessInfo?.name && userAgent.configuration?.voice;
-      const hasCompleteConfig = hasBasicConfig && userAgent.configuration?.script && userAgent.configuration?.personality;
+    const currentAgent = localUserAgent || userAgent;
+    if (currentAgent && currentAgent.id) {
+      console.log("AuthProvider: User agent detected, updating configuration level", currentAgent);
+      const hasBasicConfig = currentAgent.configuration?.businessInfo?.name && currentAgent.configuration?.voice;
+      const hasCompleteConfig = hasBasicConfig && currentAgent.configuration?.script && currentAgent.configuration?.personality;
       
       if (hasCompleteConfig) {
         setAgentConfigurationLevel('complete');
@@ -54,8 +66,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     // Run smart detection to update progress state based on existing data
-    detectProgressFromData(userAgent, onboardingData, outreachData);
-  }, [userAgent, onboardingData, outreachData, setAgentConfigurationLevel, detectProgressFromData]);
+    detectProgressFromData(currentAgent, onboardingData, outreachData);
+  }, [localUserAgent, userAgent, onboardingData, outreachData, setAgentConfigurationLevel, detectProgressFromData]);
 
   const login = async (email: string, password: string) => {
     const loggedInUser = await authService.login(email, password);
@@ -75,7 +87,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     authService.logout();
     setUser(null);
-    setUserAgent(null);
+    setUserAgentStorage(null);
+    setLocalUserAgent(null);
     setOnboardingData(null);
     setOutreachData(null);
     setSetupCompleted(false);
@@ -94,7 +107,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       const newAgent = await authService.createUserAgent(data);
       console.log("AuthProvider: Successfully created agent:", newAgent);
       
-      setUserAgent(newAgent);
+      setUserAgentStorage(newAgent);
+      setLocalUserAgent(newAgent);
       setSetupCompleted(true);
       setAgentConfigurationLevel('basic');
       
@@ -111,10 +125,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  // Enhanced setUserAgent function that updates related state
-  const enhancedSetUserAgent = (agent: UserAgent | null) => {
+  // Enhanced setUserAgent function that updates both storage and local state
+  const setUserAgent = (agent: UserAgent | null) => {
     console.log("AuthProvider: Setting user agent:", agent);
-    setUserAgent(agent);
+    setUserAgentStorage(agent);
+    setLocalUserAgent(agent);
     
     if (agent) {
       // Update progress state when agent is set
@@ -126,11 +141,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const hasCompletedSetup = (): boolean => {
-    const completed = setupCompleted && !!userAgent && !!userAgent.id;
+    const currentAgent = localUserAgent || userAgent;
+    const completed = setupCompleted && !!currentAgent && !!currentAgent.id;
     console.log("AuthProvider: hasCompletedSetup check:", { 
       setupCompleted, 
-      userAgent: !!userAgent, 
-      agentId: userAgent?.id,
+      userAgent: !!currentAgent, 
+      agentId: currentAgent?.id,
       result: completed 
     });
     return completed;
@@ -145,7 +161,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const value = {
     user,
     onboardingData,
-    userAgent,
+    userAgent: localUserAgent, // Use local state for immediate updates
     outreachData,
     setupCompleted,
     progressState,
@@ -155,7 +171,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     signup,
     logout,
     setOnboardingData,
-    setUserAgent: enhancedSetUserAgent,
+    setUserAgent,
     setOutreachData,
     createUserAgent,
     hasCompletedSetup,
@@ -166,9 +182,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider
-      value={value}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,147 +1,163 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Bot, Settings, BarChart3, Rocket, Phone, MessageSquare } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Bot, Settings, Rocket, CheckCircle, AlertCircle, RefreshCw } from "lucide-react";
 import { useAuth } from "@/context";
-import AgentOverview from "./AgentOverview";
-import AgentSettings from "./AgentSettings";
-import TestAgentPanel from "./TestAgentPanel";
 import QuickStartIntegration from "./QuickStartIntegration";
-import CoachingAnalysisPanel from "../coaching/CoachingAnalysisPanel";
+import AgentOverview from "./AgentOverview";
 
 const YourAgentSection = () => {
-  const { userAgent } = useAuth();
-  const [activeTab, setActiveTab] = useState(userAgent ? "overview" : "quick-start");
+  const { userAgent, hasCompletedSetup, progressState } = useAuth();
+  const [refreshKey, setRefreshKey] = useState(0);
+  
+  const hasAgent = !!userAgent;
+  const setupComplete = hasCompletedSetup();
+
+  console.log("YourAgentSection render:", {
+    hasAgent,
+    agentId: userAgent?.id,
+    setupComplete,
+    progressState,
+    timestamp: new Date().toISOString()
+  });
 
   const handleAgentCreated = () => {
-    setActiveTab("overview");
+    console.log("Agent created callback triggered");
+    // Force a re-render to update the UI
+    setRefreshKey(prev => prev + 1);
+    
+    // Small delay to ensure state has propagated
+    setTimeout(() => {
+      setRefreshKey(prev => prev + 1);
+    }, 500);
+  };
+
+  const handleRefreshState = () => {
+    console.log("Manually refreshing state");
+    setRefreshKey(prev => prev + 1);
   };
 
   return (
-    <div className="space-y-6">
+    <div key={refreshKey} className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Your Agent</h1>
-          <p className="text-gray-600 mt-1">
-            {userAgent 
-              ? "Manage and optimize your AI calling agent" 
-              : "Create your first AI calling agent"
-            }
+          <h2 className="text-2xl font-bold tracking-tight">Your AI Agent</h2>
+          <p className="text-muted-foreground">
+            Create and manage your AI calling agent
           </p>
         </div>
-        {userAgent && (
+        
+        {/* Debug/Refresh Button */}
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRefreshState}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Refresh
+          </Button>
+          
+          {/* Status indicator */}
           <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="bg-green-100 text-green-800">
-              <Bot className="h-3 w-3 mr-1" />
-              Active
-            </Badge>
-            <Button size="sm" variant="outline">
-              <Phone className="h-4 w-4 mr-2" />
-              Test Agent
-            </Button>
+            {hasAgent ? (
+              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                <CheckCircle className="h-3 w-3 mr-1" />
+                Agent Active
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                <AlertCircle className="h-3 w-3 mr-1" />
+                No Agent
+              </Badge>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 lg:w-fit lg:grid-cols-5">
-          <TabsTrigger value="quick-start" className="flex items-center gap-2">
-            <Rocket className="h-4 w-4" />
-            Quick Start
-          </TabsTrigger>
-          <TabsTrigger value="overview" disabled={!userAgent} className="flex items-center gap-2">
-            <Bot className="h-4 w-4" />
-            Overview
-          </TabsTrigger>
-          <TabsTrigger value="settings" disabled={!userAgent} className="flex items-center gap-2">
-            <Settings className="h-4 w-4" />
-            Settings
-          </TabsTrigger>
-          <TabsTrigger value="test" disabled={!userAgent} className="flex items-center gap-2">
-            <MessageSquare className="h-4 w-4" />
-            Test
-          </TabsTrigger>
-          <TabsTrigger value="coaching" disabled={!userAgent} className="flex items-center gap-2">
-            <BarChart3 className="h-4 w-4" />
-            Coaching
-          </TabsTrigger>
-        </TabsList>
+      {/* Debug Information Card */}
+      <Card className="bg-gray-50 border-gray-200">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-medium text-gray-600">Debug Information</CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+            <div>
+              <span className="text-gray-500">Agent Exists:</span>
+              <span className={`ml-2 font-medium ${hasAgent ? 'text-green-600' : 'text-red-600'}`}>
+                {hasAgent ? 'Yes' : 'No'}
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-500">Agent ID:</span>
+              <span className="ml-2 font-medium text-gray-800">
+                {userAgent?.id ? userAgent.id.substring(0, 12) + '...' : 'None'}
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-500">Setup Complete:</span>
+              <span className={`ml-2 font-medium ${setupComplete ? 'text-green-600' : 'text-red-600'}`}>
+                {setupComplete ? 'Yes' : 'No'}
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-500">Config Level:</span>
+              <span className="ml-2 font-medium text-gray-800">
+                {progressState.agentConfigurationLevel}
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
-        <TabsContent value="quick-start" className="space-y-6">
+      {!hasAgent ? (
+        <>
+          {/* Quick Start Integration for New Users */}
           <QuickStartIntegration 
-            hasAgent={!!userAgent}
+            hasAgent={hasAgent} 
             onAgentCreated={handleAgentCreated}
           />
-        </TabsContent>
-
-        <TabsContent value="overview" className="space-y-6">
-          {userAgent ? (
-            <AgentOverview />
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>No Agent Found</CardTitle>
-                <CardDescription>
-                  You need to create an agent first using the Quick Start wizard.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button onClick={() => setActiveTab("quick-start")}>
-                  <Rocket className="h-4 w-4 mr-2" />
-                  Start Quick Setup
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
-
-        <TabsContent value="settings" className="space-y-6">
-          {userAgent ? (
-            <AgentSettings />
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>Settings Unavailable</CardTitle>
-                <CardDescription>
-                  Create an agent first to access settings.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          )}
-        </TabsContent>
-
-        <TabsContent value="test" className="space-y-6">
-          {userAgent ? (
-            <TestAgentPanel />
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>Testing Unavailable</CardTitle>
-                <CardDescription>
-                  Create an agent first to test functionality.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          )}
-        </TabsContent>
-
-        <TabsContent value="coaching" className="space-y-6">
-          {userAgent ? (
-            <CoachingAnalysisPanel />
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>Coaching Unavailable</CardTitle>
-                <CardDescription>
-                  Create an agent and make some calls to see coaching insights.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          )}
-        </TabsContent>
-      </Tabs>
+          
+          {/* Alternative Manual Setup */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Settings className="h-5 w-5 text-gray-600" />
+                Advanced Setup
+              </CardTitle>
+              <CardDescription>
+                For advanced users who want full control over their agent configuration
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-4">
+                Skip the Quick Start and configure your agent manually with full customization options.
+              </p>
+              <Button variant="outline" disabled>
+                <Settings className="mr-2 h-4 w-4" />
+                Manual Configuration (Coming Soon)
+              </Button>
+            </CardContent>
+          </Card>
+        </>
+      ) : (
+        <>
+          {/* Agent Overview for Existing Users */}
+          <AgentOverview />
+          
+          <Separator />
+          
+          {/* Additional Quick Start for Existing Users */}
+          <QuickStartIntegration 
+            hasAgent={hasAgent} 
+            onAgentCreated={handleAgentCreated}
+          />
+        </>
+      )}
     </div>
   );
 };
