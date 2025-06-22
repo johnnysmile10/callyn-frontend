@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
+import { Rocket, ArrowRight, CheckCircle, Loader2, Globe } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/context";
 import { OnboardingData, UserAgent } from "@/context/types/authTypes";
@@ -21,11 +21,10 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
   const { setUserAgent, setOnboardingData, markSetupCompleted, updateProgressState } = useAuth();
 
   const handleWizardComplete = async (data: any) => {
-    console.log("Quick Start wizard completed with data:", data);
+    console.log("Quick Start wizard completed with enhanced data:", data);
     setIsCreatingAgent(true);
     
     try {
-      // Create a proper UserAgent object with all required fields
       const agentId = `agent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       const currentTime = new Date().toISOString();
       
@@ -35,7 +34,7 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
         status: 'active',
         createdAt: currentTime,
         configuration: {
-          voice: data.selectedVoice || "default",
+          voice: data.selectedVoice || data.languageConfig?.voiceId || "9BWtsMINqrJLrRacOk9x",
           personality: "professional",
           script: data.script || "",
           businessInfo: {
@@ -47,13 +46,12 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
         }
       };
 
-      console.log("Created UserAgent object:", newAgent);
+      console.log("Created UserAgent object with language support:", newAgent);
 
-      // Create corresponding OnboardingData
       const onboardingData: OnboardingData = {
         businessName: data.businessName || "",
         industry: data.industry || "",
-        selectedVoice: data.selectedVoice || "",
+        selectedVoice: data.selectedVoice || data.languageConfig?.voiceId || "9BWtsMINqrJLrRacOk9x",
         customScript: data.script || "",
         scriptMethod: "custom",
         personality: "professional",
@@ -62,36 +60,34 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
         useSmallTalk: true,
         handleObjections: true,
         targetAudience: "prospects",
-        mainGoal: "generate leads"
+        mainGoal: "generate leads",
+        languageConfig: data.languageConfig
       };
 
-      console.log("Setting onboarding data:", onboardingData);
-      console.log("Setting user agent:", newAgent);
+      console.log("Setting enhanced onboarding data with language config:", onboardingData);
 
-      // Store both pieces of data
       setOnboardingData(onboardingData);
       setUserAgent(newAgent);
-      
-      // Mark setup as completed
       markSetupCompleted();
       
-      // Update progress state
       updateProgressState({
-        hasVoiceIntegration: !!data.selectedVoice,
-        agentConfigurationLevel: 'basic'
+        hasVoiceIntegration: true,
+        agentConfigurationLevel: 'complete'
       });
       
-      console.log("Agent creation completed successfully");
+      console.log("Agent creation completed successfully with language support");
       
-      // Close wizard
       setShowWizard(false);
+      
+      const languageInfo = data.languageConfig?.primaryLanguage !== 'en' 
+        ? ` with ${data.languageConfig.primaryLanguage.toUpperCase()} language support`
+        : '';
       
       toast({
         title: "Agent Created Successfully!",
-        description: "Your AI calling agent is ready to start making calls.",
+        description: `Your AI calling agent is ready to start making calls${languageInfo}.`,
       });
 
-      // Force a small delay to ensure state updates propagate
       setTimeout(() => {
         if (onAgentCreated) {
           onAgentCreated();
@@ -140,7 +136,7 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
                 <Loader2 className="h-6 w-6 animate-spin" />
                 <div>
                   <p className="font-medium">Creating Your Agent...</p>
-                  <p className="text-sm text-gray-600">This will just take a moment</p>
+                  <p className="text-sm text-gray-600">Setting up language preferences and voice</p>
                 </div>
               </div>
             </Card>
@@ -157,14 +153,14 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Rocket className="h-6 w-6 text-blue-600" />
-              Get Started in 5 Minutes
+              Get Started in 6 Minutes
             </CardTitle>
             <CardDescription>
-              Create your first AI calling agent with our guided setup wizard
+              Create your first AI calling agent with our guided setup wizard including full language support
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="flex items-center gap-3 p-3 bg-white rounded-lg border">
                 <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
                   <span className="text-sm font-bold text-blue-600">1</span>
@@ -180,8 +176,8 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
                   <span className="text-sm font-bold text-blue-600">2</span>
                 </div>
                 <div>
-                  <p className="font-medium text-sm">Choose Voice</p>
-                  <p className="text-xs text-gray-600">Select your AI agent's voice</p>
+                  <p className="font-medium text-sm">Language Settings</p>
+                  <p className="text-xs text-gray-600">Choose your languages</p>
                 </div>
               </div>
 
@@ -190,9 +186,32 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
                   <span className="text-sm font-bold text-blue-600">3</span>
                 </div>
                 <div>
+                  <p className="font-medium text-sm">Choose Voice</p>
+                  <p className="text-xs text-gray-600">Select your AI agent's voice</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 bg-white rounded-lg border">
+                <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <span className="text-sm font-bold text-blue-600">4</span>
+                </div>
+                <div>
                   <p className="font-medium text-sm">Create Script</p>
                   <p className="text-xs text-gray-600">Generate your call script</p>
                 </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg p-4 border">
+              <h4 className="font-medium mb-3 flex items-center gap-2">
+                <Globe className="h-4 w-4 text-blue-600" />
+                Multi-Language Support:
+              </h4>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                <span className="text-gray-600">🇺🇸 English</span>
+                <span className="text-gray-600">🇳🇴 Norwegian</span>
+                <span className="text-gray-600">🇸🇪 Swedish</span>
+                <span className="text-gray-600">🇩🇰 Danish</span>
               </div>
             </div>
 
@@ -231,7 +250,7 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
               Your Agent is Ready!
             </CardTitle>
             <CardDescription>
-              Your AI calling agent has been successfully configured
+              Your AI calling agent has been successfully configured with language support
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -247,8 +266,8 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
               <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
                 <CheckCircle className="h-5 w-5 text-green-500" />
                 <div>
-                  <p className="font-medium text-sm text-green-800">Script Ready</p>
-                  <p className="text-xs text-green-600">Call script optimized</p>
+                  <p className="font-medium text-sm text-green-800">Language Ready</p>
+                  <p className="text-xs text-green-600">Multi-language support active</p>
                 </div>
               </div>
             </div>

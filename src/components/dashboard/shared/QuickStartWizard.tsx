@@ -6,11 +6,13 @@ import { Progress } from "@/components/ui/progress";
 import { CheckCircle, ArrowRight, Rocket } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import QuickStartErrorBoundary from "./QuickStartErrorBoundary";
-import { BusinessSetupStep, VoiceSelectionStep, ScriptCreationStep } from "./QuickStartWizardSteps";
+import { BusinessSetupStep, LanguageSelectionStep, VoiceSelectionStep, ScriptCreationStep } from "./QuickStartWizardSteps";
+import { LanguageConfig } from "../outreach/types";
 
 interface QuickStartData {
   businessName: string;
   industry: string;
+  languageConfig: LanguageConfig;
   selectedVoice: string;
   script: string;
 }
@@ -22,6 +24,7 @@ interface QuickStartWizardProps {
 
 const STEPS = [
   { id: 'business', title: 'Business Setup', description: 'Tell us about your business' },
+  { id: 'language', title: 'Language Settings', description: 'Choose your language preferences' },
   { id: 'voice', title: 'Choose Voice', description: 'Select your AI agent voice' },
   { id: 'script', title: 'Create Script', description: 'Create your call script' }
 ];
@@ -31,11 +34,21 @@ const QuickStartWizard = ({ onComplete, onSkip }: QuickStartWizardProps) => {
   const [formData, setFormData] = useState<QuickStartData>({
     businessName: '',
     industry: '',
+    languageConfig: {
+      primaryLanguage: "en",
+      secondaryLanguages: [],
+      voiceId: "9BWtsMINqrJLrRacOk9x",
+      model: "eleven_multilingual_v2",
+      tone: "professional",
+      formality: "balanced",
+      culturalAdaptation: false,
+      localExpressions: false
+    },
     selectedVoice: '',
     script: ''
   });
 
-  const updateFormData = (field: keyof QuickStartData, value: string) => {
+  const updateFormData = (field: keyof QuickStartData, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -55,10 +68,11 @@ const QuickStartWizard = ({ onComplete, onSkip }: QuickStartWizardProps) => {
 
   const handleComplete = () => {
     try {
+      console.log("QuickStart completed with data:", formData);
       onComplete(formData);
       toast({
         title: "Quick Start Complete!",
-        description: "Your AI agent is ready to start making calls.",
+        description: `Your AI agent is ready with ${formData.languageConfig.primaryLanguage.toUpperCase()} language support.`,
       });
     } catch (error) {
       console.error('Quick Start completion error:', error);
@@ -84,8 +98,10 @@ const QuickStartWizard = ({ onComplete, onSkip }: QuickStartWizardProps) => {
       case 0:
         return <BusinessSetupStep {...stepProps} />;
       case 1:
-        return <VoiceSelectionStep {...stepProps} />;
+        return <LanguageSelectionStep {...stepProps} />;
       case 2:
+        return <VoiceSelectionStep {...stepProps} />;
+      case 3:
         return <ScriptCreationStep {...stepProps} />;
       default:
         return <BusinessSetupStep {...stepProps} />;
@@ -102,7 +118,7 @@ const QuickStartWizard = ({ onComplete, onSkip }: QuickStartWizardProps) => {
               Quick Start Wizard
             </CardTitle>
             <CardDescription>
-              Get your AI calling agent set up in just a few minutes
+              Get your AI calling agent set up in just a few minutes with full language support
             </CardDescription>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
@@ -115,22 +131,22 @@ const QuickStartWizard = ({ onComplete, onSkip }: QuickStartWizardProps) => {
 
           <CardContent className="space-y-6">
             {/* Step Indicator */}
-            <div className="flex items-center justify-center space-x-4 mb-8">
+            <div className="flex items-center justify-center space-x-2 mb-8 overflow-x-auto">
               {STEPS.map((step, index) => (
-                <div key={step.id} className="flex items-center">
-                  <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
+                <div key={step.id} className="flex items-center flex-shrink-0">
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 text-xs ${
                     index <= currentStep 
                       ? 'bg-blue-600 border-blue-600 text-white'
                       : 'border-gray-300 text-gray-400'
                   }`}>
                     {index < currentStep ? (
-                      <CheckCircle className="h-5 w-5" />
+                      <CheckCircle className="h-4 w-4" />
                     ) : (
-                      <span className="text-sm font-bold">{index + 1}</span>
+                      <span className="font-bold">{index + 1}</span>
                     )}
                   </div>
                   {index < STEPS.length - 1 && (
-                    <div className={`w-12 h-0.5 mx-2 ${
+                    <div className={`w-8 h-0.5 mx-1 ${
                       index < currentStep ? 'bg-blue-600' : 'bg-gray-300'
                     }`} />
                   )}

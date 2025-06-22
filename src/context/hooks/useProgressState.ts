@@ -11,7 +11,6 @@ export const useProgressState = () => {
     agentConfigurationLevel: 'none'
   });
 
-  // Use ref to track if we've already run detection to prevent loops
   const detectionRunRef = useRef(false);
 
   const updateProgressState = useCallback((updates: Partial<ProgressState>) => {
@@ -22,7 +21,6 @@ export const useProgressState = () => {
       agentConfigurationLevel: 'none' as const
     };
     
-    // Only update if there are actual changes
     const hasChanges = Object.entries(updates).some(([key, value]) => 
       currentState[key as keyof ProgressState] !== value
     );
@@ -51,9 +49,7 @@ export const useProgressState = () => {
     }
   }, [progressState?.agentConfigurationLevel, updateProgressState]);
 
-  // Smart detection function to check if conditions should be met
   const detectProgressFromData = useCallback((userAgent: any, onboardingData: any, outreachData: any) => {
-    // Prevent multiple runs
     if (detectionRunRef.current) {
       return;
     }
@@ -62,12 +58,15 @@ export const useProgressState = () => {
     
     const updates: Partial<ProgressState> = {};
     
-    // Check if voice should be marked as configured
-    if (onboardingData?.selectedVoice || onboardingData?.languageConfig) {
+    // Enhanced voice detection - check for voice integration including language config
+    if (onboardingData?.selectedVoice || 
+        onboardingData?.languageConfig?.voiceId || 
+        onboardingData?.languageConfig?.primaryLanguage) {
       updates.hasVoiceIntegration = true;
+      console.log("Voice integration detected via enhanced language config");
     }
     
-    // Check if leads should be marked as imported (mock data counts as having leads)
+    // Check if leads should be marked as imported
     if (outreachData?.leadList?.length > 0) {
       updates.hasLeads = true;
     }
@@ -77,13 +76,31 @@ export const useProgressState = () => {
       updates.hasCampaigns = true;
     }
     
-    // Apply updates if any were detected
+    // Enhanced agent configuration level detection
+    if (userAgent && userAgent.id) {
+      const hasBasicConfig = userAgent.configuration?.businessInfo?.name && 
+                           (userAgent.configuration?.voice || onboardingData?.selectedVoice);
+      
+      const hasLanguageConfig = onboardingData?.languageConfig?.primaryLanguage;
+      const hasCompleteConfig = hasBasicConfig && 
+                              userAgent.configuration?.script && 
+                              userAgent.configuration?.personality &&
+                              hasLanguageConfig;
+      
+      if (hasCompleteConfig) {
+        updates.agentConfigurationLevel = 'complete';
+        console.log("Complete agent configuration detected (including language)");
+      } else if (hasBasicConfig) {
+        updates.agentConfigurationLevel = 'basic';
+        console.log("Basic agent configuration detected");
+      }
+    }
+    
     if (Object.keys(updates).length > 0) {
-      console.log("Smart detection found updates:", updates);
+      console.log("Enhanced smart detection found updates:", updates);
       updateProgressState(updates);
     }
     
-    // Reset detection flag after a delay
     setTimeout(() => {
       detectionRunRef.current = false;
     }, 1000);

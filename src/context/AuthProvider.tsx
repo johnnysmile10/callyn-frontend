@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { User, OnboardingData, UserAgent, AuthContextType, ProgressState } from './types/authTypes';
 import { OutreachData } from '@/components/dashboard/outreach/types';
@@ -52,22 +51,28 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   // Update agent configuration level when user agent changes
   const updateAgentConfigLevel = useCallback((agent: UserAgent | null) => {
     if (agent && agent.id) {
-      console.log("AuthProvider: User agent detected, updating configuration level", agent);
+      console.log("AuthProvider: User agent detected, updating configuration level with language support", agent);
+      
       const hasBasicConfig = agent.configuration?.businessInfo?.name && agent.configuration?.voice;
-      const hasCompleteConfig = hasBasicConfig && agent.configuration?.script && agent.configuration?.personality;
+      const hasLanguageConfig = onboardingData?.languageConfig?.primaryLanguage;
+      const hasCompleteConfig = hasBasicConfig && 
+                              agent.configuration?.script && 
+                              agent.configuration?.personality &&
+                              hasLanguageConfig;
       
       if (hasCompleteConfig) {
+        console.log("Setting complete configuration level (including language support)");
         setAgentConfigurationLevel('complete');
       } else if (hasBasicConfig) {
         setAgentConfigurationLevel('basic');
       } else {
-        setAgentConfigurationLevel('basic'); // Give benefit of the doubt if agent exists
+        setAgentConfigurationLevel('basic');
       }
     } else {
       console.log("AuthProvider: No user agent found, setting configuration level to none");
       setAgentConfigurationLevel('none');
     }
-  }, [setAgentConfigurationLevel]);
+  }, [setAgentConfigurationLevel, onboardingData?.languageConfig]);
 
   // Update agent configuration level when userAgent changes
   useEffect(() => {
@@ -124,21 +129,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const createUserAgent = async (data: OnboardingData): Promise<UserAgent> => {
-    console.log("AuthProvider: Creating user agent with data:", data);
+    console.log("AuthProvider: Creating user agent with enhanced language data:", data);
     
     try {
       const newAgent = await authService.createUserAgent(data);
-      console.log("AuthProvider: Successfully created agent:", newAgent);
+      console.log("AuthProvider: Successfully created agent with language support:", newAgent);
       
       setUserAgentStorage(newAgent);
       setLocalUserAgent(newAgent);
       setSetupCompleted(true);
       
-      // Update progress state
+      // Enhanced progress state update with language detection
       updateProgressState({
-        hasVoiceIntegration: !!data.selectedVoice,
-        agentConfigurationLevel: 'basic'
+        hasVoiceIntegration: !!(data.selectedVoice || data.languageConfig?.voiceId),
+        agentConfigurationLevel: data.languageConfig?.primaryLanguage ? 'complete' : 'basic'
       });
+      
+      console.log("Language configuration preserved:", data.languageConfig);
       
       return newAgent;
     } catch (error) {
@@ -149,15 +156,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Enhanced setUserAgent function that updates both storage and local state
   const setUserAgent = (agent: UserAgent | null) => {
-    console.log("AuthProvider: Setting user agent:", agent);
+    console.log("AuthProvider: Setting user agent with language awareness:", agent);
     setUserAgentStorage(agent);
     setLocalUserAgent(agent);
     
     if (agent) {
-      // Update progress state when agent is set
+      // Enhanced progress state update
+      const hasLanguageSupport = onboardingData?.languageConfig?.primaryLanguage;
       updateProgressState({
-        hasVoiceIntegration: !!agent.configuration?.voice,
-        agentConfigurationLevel: 'basic'
+        hasVoiceIntegration: !!(agent.configuration?.voice || onboardingData?.selectedVoice),
+        agentConfigurationLevel: hasLanguageSupport ? 'complete' : 'basic'
       });
     }
   };
