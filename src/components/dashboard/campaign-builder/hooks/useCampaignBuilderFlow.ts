@@ -1,5 +1,6 @@
 
 import { useAuth } from "@/context";
+import { LanguageConfig } from "../../outreach/types";
 
 export interface CampaignBuilderData {
   agentProfile?: {
@@ -29,6 +30,7 @@ export interface CampaignBuilderData {
     enthusiasm: number;
     primaryLanguage: string;
     additionalLanguages: string[];
+    languageConfig?: LanguageConfig;
   };
   leadManagement?: {
     leadList: any[];
@@ -79,7 +81,9 @@ export const useCampaignBuilderFlow = () => {
         return !!(campaignBuilderData?.script?.greeting && 
                  campaignBuilderData?.script?.mainPitch);
       case 4:
-        return !!(campaignBuilderData?.voiceSettings?.voiceId);
+        // Enhanced validation for voice settings - require voice ID and primary language
+        return !!(campaignBuilderData?.voiceSettings?.voiceId && 
+                 campaignBuilderData?.voiceSettings?.primaryLanguage);
       case 5:
         return !!(campaignBuilderData?.leadManagement?.leadList?.length);
       case 6:
@@ -118,11 +122,21 @@ export const useCampaignBuilderFlow = () => {
         };
       case 4:
         return campaignBuilderData?.voiceSettings || {
-          voiceId: '',
+          voiceId: '9BWtsMINqrJLrRacOk9x',
           speakingSpeed: 1.0,
           enthusiasm: 5,
           primaryLanguage: 'en',
-          additionalLanguages: []
+          additionalLanguages: [],
+          languageConfig: {
+            primaryLanguage: 'en',
+            secondaryLanguages: [],
+            voiceId: '9BWtsMINqrJLrRacOk9x',
+            model: 'eleven_multilingual_v2',
+            tone: 'professional',
+            formality: 'balanced',
+            culturalAdaptation: false,
+            localExpressions: false
+          }
         };
       case 5:
         return campaignBuilderData?.leadManagement || {

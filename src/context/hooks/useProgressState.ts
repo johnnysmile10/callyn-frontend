@@ -49,7 +49,7 @@ export const useProgressState = () => {
     }
   }, [progressState?.agentConfigurationLevel, updateProgressState]);
 
-  const detectProgressFromData = useCallback((userAgent: any, onboardingData: any, outreachData: any) => {
+  const detectProgressFromData = useCallback((userAgent: any, onboardingData: any, outreachData: any, campaignBuilderData?: any) => {
     if (detectionRunRef.current) {
       return;
     }
@@ -58,21 +58,24 @@ export const useProgressState = () => {
     
     const updates: Partial<ProgressState> = {};
     
-    // Enhanced voice detection - check for voice integration including language config
+    // Enhanced voice detection - check for voice integration including language config and campaign builder
     if (onboardingData?.selectedVoice || 
         onboardingData?.languageConfig?.voiceId || 
-        onboardingData?.languageConfig?.primaryLanguage) {
+        onboardingData?.languageConfig?.primaryLanguage ||
+        campaignBuilderData?.voiceSettings?.voiceId ||
+        campaignBuilderData?.voiceSettings?.primaryLanguage) {
       updates.hasVoiceIntegration = true;
-      console.log("Voice integration detected via enhanced language config");
+      console.log("Voice integration detected via enhanced language config or campaign builder");
     }
     
     // Check if leads should be marked as imported
-    if (outreachData?.leadList?.length > 0) {
+    if (outreachData?.leadList?.length > 0 || campaignBuilderData?.leadManagement?.leadList?.length > 0) {
       updates.hasLeads = true;
     }
     
     // Check if campaigns should be marked as created
-    if (outreachData && (outreachData.targetAudience || outreachData.script || outreachData.scheduling)) {
+    if ((outreachData && (outreachData.targetAudience || outreachData.script || outreachData.scheduling)) ||
+        (campaignBuilderData && (campaignBuilderData.agentProfile || campaignBuilderData.targetAudience || campaignBuilderData.script))) {
       updates.hasCampaigns = true;
     }
     
@@ -81,7 +84,8 @@ export const useProgressState = () => {
       const hasBasicConfig = userAgent.configuration?.businessInfo?.name && 
                            (userAgent.configuration?.voice || onboardingData?.selectedVoice);
       
-      const hasLanguageConfig = onboardingData?.languageConfig?.primaryLanguage;
+      const hasLanguageConfig = onboardingData?.languageConfig?.primaryLanguage || 
+                               campaignBuilderData?.voiceSettings?.primaryLanguage;
       const hasCompleteConfig = hasBasicConfig && 
                               userAgent.configuration?.script && 
                               userAgent.configuration?.personality &&
