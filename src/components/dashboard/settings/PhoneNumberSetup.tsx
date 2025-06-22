@@ -1,15 +1,21 @@
 
 import { useState, useMemo } from "react";
+import PhoneNumberSourceSelector from "./phone-setup/PhoneNumberSourceSelector";
 import PhoneNumberProvisioningCard from "./phone-setup/PhoneNumberProvisioningCard";
-import CurrentPhoneNumberCard from "./phone-setup/CurrentPhoneNumberCard";
+import BYODSetup from "./phone-setup/BYODSetup";
+import PhoneNumberManagement from "./phone-setup/PhoneNumberManagement";
 import { COUNTRY_PHONE_DATA } from "./phone-setup/phoneDataConfig";
 
 const PhoneNumberSetup = () => {
+  const [phoneNumberSource, setPhoneNumberSource] = useState<"provision" | "byod">("provision");
   const [selectedCountry, setSelectedCountry] = useState("US");
   const [selectedAreaCode, setSelectedAreaCode] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedNumber, setSelectedNumber] = useState("");
   const [isProvisioning, setIsProvisioning] = useState(false);
+
+  // Mock check if user has existing numbers
+  const hasExistingNumbers = true; // In real app, this would come from backend
 
   // Get dynamic data based on selected country
   const countryData = COUNTRY_PHONE_DATA[selectedCountry];
@@ -55,22 +61,36 @@ const PhoneNumberSetup = () => {
 
   return (
     <div className="space-y-6">
-      <PhoneNumberProvisioningCard
-        selectedCountry={selectedCountry}
-        onCountryChange={handleCountryChange}
-        selectedAreaCode={selectedAreaCode}
-        onAreaCodeChange={setSelectedAreaCode}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        selectedNumber={selectedNumber}
-        onNumberSelect={setSelectedNumber}
-        isProvisioning={isProvisioning}
-        onProvision={handleProvisionNumber}
-        availableNumbers={filteredNumbers}
-        areaCodes={countryData?.areaCodes || []}
+      {/* Show existing numbers if user has any */}
+      {hasExistingNumbers && (
+        <PhoneNumberManagement />
+      )}
+
+      {/* Source Selection */}
+      <PhoneNumberSourceSelector
+        selectedSource={phoneNumberSource}
+        onSourceChange={setPhoneNumberSource}
       />
 
-      <CurrentPhoneNumberCard />
+      {/* Conditional Content Based on Source */}
+      {phoneNumberSource === "provision" ? (
+        <PhoneNumberProvisioningCard
+          selectedCountry={selectedCountry}
+          onCountryChange={handleCountryChange}
+          selectedAreaCode={selectedAreaCode}
+          onAreaCodeChange={setSelectedAreaCode}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          selectedNumber={selectedNumber}
+          onNumberSelect={setSelectedNumber}
+          isProvisioning={isProvisioning}
+          onProvision={handleProvisionNumber}
+          availableNumbers={filteredNumbers}
+          areaCodes={countryData?.areaCodes || []}
+        />
+      ) : (
+        <BYODSetup />
+      )}
     </div>
   );
 };
