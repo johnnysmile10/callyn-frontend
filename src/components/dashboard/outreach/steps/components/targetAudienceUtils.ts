@@ -4,7 +4,11 @@ export const renderTargetAudience = (audience: any): string => {
     return audience;
   }
   if (audience && typeof audience === 'object') {
-    // Convert TargetAudience object to readable string
+    // Handle new simplified structure
+    if (audience.description) {
+      return audience.description;
+    }
+    // Legacy support for old structure
     const parts = [];
     if (audience.industry?.length) parts.push(`${audience.industry.join(', ')} industry`);
     if (audience.jobTitles?.length) parts.push(`${audience.jobTitles.join(', ')} roles`);

@@ -1,9 +1,5 @@
 export interface TargetAudience {
-  industry: string[];
-  companySize: string[];
-  jobTitles: string[];
-  location: string[];
-  customCriteria?: string;
+  description: string;
 }
 
 export interface LeadRecord {
