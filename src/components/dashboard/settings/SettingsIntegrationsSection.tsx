@@ -19,15 +19,13 @@ import PhoneNumberSetup from "./PhoneNumberSetup";
 import TwilioIntegration from "./TwilioIntegration";
 import LanguageVoiceSettings from "./LanguageVoiceSettings";
 import CRMCalendarIntegrations from "./CRMCalendarIntegrations";
-import UserDatabaseIntegration from "./UserDatabaseIntegration";
 
 const SettingsIntegrationsSection = () => {
   const { userAgent, onboardingData } = useAuth();
-  const [activeTab, setActiveTab] = useState("database");
+  const [activeTab, setActiveTab] = useState("phone");
 
   // Mock setup status - in real app this would come from your backend
   const setupStatus = {
-    userDatabase: false,
     phoneNumber: false,
     twilioIntegration: false,
     languageSettings: true, // Already configured from onboarding
@@ -42,14 +40,6 @@ const SettingsIntegrationsSection = () => {
   };
 
   const integrationCategories = [
-    {
-      id: "database",
-      title: "User Database",
-      description: "Connect your lead database or CRM",
-      icon: Database,
-      status: setupStatus.userDatabase,
-      required: true
-    },
     {
       id: "phone",
       title: "Phone Number",
@@ -127,7 +117,7 @@ const SettingsIntegrationsSection = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {integrationCategories.map((category) => (
               <div 
                 key={category.id}
@@ -173,11 +163,7 @@ const SettingsIntegrationsSection = () => {
 
       {/* Settings Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="database" className="flex items-center gap-2">
-            <Database className="h-4 w-4" />
-            Database
-          </TabsTrigger>
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="phone" className="flex items-center gap-2">
             <Phone className="h-4 w-4" />
             Phone
@@ -195,10 +181,6 @@ const SettingsIntegrationsSection = () => {
             Integrations
           </TabsTrigger>
         </TabsList>
-
-        <TabsContent value="database" className="mt-6">
-          <UserDatabaseIntegration />
-        </TabsContent>
 
         <TabsContent value="phone" className="mt-6">
           <PhoneNumberSetup />
