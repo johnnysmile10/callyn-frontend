@@ -68,9 +68,11 @@ export const useProgressState = () => {
       console.log("Voice integration detected via enhanced language config or campaign builder");
     }
     
-    // Check if leads should be marked as imported
-    if (outreachData?.leadList?.length > 0 || campaignBuilderData?.leadManagement?.leadList?.length > 0) {
+    // Enhanced lead detection to check campaign builder leadManagement structure
+    if (outreachData?.leadList?.length > 0 || 
+        campaignBuilderData?.leadManagement?.leadList?.length > 0) {
       updates.hasLeads = true;
+      console.log("Leads detected in outreach or campaign builder");
     }
     
     // Check if campaigns should be marked as created

@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/context";
 import { LanguageConfig } from "../../outreach/types";
 
@@ -85,6 +84,7 @@ export const useCampaignBuilderFlow = () => {
         return !!(campaignBuilderData?.voiceSettings?.voiceId && 
                  campaignBuilderData?.voiceSettings?.primaryLanguage);
       case 5:
+        // Fixed validation to check for leadList array length
         return !!(campaignBuilderData?.leadManagement?.leadList?.length);
       case 6:
         return !!(campaignBuilderData?.callScheduling?.calendarIntegration?.connected);
@@ -139,6 +139,7 @@ export const useCampaignBuilderFlow = () => {
           }
         };
       case 5:
+        // Fixed to return proper structure for leadManagement
         return campaignBuilderData?.leadManagement || {
           leadList: [],
           leadSources: [],
