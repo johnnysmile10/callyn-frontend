@@ -13,8 +13,8 @@ export const useOutreachFlow = () => {
   const canProceedFromStep = (stepId: number): boolean => {
     switch (stepId) {
       case 1:
-        return !!(outreachData?.targetAudience?.industry?.length && 
-                 outreachData?.targetAudience?.companySize?.length);
+        return !!(outreachData?.targetAudience?.description && 
+                 outreachData.targetAudience.description.trim().length > 0);
       case 2:
         return !!(outreachData?.leadList?.length && outreachData.leadList.length > 0);
       case 3:
@@ -33,10 +33,7 @@ export const useOutreachFlow = () => {
     switch (currentStep) {
       case 1:
         return outreachData?.targetAudience || {
-          industry: [],
-          companySize: [],
-          jobTitles: [],
-          location: []
+          description: ''
         };
       case 2:
         return outreachData?.leadList || [];

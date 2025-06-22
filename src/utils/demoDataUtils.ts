@@ -4,10 +4,7 @@ import { OutreachData } from '@/components/dashboard/outreach/types';
 export const createDemoOutreachData = (): OutreachData => {
   return {
     targetAudience: {
-      industry: ['Technology', 'SaaS'],
-      jobTitles: ['CEO', 'CTO', 'Founder'],
-      companySize: ['10-50 employees', '50-200 employees'],
-      location: ['United States', 'Canada']
+      description: 'Small to medium-sized SaaS companies (10-200 employees) in the Technology industry, targeting CEOs, CTOs, and Founders in the United States and Canada who are looking to scale their development teams.'
     },
     leadList: [
       {
