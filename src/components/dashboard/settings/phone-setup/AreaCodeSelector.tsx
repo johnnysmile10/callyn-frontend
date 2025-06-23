@@ -1,6 +1,12 @@
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface AreaCode {
   code: string;
@@ -16,18 +22,15 @@ interface AreaCodeSelectorProps {
 const AreaCodeSelector = ({ selectedAreaCode, onAreaCodeChange, areaCodes }: AreaCodeSelectorProps) => {
   return (
     <div className="space-y-2">
-      <Label>Area Code (Optional)</Label>
+      <Label htmlFor="area-code">Area Code</Label>
       <Select value={selectedAreaCode} onValueChange={onAreaCodeChange}>
         <SelectTrigger>
-          <SelectValue placeholder="Any area code" />
+          <SelectValue placeholder="Select area code" />
         </SelectTrigger>
         <SelectContent>
-          {areaCodes.map((area) => (
-            <SelectItem key={area.code} value={area.code}>
-              <div className="flex items-center gap-2">
-                <span>{area.code}</span>
-                <span className="text-sm text-gray-500">- {area.location}</span>
-              </div>
+          {areaCodes.map((areaCode) => (
+            <SelectItem key={areaCode.code} value={areaCode.code}>
+              {areaCode.code} - {areaCode.location}
             </SelectItem>
           ))}
         </SelectContent>

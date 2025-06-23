@@ -1,35 +1,41 @@
 
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { PHONE_COUNTRIES } from "./phoneCountryConfig";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PhoneCountrySelectorProps {
   selectedCountry: string;
-  onCountryChange: (countryCode: string) => void;
+  onCountryChange: (country: string) => void;
 }
 
 const PhoneCountrySelector = ({ selectedCountry, onCountryChange }: PhoneCountrySelectorProps) => {
+  const countries = [
+    { code: "US", name: "United States" },
+    { code: "CA", name: "Canada" },
+    { code: "GB", name: "United Kingdom" },
+    { code: "AU", name: "Australia" },
+  ];
+
   return (
-    <div className="space-y-3">
-      <Label className="text-base font-medium">Country</Label>
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-2 max-h-40 overflow-y-auto">
-        {PHONE_COUNTRIES.map((country) => (
-          <Button
-            key={country.code}
-            variant={selectedCountry === country.code ? "default" : "outline"}
-            className="justify-start h-auto p-3"
-            onClick={() => onCountryChange(country.code)}
-          >
-            <div className="flex items-center gap-2 text-left">
-              <span className="text-lg">{country.flag}</span>
-              <div className="flex flex-col">
-                <span className="font-medium text-sm">{country.name}</span>
-                <span className="text-xs opacity-70">{country.dialCode}</span>
-              </div>
-            </div>
-          </Button>
-        ))}
-      </div>
+    <div className="space-y-2">
+      <Label htmlFor="phone-country">Country</Label>
+      <Select value={selectedCountry} onValueChange={onCountryChange}>
+        <SelectTrigger>
+          <SelectValue placeholder="Select a country" />
+        </SelectTrigger>
+        <SelectContent>
+          {countries.map((country) => (
+            <SelectItem key={country.code} value={country.code}>
+              {country.name}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

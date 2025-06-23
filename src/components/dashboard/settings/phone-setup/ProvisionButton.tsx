@@ -1,7 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Phone, Clock, AlertTriangle } from "lucide-react";
+import { CheckCircle, Clock } from "lucide-react";
 
 interface ProvisionButtonProps {
   selectedNumber: string;
@@ -10,32 +9,29 @@ interface ProvisionButtonProps {
 }
 
 const ProvisionButton = ({ selectedNumber, isProvisioning, onProvision }: ProvisionButtonProps) => {
-  if (!selectedNumber) return null;
-
   return (
-    <div className="space-y-4">
-      <Alert>
-        <AlertTriangle className="h-4 w-4" />
-        <AlertDescription>
-          You'll be charged $1.00/month for this phone number. You can cancel anytime.
-        </AlertDescription>
-      </Alert>
-      
-      <Button 
+    <div className="flex flex-col sm:flex-row gap-4 items-center justify-between pt-4 border-t">
+      <div className="text-sm text-gray-600">
+        {selectedNumber ? (
+          <>Selected: <span className="font-mono font-semibold">{selectedNumber}</span></>
+        ) : (
+          "Please select a phone number to provision"
+        )}
+      </div>
+      <Button
         onClick={onProvision}
-        disabled={isProvisioning}
-        className="w-full"
-        size="lg"
+        disabled={!selectedNumber || isProvisioning}
+        className="bg-blue-600 hover:bg-blue-700 min-w-fit"
       >
         {isProvisioning ? (
           <>
             <Clock className="mr-2 h-4 w-4 animate-spin" />
-            Provisioning Number...
+            Provisioning...
           </>
         ) : (
           <>
-            <Phone className="mr-2 h-4 w-4" />
-            Provision {selectedNumber}
+            <CheckCircle className="mr-2 h-4 w-4" />
+            Provision Number
           </>
         )}
       </Button>

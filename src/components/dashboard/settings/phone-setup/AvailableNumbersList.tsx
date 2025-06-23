@@ -1,7 +1,8 @@
 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { MapPin, CheckCircle } from "lucide-react";
+import { MapPin } from "lucide-react";
 
 interface PhoneNumber {
   number: string;
@@ -16,38 +17,50 @@ interface AvailableNumbersListProps {
 }
 
 const AvailableNumbersList = ({ numbers, selectedNumber, onNumberSelect }: AvailableNumbersListProps) => {
+  if (numbers.length === 0) {
+    return (
+      <Card>
+        <CardContent className="p-6 text-center text-gray-500">
+          No numbers available for the selected criteria. Try adjusting your search or area code selection.
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <div className="space-y-3">
-      <Label className="text-base font-medium">Available Numbers</Label>
-      <div className="space-y-2 max-h-80 overflow-y-auto">
-        {numbers.map((number, index) => (
-          <div 
-            key={index}
-            className={`p-4 border rounded-lg cursor-pointer transition-all ${
+    <div className="space-y-4">
+      <h3 className="text-lg font-semibold">Available Numbers</h3>
+      <div className="grid gap-3 max-h-96 overflow-y-auto">
+        {numbers.map((number) => (
+          <Card 
+            key={number.number} 
+            className={`cursor-pointer transition-colors ${
               selectedNumber === number.number 
-                ? 'border-blue-500 bg-blue-50' 
-                : 'border-gray-200 hover:border-gray-300'
+                ? "border-blue-500 bg-blue-50" 
+                : "hover:bg-gray-50"
             }`}
             onClick={() => onNumberSelect(number.number)}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="text-lg font-mono font-medium">
-                  {number.number}
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex-1">
+                  <div className="font-mono text-lg font-semibold">
+                    {number.number}
+                  </div>
+                  <div className="flex items-center gap-1 text-sm text-gray-600">
+                    <MapPin className="h-3 w-3" />
+                    {number.location}
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 text-sm text-gray-600">
-                  <MapPin className="h-4 w-4" />
-                  {number.location}
+                <div className="flex items-center gap-2">
+                  <Badge variant="secondary">{number.price}/month</Badge>
+                  {selectedNumber === number.number && (
+                    <Button size="sm">Selected</Button>
+                  )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="outline">{number.price}</Badge>
-                {selectedNumber === number.number && (
-                  <CheckCircle className="h-4 w-4 text-blue-600" />
-                )}
-              </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
     </div>
