@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -13,6 +12,7 @@ import YourAgentSection from "@/components/dashboard/agent/YourAgentSection";
 import SettingsIntegrationsSection from "@/components/dashboard/settings/SettingsIntegrationsSection";
 import UserDatabaseSection from "@/components/dashboard/settings/UserDatabaseSection";
 import GatewaySetupCard from "@/components/dashboard/settings/gateway-setup/GatewaySetupCard";
+import EliteGatewaySetupCard from "@/components/dashboard/settings/gateway-setup/EliteGatewaySetupCard";
 import CallCenterDashboard from "@/components/dashboard/callcenter/CallCenterDashboard";
 import EliteCallInterface from "@/components/dashboard/callcenter/EliteCallInterface";
 import PersonalAgentManager from "@/components/dashboard/PersonalAgentManager";
@@ -152,6 +152,11 @@ const Dashboard = () => {
       case "call-center":
       case "elite-call-interface":
         return <LiveCallCenter />;
+      
+      // Gateway Setup - Check for Elite vs Lite
+      case "gateway-setup":
+        // For demo, show Elite version if user has an agent, otherwise show Lite
+        return userAgent ? <EliteGatewaySetupCard /> : <GatewaySetupCard />;
       
       default:
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;
