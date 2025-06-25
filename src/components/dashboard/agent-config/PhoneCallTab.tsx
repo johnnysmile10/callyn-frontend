@@ -12,6 +12,7 @@ import { Phone, Clock, Settings, AlertCircle, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import PhoneNumberSetup from "../settings/PhoneNumberSetup";
 import TwilioIntegration from "../settings/TwilioIntegration";
+import GatewaySetupCard from "../settings/gateway-setup/GatewaySetupCard";
 
 const PhoneCallTab = () => {
   const { toast } = useToast();
@@ -98,6 +99,9 @@ const PhoneCallTab = () => {
 
       {/* Twilio Integration */}
       <TwilioIntegration />
+
+      {/* Gateway Setup - NEW */}
+      <GatewaySetupCard />
 
       {/* Call Timing Settings */}
       <Card>
