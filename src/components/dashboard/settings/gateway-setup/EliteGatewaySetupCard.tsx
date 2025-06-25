@@ -5,13 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Crown, Phone, Save, Zap, Brain, TestTube, Globe } from "lucide-react";
+import { Crown, Phone, Save, Brain, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { EliteGatewaySetup, EliteGlobalSettings } from "./types/eliteGatewayTypes";
 import EliteMenuOptionsManager from "./components/EliteMenuOptionsManager";
 import EliteGlobalSettingsPanel from "./components/EliteGlobalSettingsPanel";
-import EliteTestingCenter from "./components/EliteTestingCenter";
-import EliteAnalyticsPanel from "./components/EliteAnalyticsPanel";
 import EliteAILearningPanel from "./components/EliteAILearningPanel";
 
 const EliteGatewaySetupCard = () => {
@@ -86,13 +84,13 @@ const EliteGatewaySetupCard = () => {
             <Brain className="h-4 w-4 text-purple-600" />
             <AlertDescription>
               <strong>Elite Features Active:</strong> AI Learning, Voice Detection, Multi-Language Support, 
-              Real-time Adaptation, and Advanced Testing capabilities are now enabled for superior call navigation.
+              Real-time Adaptation for superior call navigation.
             </AlertDescription>
           </Alert>
 
           {/* Elite Features Tabs */}
           <Tabs defaultValue="menu-options" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="menu-options" className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
                 Menu Options
@@ -101,16 +99,8 @@ const EliteGatewaySetupCard = () => {
                 <Brain className="h-4 w-4" />
                 AI Learning
               </TabsTrigger>
-              <TabsTrigger value="testing" className="flex items-center gap-2">
-                <TestTube className="h-4 w-4" />
-                Testing Center
-              </TabsTrigger>
-              <TabsTrigger value="analytics" className="flex items-center gap-2">
-                <Zap className="h-4 w-4" />
-                Analytics
-              </TabsTrigger>
               <TabsTrigger value="settings" className="flex items-center gap-2">
-                <Globe className="h-4 w-4" />
+                <Settings className="h-4 w-4" />
                 Global Settings
               </TabsTrigger>
             </TabsList>
@@ -126,14 +116,6 @@ const EliteGatewaySetupCard = () => {
 
             <TabsContent value="ai-learning" className="space-y-4">
               <EliteAILearningPanel gatewaySetup={eliteGatewaySetup} />
-            </TabsContent>
-
-            <TabsContent value="testing" className="space-y-4">
-              <EliteTestingCenter gatewaySetup={eliteGatewaySetup} />
-            </TabsContent>
-
-            <TabsContent value="analytics" className="space-y-4">
-              <EliteAnalyticsPanel gatewaySetup={eliteGatewaySetup} />
             </TabsContent>
 
             <TabsContent value="settings" className="space-y-4">

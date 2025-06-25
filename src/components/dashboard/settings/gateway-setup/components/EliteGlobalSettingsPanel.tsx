@@ -4,8 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Brain, Globe, Volume2, Clock, Settings } from "lucide-react";
+import { Brain, Clock } from "lucide-react";
 import { EliteGlobalSettings } from "../types/eliteGatewayTypes";
 
 interface EliteGlobalSettingsPanelProps {
@@ -65,56 +64,6 @@ const EliteGlobalSettingsPanel = ({ settings, onSettingsChange }: EliteGlobalSet
             </div>
             <p className="text-sm text-gray-600">
               Minimum confidence level: {Math.round(settings.confidenceThreshold * 100)}%
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Language & Voice Settings */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-blue-700">
-            <Globe className="h-5 w-5" />
-            Language & Voice Detection
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label>Default Language</Label>
-            <Select
-              value={settings.defaultLanguage}
-              onValueChange={(value) => onSettingsChange({ defaultLanguage: value })}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">English</SelectItem>
-                <SelectItem value="es">Spanish</SelectItem>
-                <SelectItem value="fr">French</SelectItem>
-                <SelectItem value="de">German</SelectItem>
-                <SelectItem value="it">Italian</SelectItem>
-                <SelectItem value="pt">Portuguese</SelectItem>
-                <SelectItem value="zh">Chinese</SelectItem>
-                <SelectItem value="ja">Japanese</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Voice Sensitivity</Label>
-            <div className="px-2">
-              <Slider
-                value={[settings.voiceSensitivity]}
-                onValueChange={([value]) => onSettingsChange({ voiceSensitivity: value })}
-                max={1}
-                min={0.1}
-                step={0.1}
-                className="w-full"
-              />
-            </div>
-            <p className="text-sm text-gray-600">
-              Voice detection sensitivity: {Math.round(settings.voiceSensitivity * 100)}%
             </p>
           </div>
         </CardContent>

@@ -1,4 +1,3 @@
-
 import { GatewayAction, GatewayMenuOption } from './gatewayTypes';
 
 export interface EliteGatewayMenuOption extends GatewayMenuOption {
@@ -99,11 +98,9 @@ export interface EliteGatewaySetup {
 }
 
 export interface EliteGlobalSettings {
-  defaultLanguage: string;
   fallbackToOperator: boolean;
   maxCallDuration: number;
   adaptiveLearning: boolean;
-  voiceSensitivity: number;
   confidenceThreshold: number;
   enableRealTimeAdaptation: boolean;
 }
