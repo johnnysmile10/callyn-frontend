@@ -1,13 +1,12 @@
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Plus, Lightbulb } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { GatewayMenuOption, GatewayAction } from "./types/gatewayTypes";
-import AlwaysTryZeroToggle from "./components/AlwaysTryZeroToggle";
-import TemplateSelector, { EXAMPLE_TEMPLATES } from "./components/TemplateSelector";
-import MenuOptionFormFields from "./components/MenuOptionFormFields";
+import { EXAMPLE_TEMPLATES } from "./components/TemplateSelector";
+import AddMenuOptionCollapsed from "./components/AddMenuOptionCollapsed";
+import AddMenuOptionHeader from "./components/AddMenuOptionHeader";
+import AddMenuOptionFormContent from "./components/AddMenuOptionFormContent";
+import AddMenuOptionFormActions from "./components/AddMenuOptionFormActions";
 
 interface AddMenuOptionFormProps {
   onAdd: (option: GatewayMenuOption) => void;
@@ -26,9 +25,7 @@ const AddMenuOptionForm = ({ onAdd, onAlwaysTryZeroChange, alwaysTryZero = false
     instructions: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = () => {
     if (!formData.prompt.trim()) return;
 
     const newOption: GatewayMenuOption = {
@@ -91,68 +88,41 @@ const AddMenuOptionForm = ({ onAdd, onAlwaysTryZeroChange, alwaysTryZero = false
     }
   };
 
+  const handleCancel = () => {
+    setIsOpen(false);
+  };
+
+  const handleExpand = () => {
+    setIsOpen(true);
+  };
+
   if (!isOpen) {
     return (
-      <div className="space-y-4">
-        <AlwaysTryZeroToggle 
-          alwaysTryZero={alwaysTryZero}
-          onAlwaysTryZeroChange={onAlwaysTryZeroChange}
-        />
-
-        <Button
-          onClick={() => setIsOpen(true)}
-          variant="outline"
-          className="w-full border-dashed border-2 border-gray-300 hover:border-blue-400 hover:bg-blue-50 py-8"
-        >
-          <Plus className="h-5 w-5 mr-2" />
-          Add Menu Option
-        </Button>
-      </div>
+      <AddMenuOptionCollapsed 
+        alwaysTryZero={alwaysTryZero}
+        onAlwaysTryZeroChange={onAlwaysTryZeroChange}
+        onExpand={handleExpand}
+      />
     );
   }
 
   return (
     <Card className="border-2 border-blue-200 bg-blue-50">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-lg flex items-center gap-2">
-          <Lightbulb className="h-5 w-5 text-blue-600" />
-          Add New Menu Option
-        </CardTitle>
-      </CardHeader>
+      <AddMenuOptionHeader />
+      
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Alert className="bg-blue-50 border-blue-200">
-            <Lightbulb className="h-4 w-4 text-blue-600" />
-            <AlertDescription className="text-sm">
-              <strong>Quick Guide:</strong> Configure how your AI agent should respond to phone menu prompts. 
-              Choose from common templates below or create a custom option. Each option tells the agent what to do 
-              when it hears a specific prompt during a call.
-            </AlertDescription>
-          </Alert>
+        <AddMenuOptionFormContent
+          selectedTemplate={selectedTemplate}
+          onTemplateChange={handleTemplateChange}
+          formData={formData}
+          onFieldChange={handleFieldChange}
+        />
 
-          <TemplateSelector 
-            selectedTemplate={selectedTemplate}
-            onTemplateChange={handleTemplateChange}
-          />
-
-          <MenuOptionFormFields 
-            formData={formData}
-            onFieldChange={handleFieldChange}
-          />
-
-          <div className="flex gap-3 pt-4">
-            <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
-              Add Option
-            </Button>
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={() => setIsOpen(false)}
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
+        <AddMenuOptionFormActions
+          onSubmit={handleSubmit}
+          onCancel={handleCancel}
+          isSubmitDisabled={!formData.prompt.trim()}
+        />
       </CardContent>
     </Card>
   );
