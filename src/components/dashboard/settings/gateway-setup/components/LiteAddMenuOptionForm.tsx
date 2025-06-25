@@ -15,9 +15,14 @@ interface LiteAddMenuOptionFormProps {
 }
 
 const LiteAddMenuOptionForm = ({ onAdd, onCancel }: LiteAddMenuOptionFormProps) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    prompt: string;
+    actionType: 'press_key' | 'wait' | 'speak' | 'transfer';
+    actionValue: string;
+    duration: number;
+  }>({
     prompt: "",
-    actionType: "press_key" as const,
+    actionType: "press_key",
     actionValue: "",
     duration: 3
   });
@@ -71,7 +76,9 @@ const LiteAddMenuOptionForm = ({ onAdd, onCancel }: LiteAddMenuOptionFormProps) 
             <Label>Action</Label>
             <Select
               value={formData.actionType}
-              onValueChange={(value: any) => setFormData(prev => ({ ...prev, actionType: value }))}
+              onValueChange={(value: 'press_key' | 'wait' | 'speak' | 'transfer') => 
+                setFormData(prev => ({ ...prev, actionType: value }))
+              }
             >
               <SelectTrigger>
                 <SelectValue />
