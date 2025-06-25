@@ -13,6 +13,7 @@ import { HeadphonesIcon, Upload, CheckCircle, AlertCircle } from "lucide-react";
 
 interface SupportFormData {
   title: string;
+  category: string;
   description: string;
   priority: string;
   screenshot?: FileList;
@@ -175,6 +176,48 @@ const SupportSection = () => {
               )}
             </div>
 
+            {/* Issue Category Field */}
+            <div className="space-y-2">
+              <Label htmlFor="category">Issue Category *</Label>
+              <Select 
+                onValueChange={(value) => setValue("category", value)}
+                {...register("category", { required: "Please select an issue category" })}
+              >
+                <SelectTrigger className={errors.category ? "border-red-500" : ""}>
+                  <SelectValue placeholder="Select issue category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="bug-report">Bug Report</SelectItem>
+                  <SelectItem value="feature-request">Feature Request</SelectItem>
+                  <SelectItem value="technical-support">Technical Support</SelectItem>
+                  <SelectItem value="account-billing">Account & Billing</SelectItem>
+                  <SelectItem value="general-inquiry">General Inquiry</SelectItem>
+                  <SelectItem value="feedback">Feedback</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.category && (
+                <p className="text-sm text-red-500">{errors.category.message}</p>
+              )}
+            </div>
+
+            {/* Description Field */}
+            <div className="space-y-2">
+              <Label htmlFor="description">Description *</Label>
+              <Textarea
+                id="description"
+                placeholder="Please describe your issue in detail. Include steps to reproduce if reporting a bug, or specific requirements if requesting a feature."
+                rows={6}
+                {...register("description", { 
+                  required: "Please provide a detailed description",
+                  minLength: { value: 20, message: "Please provide at least 20 characters" }
+                })}
+                className={errors.description ? "border-red-500" : ""}
+              />
+              {errors.description && (
+                <p className="text-sm text-red-500">{errors.description.message}</p>
+              )}
+            </div>
+
             {/* Priority Field */}
             <div className="space-y-2">
               <Label htmlFor="priority">Priority *</Label>
@@ -222,24 +265,6 @@ const SupportSection = () => {
               )}
             </div>
 
-            {/* Description Field */}
-            <div className="space-y-2">
-              <Label htmlFor="description">Description *</Label>
-              <Textarea
-                id="description"
-                placeholder="Please provide detailed information about your issue, including steps to reproduce if it's a bug, or specific requirements if it's a feature request."
-                rows={6}
-                {...register("description", { 
-                  required: "Please provide a detailed description",
-                  minLength: { value: 20, message: "Please provide at least 20 characters" }
-                })}
-                className={errors.description ? "border-red-500" : ""}
-              />
-              {errors.description && (
-                <p className="text-sm text-red-500">{errors.description.message}</p>
-              )}
-            </div>
-
             {/* Screenshot Upload */}
             <div className="space-y-2">
               <Label htmlFor="screenshot">Screenshot (Optional)</Label>
@@ -273,7 +298,7 @@ const SupportSection = () => {
               <Button 
                 type="submit" 
                 disabled={isSubmitting}
-                className="min-w-[140px]"
+                className="min-w-[140px] bg-purple-600 hover:bg-purple-700 text-white"
               >
                 {isSubmitting ? "Submitting..." : "Submit Request"}
               </Button>
