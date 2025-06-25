@@ -1,18 +1,36 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Crown, Phone, Save, Brain, Settings } from "lucide-react";
+import { Crown, Phone, Save, Brain, Settings, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { EliteGatewaySetup, EliteGlobalSettings } from "./types/eliteGatewayTypes";
 import EliteMenuOptionsManager from "./components/EliteMenuOptionsManager";
 import EliteGlobalSettingsPanel from "./components/EliteGlobalSettingsPanel";
 import EliteAILearningPanel from "./components/EliteAILearningPanel";
+import BasicGatewaySetupTab from "./components/BasicGatewaySetupTab";
+import AIGatewaySetTab from "./components/AIGatewaySetTab";
+
+interface BasicGatewaySettings {
+  phoneSystemType: string;
+  waitTimeBeforeInput: number;
+  firstAction: string;
+  fallbackAction: string;
+}
 
 const EliteGatewaySetupCard = () => {
   const { toast } = useToast();
+  
+  // Basic gateway settings state
+  const [basicSettings, setBasicSettings] = useState<BasicGatewaySettings>({
+    phoneSystemType: 'ivr',
+    waitTimeBeforeInput: 3,
+    firstAction: 'press_1',
+    fallbackAction: 'press_0'
+  });
   
   // Mock Elite gateway setup data
   const [eliteGatewaySetup, setEliteGatewaySetup] = useState<EliteGatewaySetup>({
@@ -35,8 +53,13 @@ const EliteGatewaySetupCard = () => {
     updatedAt: new Date()
   });
 
+  const handleBasicSettingsChange = (settings: Partial<BasicGatewaySettings>) => {
+    setBasicSettings(prev => ({ ...prev, ...settings }));
+  };
+
   const handleSave = () => {
     console.log('Saving Elite gateway setup:', eliteGatewaySetup);
+    console.log('Saving basic settings:', basicSettings);
     
     toast({
       title: "Elite Gateway Setup Saved",
@@ -49,6 +72,17 @@ const EliteGatewaySetupCard = () => {
       ...prev,
       globalSettings: { ...prev.globalSettings, ...settings },
       updatedAt: new Date()
+    }));
+  };
+
+  const handleAISuggestions = (suggestions: any) => {
+    // Apply AI suggestions to basic settings
+    setBasicSettings(prev => ({
+      ...prev,
+      phoneSystemType: suggestions.phoneSystemType,
+      waitTimeBeforeInput: suggestions.waitTimeBeforeInput,
+      firstAction: suggestions.firstAction,
+      fallbackAction: suggestions.fallbackAction
     }));
   };
 
@@ -78,19 +112,27 @@ const EliteGatewaySetupCard = () => {
         <CardContent className="space-y-6">
           {/* Elite Features Alert */}
           <Alert className="bg-gradient-to-r from-purple-50 to-indigo-50 border-purple-200">
-            <Brain className="h-4 w-4 text-purple-600" />
+            <Sparkles className="h-4 w-4 text-purple-600" />
             <AlertDescription>
-              <strong>Elite Features Active:</strong> AI Learning, Voice Detection, Multi-Language Support, 
-              Real-time Adaptation for superior call navigation.
+              <strong>Elite Features Active:</strong> AI Gateway Optimization Enabled. Describe your phone system, 
+              and let the AI build your path through.
             </AlertDescription>
           </Alert>
 
           {/* Elite Features Tabs */}
-          <Tabs defaultValue="menu-options" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+          <Tabs defaultValue="basic-setup" className="w-full">
+            <TabsList className="grid w-full grid-cols-5">
+              <TabsTrigger value="basic-setup" className="flex items-center gap-2">
+                <Settings className="h-4 w-4" />
+                Basic Setup
+              </TabsTrigger>
               <TabsTrigger value="menu-options" className="flex items-center gap-2">
                 <Phone className="h-4 w-4" />
                 Menu Options
+              </TabsTrigger>
+              <TabsTrigger value="ai-gateway" className="flex items-center gap-2">
+                <Sparkles className="h-4 w-4" />
+                AI Gateway Set
               </TabsTrigger>
               <TabsTrigger value="ai-learning" className="flex items-center gap-2">
                 <Brain className="h-4 w-4" />
@@ -102,6 +144,13 @@ const EliteGatewaySetupCard = () => {
               </TabsTrigger>
             </TabsList>
 
+            <TabsContent value="basic-setup" className="space-y-4">
+              <BasicGatewaySetupTab
+                settings={basicSettings}
+                onSettingsChange={handleBasicSettingsChange}
+              />
+            </TabsContent>
+
             <TabsContent value="menu-options" className="space-y-4">
               <EliteMenuOptionsManager
                 gatewaySetup={eliteGatewaySetup}
@@ -109,6 +158,10 @@ const EliteGatewaySetupCard = () => {
                   setEliteGatewaySetup(prev => ({ ...prev, menuOptions: options, updatedAt: new Date() }))
                 }
               />
+            </TabsContent>
+
+            <TabsContent value="ai-gateway" className="space-y-4">
+              <AIGatewaySetTab onSuggestionsGenerated={handleAISuggestions} />
             </TabsContent>
 
             <TabsContent value="ai-learning" className="space-y-4">
