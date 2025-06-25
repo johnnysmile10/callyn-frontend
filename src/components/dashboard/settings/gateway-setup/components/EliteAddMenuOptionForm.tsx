@@ -105,7 +105,8 @@ const EliteAddMenuOptionForm = ({ onAdd, onCancel }: EliteAddMenuOptionFormProps
         successfulAttempts: 0,
         averageTime: 0,
         commonFailures: []
-      }
+      },
+      createdAt: new Date()
     };
 
     onAdd(newOption);
