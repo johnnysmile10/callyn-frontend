@@ -11,10 +11,18 @@ import GatewayBasicInfoSection from "./GatewayBasicInfoSection";
 import GatewaySetupStatus from "./GatewaySetupStatus";
 import GatewayMenuOptionsList from "./GatewayMenuOptionsList";
 import GatewayElitePreviewCards from "./GatewayElitePreviewCards";
+import LiteGatewaySetupCard from "./LiteGatewaySetupCard";
+import { useAuth } from "@/context";
 
 const GatewaySetupCard = () => {
   const { toast } = useToast();
+  const { userAgent } = useAuth();
   
+  // If user has no agent, show the lite version
+  if (!userAgent) {
+    return <LiteGatewaySetupCard />;
+  }
+
   // Mock data - in real app this would come from backend/context
   const [gatewaySetup, setGatewaySetup] = useState<GatewaySetupData>({
     id: 'gateway_1',
