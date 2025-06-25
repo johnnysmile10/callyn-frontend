@@ -3,8 +3,9 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { TestTube, Play, RotateCcw, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Play, Square, TestTube, CheckCircle, XCircle, Clock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { EliteGatewaySetup, TestScenario, TestResult, DEFAULT_TEST_SCENARIOS } from "../types/eliteGatewayTypes";
 
@@ -14,213 +15,175 @@ interface EliteTestingCenterProps {
 
 const EliteTestingCenter = ({ gatewaySetup }: EliteTestingCenterProps) => {
   const { toast } = useToast();
+  const [selectedScenario, setSelectedScenario] = useState<string>("");
+  const [isRunningTest, setIsRunningTest] = useState(false);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
-  const [runningTests, setRunningTests] = useState<string[]>([]);
-  const [testProgress, setTestProgress] = useState(0);
 
-  const runSingleTest = async (scenario: TestScenario): Promise<TestResult> => {
+  const runTest = async (scenarioId: string) => {
+    const scenario = DEFAULT_TEST_SCENARIOS.find(s => s.id === scenarioId);
+    if (!scenario) return;
+
+    setIsRunningTest(true);
+    
     // Simulate test execution
-    setRunningTests(prev => [...prev, scenario.id]);
+    await new Promise(resolve => setTimeout(resolve, 2000));
     
-    await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 3000));
-    
-    const result: TestResult = {
-      scenarioId: scenario.id,
-      success: Math.random() > 0.2, // 80% success rate for demo
-      executionTime: 1500 + Math.random() * 2000,
+    const mockResult: TestResult = {
+      scenarioId,
+      success: Math.random() > 0.2, // 80% success rate
+      executionTime: Math.random() * 30 + 10, // 10-40 seconds
       detectedPrompts: scenario.mockPrompts,
       executedActions: scenario.expectedActions,
-      confidence: 0.7 + Math.random() * 0.3,
+      confidence: Math.random() * 0.3 + 0.7, // 70-100% confidence
       timestamp: new Date()
     };
 
-    if (!result.success) {
-      result.errors = ['Menu option not detected', 'Timeout waiting for response'];
-    }
+    setTestResults(prev => [mockResult, ...prev.slice(0, 4)]); // Keep last 5 results
+    setIsRunningTest(false);
 
-    setRunningTests(prev => prev.filter(id => id !== scenario.id));
-    return result;
+    toast({
+      title: mockResult.success ? "Test Passed" : "Test Failed",
+      description: `${scenario.name} completed in ${mockResult.executionTime.toFixed(1)}s`,
+    });
   };
 
   const runAllTests = async () => {
-    setTestResults([]);
-    setTestProgress(0);
-    
-    const totalTests = DEFAULT_TEST_SCENARIOS.length;
-    const results: TestResult[] = [];
-    
-    for (let i = 0; i < DEFAULT_TEST_SCENARIOS.length; i++) {
-      const scenario = DEFAULT_TEST_SCENARIOS[i];
-      const result = await runSingleTest(scenario);
-      results.push(result);
-      setTestResults([...results]);
-      setTestProgress(((i + 1) / totalTests) * 100);
+    for (const scenario of DEFAULT_TEST_SCENARIOS) {
+      await runTest(scenario.id);
     }
-
-    const successCount = results.filter(r => r.success).length;
-    
-    toast({
-      title: "Test Suite Completed",
-      description: `${successCount}/${totalTests} tests passed successfully.`,
-    });
-  };
-
-  const runIndividualTest = async (scenario: TestScenario) => {
-    const result = await runSingleTest(scenario);
-    setTestResults(prev => {
-      const filtered = prev.filter(r => r.scenarioId !== scenario.id);
-      return [...filtered, result];
-    });
-
-    toast({
-      title: result.success ? "Test Passed" : "Test Failed",
-      description: `${scenario.name} completed in ${Math.round(result.executionTime)}ms`,
-    });
-  };
-
-  const getTestResult = (scenarioId: string) => {
-    return testResults.find(r => r.scenarioId === scenarioId);
-  };
-
-  const isTestRunning = (scenarioId: string) => {
-    return runningTests.includes(scenarioId);
   };
 
   return (
     <div className="space-y-6">
-      {/* Test Controls */}
+      {/* Test Control Panel */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TestTube className="h-5 w-5 text-blue-600" />
-            Gateway Testing Center
+            Elite Testing Center
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex items-center gap-4 mb-4">
+        <CardContent className="space-y-4">
+          <Alert className="bg-blue-50 border-blue-200">
+            <TestTube className="h-4 w-4 text-blue-600" />
+            <AlertDescription>
+              Test your Elite gateway configuration with AI-powered scenarios including 
+              multi-language support, voice detection, and adaptive learning validation.
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <Select value={selectedScenario} onValueChange={setSelectedScenario}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a test scenario" />
+                </SelectTrigger>
+                <SelectContent>
+                  {DEFAULT_TEST_SCENARIOS.map((scenario) => (
+                    <SelectItem key={scenario.id} value={scenario.id}>
+                      {scenario.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <Button
-              onClick={runAllTests}
-              disabled={runningTests.length > 0}
+              onClick={() => selectedScenario && runTest(selectedScenario)}
+              disabled={!selectedScenario || isRunningTest}
               className="bg-blue-600 hover:bg-blue-700"
             >
-              <Play className="h-4 w-4 mr-2" />
-              Run All Tests
+              {isRunningTest ? (
+                <>
+                  <Square className="h-4 w-4 mr-2" />
+                  Running...
+                </>
+              ) : (
+                <>
+                  <Play className="h-4 w-4 mr-2" />
+                  Run Test
+                </>
+              )}
             </Button>
             <Button
               variant="outline"
-              onClick={() => {
-                setTestResults([]);
-                setTestProgress(0);
-              }}
-              disabled={runningTests.length > 0}
+              onClick={runAllTests}
+              disabled={isRunningTest}
             >
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Clear Results
+              Run All Tests
             </Button>
-            <div className="text-sm text-gray-600">
-              {testResults.length > 0 && (
-                <>
-                  {testResults.filter(r => r.success).length}/{testResults.length} tests passed
-                </>
-              )}
-            </div>
           </div>
-
-          {runningTests.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span>Running tests...</span>
-                <span>{Math.round(testProgress)}%</span>
-              </div>
-              <Progress value={testProgress} className="w-full" />
-            </div>
-          )}
         </CardContent>
       </Card>
 
-      {/* Individual Test Scenarios */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {DEFAULT_TEST_SCENARIOS.map((scenario) => {
-          const result = getTestResult(scenario.id);
-          const isRunning = isTestRunning(scenario.id);
-
-          return (
-            <Card key={scenario.id} className="border border-gray-200">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="text-sm font-medium">{scenario.name}</CardTitle>
-                  <div className="flex items-center gap-2">
-                    {result && (
-                      <Badge variant={result.success ? "default" : "destructive"}>
-                        {result.success ? (
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                        ) : (
-                          <XCircle className="h-3 w-3 mr-1" />
-                        )}
-                        {result.success ? "Passed" : "Failed"}
-                      </Badge>
-                    )}
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => runIndividualTest(scenario)}
-                      disabled={isRunning}
-                    >
-                      {isRunning ? (
-                        <Clock className="h-4 w-4" />
-                      ) : (
-                        <Play className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <p className="text-sm text-gray-600">{scenario.description}</p>
-                
-                <div className="space-y-2">
-                  <div>
-                    <p className="text-xs font-medium text-gray-700">Mock Prompts:</p>
-                    <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
-                      {scenario.mockPrompts.join(" | ")}
-                    </div>
-                  </div>
-                  
+      {/* Available Test Scenarios */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Available Test Scenarios</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {DEFAULT_TEST_SCENARIOS.map((scenario) => (
+              <div key={scenario.id} className="border border-gray-200 rounded-lg p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-medium">{scenario.name}</h4>
                   {scenario.language && (
-                    <div>
-                      <p className="text-xs font-medium text-gray-700">Language:</p>
-                      <Badge variant="outline" className="text-xs">
-                        {scenario.language}
-                      </Badge>
-                    </div>
+                    <Badge variant="outline" className="text-xs">
+                      {scenario.language.toUpperCase()}
+                    </Badge>
                   )}
                 </div>
+                <p className="text-sm text-gray-600 mb-3">{scenario.description}</p>
+                <div className="text-xs text-gray-500">
+                  <div><strong>Mock Prompts:</strong> {scenario.mockPrompts.join(", ")}</div>
+                  <div><strong>Expected Actions:</strong> {scenario.expectedActions.map(a => `${a.type}: ${a.value}`).join(", ")}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-                {result && (
-                  <div className="pt-2 border-t border-gray-100 space-y-2">
-                    <div className="flex items-center justify-between text-xs">
-                      <span>Execution Time:</span>
-                      <span>{Math.round(result.executionTime)}ms</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span>Confidence:</span>
-                      <span>{Math.round(result.confidence * 100)}%</span>
-                    </div>
-                    {result.errors && result.errors.length > 0 && (
+      {/* Test Results */}
+      {testResults.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Test Results</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {testResults.map((result, index) => {
+                const scenario = DEFAULT_TEST_SCENARIOS.find(s => s.id === result.scenarioId);
+                return (
+                  <div key={index} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      {result.success ? (
+                        <CheckCircle className="h-5 w-5 text-green-500" />
+                      ) : (
+                        <XCircle className="h-5 w-5 text-red-500" />
+                      )}
                       <div>
-                        <p className="text-xs font-medium text-red-700">Errors:</p>
-                        <div className="text-xs text-red-600">
-                          {result.errors.join(", ")}
+                        <div className="font-medium">{scenario?.name}</div>
+                        <div className="text-sm text-gray-600">
+                          Confidence: {Math.round(result.confidence * 100)}%
                         </div>
                       </div>
-                    )}
+                    </div>
+                    <div className="text-right">
+                      <div className="flex items-center gap-1 text-sm text-gray-600">
+                        <Clock className="h-4 w-4" />
+                        {result.executionTime.toFixed(1)}s
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {result.timestamp.toLocaleTimeString()}
+                      </div>
+                    </div>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

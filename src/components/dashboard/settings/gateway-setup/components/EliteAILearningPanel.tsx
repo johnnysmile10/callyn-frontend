@@ -1,8 +1,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
-import { Brain, TrendingUp, Target, Clock, Zap } from "lucide-react";
+import { Brain, TrendingUp, Lightbulb, Database, Settings } from "lucide-react";
 import { EliteGatewaySetup } from "../types/eliteGatewayTypes";
 
 interface EliteAILearningPanelProps {
@@ -10,204 +12,162 @@ interface EliteAILearningPanelProps {
 }
 
 const EliteAILearningPanel = ({ gatewaySetup }: EliteAILearningPanelProps) => {
-  // Mock learning data for demonstration
-  const mockLearningStats = {
-    totalCallsProcessed: 1247,
+  // Mock learning data
+  const learningStats = {
+    totalAdaptations: 156,
     successRateImprovement: 23.5,
-    adaptationsApplied: 47,
-    averageResponseTime: 1.8,
-    lastLearningUpdate: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+    lastLearningUpdate: new Date('2024-01-15T10:30:00'),
+    activePatterns: 43,
+    confidenceScore: 94.1
   };
 
-  const mockRecentAdaptations = [
+  const recentAdaptations = [
     {
-      id: '1',
-      pattern: 'Press 1 for English, Para español presione 2',
-      adaptation: 'Improved multi-language detection accuracy',
-      impact: '+12% success rate',
-      timestamp: new Date(Date.now() - 30 * 60 * 1000), // 30 min ago
+      id: "1",
+      trigger: "Spanish menu detection",
+      action: "Adjusted voice recognition sensitivity",
+      confidence: 0.92,
+      impact: "+15% success rate",
+      timestamp: new Date('2024-01-15T09:15:00')
     },
     {
-      id: '2',
-      pattern: 'Please hold while we transfer you',
-      adaptation: 'Optimized wait duration from 15s to 8s',
-      impact: '+5% efficiency',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      id: "2", 
+      trigger: "Long hold time pattern",
+      action: "Increased patience threshold to 8 seconds",
+      confidence: 0.87,
+      impact: "+8% completion rate",
+      timestamp: new Date('2024-01-15T08:45:00')
     },
     {
-      id: '3',
-      pattern: 'Say your company name clearly',
-      adaptation: 'Enhanced voice clarity detection',
-      impact: '+18% recognition',
-      timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
-    },
-  ];
-
-  const mockCallPatterns = [
-    { pattern: 'Banking IVR Systems', frequency: 34, successRate: 89 },
-    { pattern: 'Customer Support Menus', frequency: 28, successRate: 92 },
-    { pattern: 'Healthcare Systems', frequency: 23, successRate: 76 },
-    { pattern: 'Telecom Support', frequency: 15, successRate: 94 },
-  ];
-
-  const formatTimeAgo = (date: Date) => {
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMins / 60);
-    
-    if (diffMins < 60) {
-      return `${diffMins} minutes ago`;
-    } else {
-      return `${diffHours} hours ago`;
+      id: "3",
+      trigger: "Voice prompt not recognized",
+      action: "Added fallback to DTMF navigation",
+      confidence: 0.95,
+      impact: "+12% navigation success",
+      timestamp: new Date('2024-01-14T16:22:00')
     }
-  };
+  ];
 
   return (
     <div className="space-y-6">
-      {/* Learning Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Brain className="h-4 w-4 text-purple-600" />
-              <span className="text-sm font-medium">Calls Processed</span>
+      {/* Learning Status Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Brain className="h-5 w-5 text-purple-600" />
+            AI Learning Status
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600">{learningStats.totalAdaptations}</div>
+              <div className="text-sm text-gray-600">Total Adaptations</div>
             </div>
-            <div className="text-2xl font-bold">{mockLearningStats.totalCallsProcessed.toLocaleString()}</div>
-            <div className="text-xs text-gray-600">Total learning dataset</div>
-          </CardContent>
-        </Card>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600">+{learningStats.successRateImprovement}%</div>
+              <div className="text-sm text-gray-600">Success Rate Improvement</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-blue-600">{learningStats.activePatterns}</div>
+              <div className="text-sm text-gray-600">Active Patterns</div>
+            </div>
+          </div>
 
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <TrendingUp className="h-4 w-4 text-green-600" />
-              <span className="text-sm font-medium">Success Rate</span>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">AI Confidence Score</span>
+              <Badge className="bg-purple-100 text-purple-700">
+                {learningStats.confidenceScore}%
+              </Badge>
             </div>
-            <div className="text-2xl font-bold">+{mockLearningStats.successRateImprovement}%</div>
-            <div className="text-xs text-gray-600">Improvement over time</div>
-          </CardContent>
-        </Card>
+            <Progress value={learningStats.confidenceScore} className="h-2" />
+          </div>
+        </CardContent>
+      </Card>
 
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Target className="h-4 w-4 text-blue-600" />
-              <span className="text-sm font-medium">Adaptations</span>
+      {/* Learning Controls */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="h-5 w-5 text-gray-600" />
+            Learning Controls
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="font-medium">Adaptive Learning</div>
+              <div className="text-sm text-gray-600">
+                Allow AI to automatically adapt navigation strategies
+              </div>
             </div>
-            <div className="text-2xl font-bold">{mockLearningStats.adaptationsApplied}</div>
-            <div className="text-xs text-gray-600">Applied this month</div>
-          </CardContent>
-        </Card>
+            <Switch checked={gatewaySetup.aiLearningEnabled} />
+          </div>
 
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <Clock className="h-4 w-4 text-orange-600" />
-              <span className="text-sm font-medium">Response Time</span>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="font-medium">Real-time Adaptation</div>
+              <div className="text-sm text-gray-600">
+                Enable live adaptation during active calls
+              </div>
             </div>
-            <div className="text-2xl font-bold">{mockLearningStats.averageResponseTime}s</div>
-            <div className="text-xs text-gray-600">Average navigation time</div>
-          </CardContent>
-        </Card>
-      </div>
+            <Switch checked={gatewaySetup.globalSettings.enableRealTimeAdaptation} />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="font-medium">Pattern Recognition</div>
+              <div className="text-sm text-gray-600">
+                Learn from successful navigation patterns
+              </div>
+            </div>
+            <Switch checked={true} />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Recent Adaptations */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-yellow-600" />
-            Recent AI Adaptations
+            <TrendingUp className="h-5 w-5 text-green-600" />
+            Recent Learning Adaptations
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {mockRecentAdaptations.map((adaptation) => (
+            {recentAdaptations.map((adaptation) => (
               <div key={adaptation.id} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                    {adaptation.impact}
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4 text-yellow-500" />
+                    <span className="font-medium">{adaptation.trigger}</span>
+                  </div>
+                  <Badge variant="outline" className="text-xs">
+                    {Math.round(adaptation.confidence * 100)}% confidence
                   </Badge>
-                  <span className="text-xs text-gray-500">
-                    {formatTimeAgo(adaptation.timestamp)}
+                </div>
+                
+                <div className="text-sm text-gray-600 mb-2">
+                  <strong>Action:</strong> {adaptation.action}
+                </div>
+                
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-green-600 font-medium">{adaptation.impact}</span>
+                  <span className="text-gray-500">
+                    {adaptation.timestamp.toLocaleDateString()} at {adaptation.timestamp.toLocaleTimeString()}
                   </span>
                 </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">{adaptation.adaptation}</p>
-                  <p className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
-                    Pattern: "{adaptation.pattern}"
-                  </p>
-                </div>
               </div>
             ))}
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Call Pattern Analysis */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5 text-blue-600" />
-            Call Pattern Analysis
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {mockCallPatterns.map((pattern, index) => (
-              <div key={index} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">{pattern.pattern}</span>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs text-gray-600">
-                      {pattern.frequency} calls
-                    </span>
-                    <Badge variant={pattern.successRate >= 90 ? "default" : "secondary"}>
-                      {pattern.successRate}% success
-                    </Badge>
-                  </div>
-                </div>
-                <Progress value={pattern.successRate} className="h-2" />
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Learning Status */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Brain className="h-5 w-5 text-purple-600" />
-            Learning System Status
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-sm font-medium text-green-800">AI Learning Active</span>
-              </div>
-              <span className="text-xs text-green-600">
-                Last update: {formatTimeAgo(mockLearningStats.lastLearningUpdate)}
-              </span>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div className="space-y-1">
-                <p className="font-medium">Multi-Language Detection</p>
-                <p className="text-gray-600">Training on 8 languages</p>
-              </div>
-              <div className="space-y-1">
-                <p className="font-medium">Voice Pattern Recognition</p>
-                <p className="text-gray-600">Analyzing voice characteristics</p>
-              </div>
-              <div className="space-y-1">
-                <p className="font-medium">Response Optimization</p>
-                <p className="text-gray-600">Timing adjustments active</p>
-              </div>
-            </div>
+          <div className="mt-6 pt-4 border-t">
+            <Button variant="outline" className="w-full" disabled>
+              <Database className="h-4 w-4 mr-2" />
+              Export Learning Data
+            </Button>
           </div>
         </CardContent>
       </Card>
