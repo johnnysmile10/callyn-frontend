@@ -31,7 +31,8 @@ const SupportSection = () => {
     formState: { errors },
     reset,
     setValue,
-    watch
+    watch,
+    trigger
   } = useForm<SupportFormData>();
 
   const priority = watch("priority");
@@ -104,6 +105,16 @@ const SupportSection = () => {
       case 'low': return 'text-green-600';
       default: return 'text-gray-600';
     }
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setValue("category", value);
+    trigger("category"); // Trigger validation for this field
+  };
+
+  const handlePriorityChange = (value: string) => {
+    setValue("priority", value);
+    trigger("priority"); // Trigger validation for this field
   };
 
   if (isSubmitted) {
@@ -179,10 +190,7 @@ const SupportSection = () => {
             {/* Issue Category Field */}
             <div className="space-y-2">
               <Label htmlFor="category">Issue Category *</Label>
-              <Select 
-                onValueChange={(value) => setValue("category", value)}
-                {...register("category", { required: "Please select an issue category" })}
-              >
+              <Select onValueChange={handleCategoryChange}>
                 <SelectTrigger className={errors.category ? "border-red-500" : ""}>
                   <SelectValue placeholder="Select issue category" />
                 </SelectTrigger>
@@ -221,10 +229,7 @@ const SupportSection = () => {
             {/* Priority Field */}
             <div className="space-y-2">
               <Label htmlFor="priority">Priority *</Label>
-              <Select 
-                onValueChange={(value) => setValue("priority", value)}
-                {...register("priority", { required: "Please select a priority level" })}
-              >
+              <Select onValueChange={handlePriorityChange}>
                 <SelectTrigger className={errors.priority ? "border-red-500" : ""}>
                   <SelectValue placeholder="Select priority level" />
                 </SelectTrigger>
