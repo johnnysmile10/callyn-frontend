@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,11 +21,9 @@ const EliteGatewaySetupCard = () => {
     description: 'Advanced AI-powered gateway configuration with multi-language support and adaptive learning',
     menuOptions: [],
     globalSettings: {
-      defaultLanguage: 'en',
       fallbackToOperator: true,
       maxCallDuration: 300,
       adaptiveLearning: true,
-      voiceSensitivity: 0.8,
       confidenceThreshold: 0.7,
       enableRealTimeAdaptation: true
     },
