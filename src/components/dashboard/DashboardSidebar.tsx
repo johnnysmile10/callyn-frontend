@@ -14,6 +14,7 @@ import {
   getAgentBuilderItems, 
   getCampaignManagerItems,
   getCallCenterItems,
+  getGatewaySetupItems,
   getSettingsItems 
 } from "./sidebar/menuItems";
 
@@ -35,6 +36,7 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
   const agentBuilderItems = getAgentBuilderItems();
   const campaignManagerItems = getCampaignManagerItems();
   const callCenterItems = getCallCenterItems();
+  const gatewaySetupItems = getGatewaySetupItems();
   const settingsItems = getSettingsItems();
   
   return (
@@ -73,6 +75,15 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
         <SidebarMenuSection
           title="Call Center"
           items={callCenterItems}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          userAgent={userAgent}
+          progressState={progressState}
+        />
+
+        <SidebarMenuSection
+          title="Gateway Setup"
+          items={gatewaySetupItems}
           activeTab={activeTab}
           onTabChange={setActiveTab}
           userAgent={userAgent}

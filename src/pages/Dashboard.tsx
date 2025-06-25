@@ -12,6 +12,7 @@ import CallLogView from "@/components/dashboard/CallLogView";
 import YourAgentSection from "@/components/dashboard/agent/YourAgentSection";
 import SettingsIntegrationsSection from "@/components/dashboard/settings/SettingsIntegrationsSection";
 import UserDatabaseSection from "@/components/dashboard/settings/UserDatabaseSection";
+import GatewaySetupCard from "@/components/dashboard/settings/gateway-setup/GatewaySetupCard";
 import CallCenterDashboard from "@/components/dashboard/callcenter/CallCenterDashboard";
 import EliteCallInterface from "@/components/dashboard/callcenter/EliteCallInterface";
 import PersonalAgentManager from "@/components/dashboard/PersonalAgentManager";

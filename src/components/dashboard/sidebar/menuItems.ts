@@ -1,3 +1,4 @@
+
 import { 
   LayoutDashboard, 
   Bot, 
@@ -13,7 +14,8 @@ import {
   Rocket,
   Database,
   HeadphonesIcon,
-  CreditCard
+  CreditCard,
+  Network
 } from "lucide-react";
 import { UnlockCondition } from './unlockConditions';
 
@@ -82,6 +84,17 @@ export const getCallCenterItems = (): MenuItem[] => [
     name: "Call Analytics",
     icon: BarChart,
     id: "call-analytics",
+    unlockConditions: [
+      { type: 'agent', description: 'Create your AI agent first' }
+    ]
+  }
+];
+
+export const getGatewaySetupItems = (): MenuItem[] => [
+  {
+    name: "Gateway Setup",
+    icon: Network,
+    id: "gateway-setup",
     unlockConditions: [
       { type: 'agent', description: 'Create your AI agent first' }
     ]
