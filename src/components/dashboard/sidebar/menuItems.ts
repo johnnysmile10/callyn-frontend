@@ -121,5 +121,11 @@ export const getSettingsItems = (): MenuItem[] => [
     icon: CreditCard,
     id: "price-plan",
     unlockConditions: []
+  },
+  {
+    name: "Support",
+    icon: HeadphonesIcon,
+    id: "support",
+    unlockConditions: []
   }
 ];
