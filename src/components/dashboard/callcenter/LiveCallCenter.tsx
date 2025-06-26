@@ -18,6 +18,7 @@ import { useCallTimer } from "./Elite/useCallTimer";
 import { toast } from "@/hooks/use-toast";
 import UnifiedScriptEditor from "../shared/UnifiedScriptEditor";
 import EditAgentModal from "./Elite/EditAgentModal";
+import LiveUsageTracker from "./usage/LiveUsageTracker";
 
 // Import the new clean layout components
 import LiveCallHeader from "./components/LiveCallHeader";
@@ -121,6 +122,10 @@ const LiveCallCenter = () => {
     toast({ title: `Call outcome logged: ${outcome}` });
   };
 
+  const handleUpgradeClick = () => {
+    window.open('/dashboard?activeTab=price-plan', '_blank');
+  };
+
   return (
     <div className="h-screen flex flex-col bg-gray-50">
       {/* Clean Top Header */}
@@ -135,13 +140,23 @@ const LiveCallCenter = () => {
 
       {/* Main Content Layout */}
       <div className="flex-1 flex overflow-hidden">
-        {/* Left Sidebar - Lead Info & Outcomes */}
-        <LeadSidebar
-          lead={DUMMY_LEAD}
-          agentInstructions={agentInstructions}
-          outcomeGoals={outcomeGoals}
-          onOutcomeSelect={handleOutcome}
-        />
+        {/* Left Sidebar - Lead Info & Usage Tracker */}
+        <div className="w-80 bg-white border-r flex flex-col">
+          <LeadSidebar
+            lead={DUMMY_LEAD}
+            agentInstructions={agentInstructions}
+            outcomeGoals={outcomeGoals}
+            onOutcomeSelect={handleOutcome}
+          />
+          
+          {/* Compact Usage Tracker */}
+          <div className="p-4 border-t">
+            <LiveUsageTracker 
+              compact={true}
+              onUpgradeClick={handleUpgradeClick}
+            />
+          </div>
+        </div>
 
         {/* Center - Live Transcript & Call Controls */}
         <CallTranscriptCenter

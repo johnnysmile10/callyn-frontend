@@ -8,7 +8,8 @@ import {
   Users, 
   Settings, 
   BarChart, 
-  Volume2 
+  Volume2,
+  Activity
 } from "lucide-react";
 import AgentStatusControl from "./AgentStatusControl";
 import OperatingHoursScheduler from "./OperatingHoursScheduler";
@@ -16,6 +17,7 @@ import CallQueueView from "./CallQueueView";
 import VoiceTestingPanel from "./VoiceTestingPanel";
 import CallRateControls from "./CallRateControls";
 import DailyCallSummary from "./DailyCallSummary";
+import LiveUsageTracker from "./usage/LiveUsageTracker";
 import { useCallCenterState } from "./hooks/useCallCenterState";
 
 const CallCenterDashboard = () => {
@@ -32,6 +34,11 @@ const CallCenterDashboard = () => {
 
   const [activeTab, setActiveTab] = useState("status");
 
+  const handleUpgradeClick = () => {
+    // Navigate to pricing page or open upgrade modal
+    window.open('/dashboard?activeTab=price-plan', '_blank');
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3">
@@ -43,7 +50,7 @@ const CallCenterDashboard = () => {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-7">
           <TabsTrigger value="status" className="flex items-center gap-2">
             <Phone className="h-4 w-4" />
             Status
@@ -67,6 +74,10 @@ const CallCenterDashboard = () => {
           <TabsTrigger value="summary" className="flex items-center gap-2">
             <BarChart className="h-4 w-4" />
             Summary
+          </TabsTrigger>
+          <TabsTrigger value="usage" className="flex items-center gap-2">
+            <Activity className="h-4 w-4" />
+            Usage
           </TabsTrigger>
         </TabsList>
 
@@ -101,6 +112,10 @@ const CallCenterDashboard = () => {
 
         <TabsContent value="summary" className="space-y-6">
           <DailyCallSummary summary={dailySummary} />
+        </TabsContent>
+
+        <TabsContent value="usage" className="space-y-6">
+          <LiveUsageTracker onUpgradeClick={handleUpgradeClick} />
         </TabsContent>
       </Tabs>
     </div>
