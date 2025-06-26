@@ -1,14 +1,18 @@
 
 import { FC } from "react";
-import { pricingPlans, addOns, faqData } from "../pricing/pricingPlansData";
-import EnhancedPricingCard from "../pricing/EnhancedPricingCard";
+import { PricingProvider, usePricing } from "../pricing/PricingContext";
+import NewEnhancedPricingCard from "../pricing/NewEnhancedPricingCard";
+import PaymentTermSelector from "../pricing/PaymentTermSelector";
 import FeatureMatrix from "../pricing/FeatureMatrix";
 import FAQSection from "../pricing/FAQSection";
 import PsychologicalFraming from "../pricing/PsychologicalFraming";
 import AddOnsSection from "../pricing/AddOnsSection";
 import HybridModeExplainer from "../pricing/HybridModeExplainer";
+import { addOns, faqData } from "../pricing/newPricingData";
 
-const DashboardPricingTable: FC = () => {
+const DashboardPricingContent = () => {
+  const { selectedTerm, setSelectedTerm, pricingPlans, paymentTerms } = usePricing();
+
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -25,10 +29,21 @@ const DashboardPricingTable: FC = () => {
       {/* Psychological Framing */}
       <PsychologicalFraming />
 
+      {/* Payment Term Selector */}
+      <PaymentTermSelector 
+        terms={paymentTerms}
+        selectedTerm={selectedTerm.id}
+        onTermChange={setSelectedTerm}
+      />
+
       {/* Pricing Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {pricingPlans.map((plan, index) => (
-          <EnhancedPricingCard key={index} plan={plan} />
+          <NewEnhancedPricingCard 
+            key={`${plan.id}-${selectedTerm.id}`} 
+            plan={plan} 
+            selectedTerm={selectedTerm}
+          />
         ))}
       </div>
       
@@ -49,6 +64,14 @@ const DashboardPricingTable: FC = () => {
       {/* FAQ Section */}
       <FAQSection faqs={faqData} />
     </div>
+  );
+};
+
+const DashboardPricingTable: FC = () => {
+  return (
+    <PricingProvider>
+      <DashboardPricingContent />
+    </PricingProvider>
   );
 };
 

@@ -12,7 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import ContactForm from "@/components/ContactForm";
 import ComparisonColumns from "@/components/ComparisonColumns";
 import ComparisonZigZag from "@/components/ComparisonZigZag";
-import PricingTable from "@/components/PricingTable";
+import NewPricingTable from "@/components/pricing/NewPricingTable";
 import PricingAudienceTabs from "@/components/pricing/PricingAudienceTabs";
 import { Link } from "react-router-dom";
 
@@ -32,7 +32,7 @@ const Index = () => {
       <ComparisonZigZag />
       
       {/* Enhanced Pricing Table - Now the main pricing section */}
-      <PricingTable />
+      <NewPricingTable />
       
       <HowItWorks />
       
