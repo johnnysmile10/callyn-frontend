@@ -1,6 +1,8 @@
 
 import { FC } from "react";
-import { pricingPlans, addOns, faqData } from "./pricing/pricingPlansData";
+import { pricingPlans as pricingTiers, addOns, faqData } from "./pricing/pricingPlansData";
+import { paymentTerms } from "./pricing/newPricingData";
+import { transformTierToPlan } from "./pricing/pricingUtils";
 import EnhancedPricingCard from "./pricing/EnhancedPricingCard";
 import FeatureMatrix from "./pricing/FeatureMatrix";
 import FAQSection from "./pricing/FAQSection";
@@ -10,6 +12,10 @@ import AddOnsSection from "./pricing/AddOnsSection";
 import HybridModeExplainer from "./pricing/HybridModeExplainer";
 
 const PricingTable: FC = () => {
+  // Transform pricing tiers to pricing plans using monthly payment term
+  const monthlyTerm = paymentTerms.find(term => term.id === 'monthly') || paymentTerms[0];
+  const pricingPlans = pricingTiers.map(tier => transformTierToPlan(tier, monthlyTerm));
+
   return (
     <section className="py-16 md:py-24 px-4 bg-gray-50">
       <div className="container mx-auto">
