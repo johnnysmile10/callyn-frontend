@@ -187,7 +187,7 @@ const SidebarMenuSection = ({
                   {!canAccess && (
                     <div className="flex items-center gap-1">
                       <Lock className="h-3 w-3 text-gray-400" />
-                      <Info className="h-3 w-3 text-blue-500" title="Click for setup guidance" />
+                      <Info className="h-3 w-3 text-blue-500" />
                     </div>
                   )}
                   
