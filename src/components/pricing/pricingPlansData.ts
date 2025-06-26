@@ -1,10 +1,11 @@
 
-import { PricingPlan, AddOn } from './types';
+import { PricingTier, AddOn } from './types';
 
-export const pricingPlans: PricingPlan[] = [
+export const pricingPlans: PricingTier[] = [
   {
+    id: 'starter',
     name: "Starter",
-    price: "$49",
+    basePrice: 49,
     minutes: "250",
     features: {
       inboundCalls: true,
@@ -19,8 +20,9 @@ export const pricingPlans: PricingPlan[] = [
     popular: false,
   },
   {
+    id: 'pro',
     name: "Pro",
-    price: "$97",
+    basePrice: 97,
     minutes: "500",
     features: {
       inboundCalls: true,
@@ -35,8 +37,9 @@ export const pricingPlans: PricingPlan[] = [
     popular: true,
   },
   {
+    id: 'closer',
     name: "Closer",
-    price: "$197",
+    basePrice: 197,
     minutes: "1,500",
     features: {
       inboundCalls: true,
