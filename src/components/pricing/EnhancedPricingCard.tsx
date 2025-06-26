@@ -15,7 +15,6 @@ const EnhancedPricingCard = ({ plan }: EnhancedPricingCardProps) => {
     textTranscripts: "Call Transcripts",
     calendarIntegration: "Calendar Integration",
     smartRouting: "Smart Call Routing",
-    apiAccess: "API Access",
     prioritySupport: "Priority Support",
     hybridMode: "Hybrid Mode (Jump In Live)"
   };

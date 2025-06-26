@@ -24,15 +24,13 @@ const PricingCard = ({ plan }: PricingCardProps) => {
     textTranscripts: "Call Transcripts",
     calendarIntegration: "Calendar Integration",
     smartRouting: "Smart Call Routing",
-    apiAccess: "API Access",
     prioritySupport: "Priority Support",
     hybridMode: "Hybrid Mode (Jump In Live)"
   };
 
   const tooltips = {
     hybridMode: "Jump in live during an AI call",
-    smartRouting: "Send calls to right rep based on lead status",
-    apiAccess: "Sync leads, outcomes, and updates to your CRM"
+    smartRouting: "Send calls to right rep based on lead status"
   };
 
   // Custom Plan Card

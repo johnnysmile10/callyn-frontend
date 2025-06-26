@@ -14,7 +14,6 @@ const FeatureMatrix = ({ plans }: FeatureMatrixProps) => {
     { key: 'textTranscripts', label: 'Call Transcripts', description: 'Full conversation transcripts with key insights' },
     { key: 'calendarIntegration', label: 'Calendar Integration', description: 'Automatic appointment booking and scheduling' },
     { key: 'smartRouting', label: 'Smart Call Routing', description: 'Route qualified leads to the right team member' },
-    { key: 'apiAccess', label: 'API Access', description: 'Connect to your CRM and other sales tools' },
     { key: 'prioritySupport', label: 'Priority Support', description: 'Fast-track support with dedicated assistance' },
     { key: 'hybridMode', label: 'Hybrid Mode', description: 'Jump into AI calls live for personal closing' }
   ];

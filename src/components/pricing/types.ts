@@ -5,7 +5,6 @@ export interface PlanFeatures {
   textTranscripts: boolean;
   calendarIntegration: boolean;
   smartRouting: boolean;
-  apiAccess: boolean;
   prioritySupport: boolean;
   hybridMode: boolean;
 }

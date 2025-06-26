@@ -12,7 +12,6 @@ export const pricingPlans: PricingPlan[] = [
       textTranscripts: true,
       calendarIntegration: false,
       smartRouting: false,
-      apiAccess: false,
       prioritySupport: false,
       hybridMode: false
     },
@@ -29,7 +28,6 @@ export const pricingPlans: PricingPlan[] = [
       textTranscripts: true,
       calendarIntegration: true,
       smartRouting: true,
-      apiAccess: false,
       prioritySupport: false,
       hybridMode: true
     },
@@ -46,7 +44,6 @@ export const pricingPlans: PricingPlan[] = [
       textTranscripts: true,
       calendarIntegration: true,
       smartRouting: true,
-      apiAccess: true,
       prioritySupport: true,
       hybridMode: true
     },
@@ -77,10 +74,6 @@ export const faqData = [
   {
     question: "What is Hybrid Mode?",
     answer: "Hybrid Mode lets you jump into any AI call live. Perfect for closing high-value prospects or handling complex objections personally."
-  },
-  {
-    question: "Do you integrate with my CRM?",
-    answer: "Yes! Pro and Closer plans include API access for seamless CRM integration. Sync leads, call outcomes, and follow-up tasks automatically."
   },
   {
     question: "What if I don't close any deals?",
