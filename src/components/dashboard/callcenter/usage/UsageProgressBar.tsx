@@ -1,88 +1,58 @@
 
 import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface UsageProgressBarProps {
   percentage: number;
-  minutesUsed: number;
-  minutesTotal: number;
-  showLabels?: boolean;
-  size?: 'sm' | 'md' | 'lg';
-  showThresholds?: boolean;
+  usedMinutes: number;
+  totalMinutes: number;
+  compact?: boolean;
 }
 
 const UsageProgressBar = ({ 
   percentage, 
-  minutesUsed, 
-  minutesTotal, 
-  showLabels = true,
-  size = 'md',
-  showThresholds = false
+  usedMinutes, 
+  totalMinutes, 
+  compact = false 
 }: UsageProgressBarProps) => {
   const getProgressColor = () => {
     if (percentage >= 90) return "bg-red-500";
-    if (percentage >= 75) return "bg-orange-500";
-    if (percentage >= 50) return "bg-yellow-500";
-    return "bg-green-500";
+    if (percentage >= 75) return "bg-yellow-500";
+    return "bg-blue-500";
   };
 
-  const getHeightClass = () => {
-    switch (size) {
-      case 'sm': return 'h-2';
-      case 'lg': return 'h-6';
-      default: return 'h-3';
-    }
+  const getStatusBadge = () => {
+    if (percentage >= 90) return <Badge variant="destructive" className="text-xs">Critical</Badge>;
+    if (percentage >= 75) return <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800">Warning</Badge>;
+    return <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">Good</Badge>;
   };
+
+  if (compact) {
+    return (
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-gray-600">Usage</span>
+          {getStatusBadge()}
+        </div>
+        <Progress value={percentage} className="h-2" />
+        <div className="text-xs text-gray-500">
+          {usedMinutes}/{totalMinutes} minutes ({percentage.toFixed(1)}%)
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-2">
-      {showLabels && (
-        <div className="flex justify-between text-sm">
-          <span className="text-gray-600">
-            {minutesUsed.toLocaleString()} minutes used
-          </span>
-          <span className="text-gray-600">
-            {minutesTotal.toLocaleString()} total
-          </span>
-        </div>
-      )}
-      
-      <div className="relative">
-        <Progress 
-          value={percentage} 
-          className={cn("w-full", getHeightClass())}
-        />
-        <div 
-          className={cn(
-            "absolute top-0 left-0 h-full rounded-full transition-all duration-300",
-            getProgressColor(),
-            getHeightClass()
-          )}
-          style={{ width: `${Math.min(percentage, 100)}%` }}
-        />
-        
-        {showThresholds && (
-          <>
-            {/* 75% threshold line */}
-            <div 
-              className="absolute top-0 w-0.5 h-full bg-orange-300 opacity-60"
-              style={{ left: '75%' }}
-            />
-            {/* 90% threshold line */}
-            <div 
-              className="absolute top-0 w-0.5 h-full bg-red-300 opacity-60"
-              style={{ left: '90%' }}
-            />
-          </>
-        )}
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <h3 className="font-medium">Monthly Usage</h3>
+        {getStatusBadge()}
       </div>
-      
-      {showLabels && (
-        <div className="flex justify-between text-xs text-gray-500">
-          <span>{percentage.toFixed(1)}% used</span>
-          <span>{(100 - percentage).toFixed(1)}% remaining</span>
-        </div>
-      )}
+      <Progress value={percentage} className="h-3" />
+      <div className="flex justify-between text-sm text-gray-600">
+        <span>{usedMinutes} minutes used</span>
+        <span>{totalMinutes - usedMinutes} remaining</span>
+      </div>
     </div>
   );
 };

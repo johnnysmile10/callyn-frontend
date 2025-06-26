@@ -1,53 +1,56 @@
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { DailyUsage } from './types';
 
 interface UsageTimelineChartProps {
-  dailyUsage: DailyUsage[];
+  data: DailyUsage[];
   height?: number;
 }
 
-const UsageTimelineChart = ({ dailyUsage, height = 200 }: UsageTimelineChartProps) => {
+const UsageTimelineChart = ({ data, height = 200 }: UsageTimelineChartProps) => {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return `${date.getMonth() + 1}/${date.getDate()}`;
-  };
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      return (
-        <div className="bg-white p-3 border rounded-lg shadow-lg">
-          <p className="font-medium">{formatDate(label)}</p>
-          <p className="text-blue-600">Minutes: {data.minutes}</p>
-          <p className="text-green-600">Calls: {data.calls}</p>
-          <p className="text-purple-600">Cost: ${data.cost}</p>
-        </div>
-      );
-    }
-    return null;
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
 
   return (
-    <div className="w-full" style={{ height }}>
+    <div style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={dailyUsage} margin={{ top: 5, right: 5, left: 5, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
           <XAxis 
             dataKey="date" 
             tickFormatter={formatDate}
             fontSize={12}
-            interval="preserveStartEnd"
+            tick={{ fill: '#6b7280' }}
           />
-          <YAxis fontSize={12} />
-          <Tooltip content={<CustomTooltip />} />
-          <Bar 
+          <YAxis 
+            fontSize={12}
+            tick={{ fill: '#6b7280' }}
+            label={{ value: 'Minutes', angle: -90, position: 'insideLeft' }}
+          />
+          <Tooltip 
+            labelFormatter={(value) => formatDate(value)}
+            formatter={(value, name) => [
+              `${value} ${name === 'minutes' ? 'minutes' : 'calls'}`,
+              name === 'minutes' ? 'Minutes Used' : 'Calls Made'
+            ]}
+            contentStyle={{
+              backgroundColor: 'white',
+              border: '1px solid #e5e7eb',
+              borderRadius: '8px',
+              fontSize: '12px'
+            }}
+          />
+          <Line 
+            type="monotone" 
             dataKey="minutes" 
-            fill="#3b82f6" 
-            radius={[2, 2, 0, 0]}
-            opacity={0.8}
+            stroke="#3b82f6" 
+            strokeWidth={2}
+            dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
+            activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
           />
-        </BarChart>
+        </LineChart>
       </ResponsiveContainer>
     </div>
   );

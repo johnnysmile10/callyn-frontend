@@ -1,26 +1,29 @@
 
 export interface UsageData {
-  minutesUsed: number;
-  minutesTotal: number;
-  currentPlan: string;
-  billingPeriod: {
-    start: string;
-    end: string;
-  };
+  totalMinutes: number;
+  usedMinutes: number;
+  remainingMinutes: number;
+  percentage: number;
   dailyUsage: DailyUsage[];
-  costPerMinute: number;
-  estimatedMonthlyCost: number;
+  alerts: UsageAlert[];
 }
 
 export interface DailyUsage {
   date: string;
   minutes: number;
   calls: number;
-  cost: number;
 }
 
 export interface UsageAlert {
-  type: 'warning' | 'danger' | 'info';
+  id: string;
+  type: 'warning' | 'critical' | 'info';
   message: string;
-  threshold: number;
+  timestamp: string;
+}
+
+export interface RealtimeUsageUpdate {
+  currentCallMinutes: number;
+  totalMinutesUsed: number;
+  isActive: boolean;
+  callStartTime?: Date;
 }

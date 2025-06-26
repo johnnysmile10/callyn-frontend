@@ -1,92 +1,76 @@
 
-import { useState, useEffect, useCallback } from "react";
-import { UsageData } from "./types";
+import { useState, useEffect, useCallback } from 'react';
+import { RealtimeUsageUpdate } from './types';
 
-interface RealTimeUsageOptions {
-  initialUsageData: UsageData;
-  isLiveCall?: boolean;
+interface UseRealTimeUsageProps {
+  isCallActive: boolean;
   callStartTime?: Date;
+  onUsageUpdate?: (minutes: number) => void;
 }
 
 export const useRealTimeUsage = ({ 
-  initialUsageData, 
-  isLiveCall = false, 
-  callStartTime 
-}: RealTimeUsageOptions) => {
-  const [usageData, setUsageData] = useState<UsageData>(initialUsageData);
-  const [currentCallMinutes, setCurrentCallMinutes] = useState(0);
+  isCallActive, 
+  callStartTime, 
+  onUsageUpdate 
+}: UseRealTimeUsageProps) => {
+  const [realtimeUsage, setRealtimeUsage] = useState<RealtimeUsageUpdate>({
+    currentCallMinutes: 0,
+    totalMinutesUsed: 650, // Starting from existing usage
+    isActive: false
+  });
 
-  // Update current call duration
-  useEffect(() => {
-    if (!isLiveCall || !callStartTime) {
-      setCurrentCallMinutes(0);
+  const updateCurrentCallTime = useCallback(() => {
+    if (!isCallActive || !callStartTime) {
+      setRealtimeUsage(prev => ({
+        ...prev,
+        currentCallMinutes: 0,
+        isActive: false
+      }));
       return;
     }
 
-    const interval = setInterval(() => {
-      const now = new Date();
-      const diffMs = now.getTime() - callStartTime.getTime();
-      const diffMinutes = Math.floor(diffMs / (1000 * 60));
-      setCurrentCallMinutes(diffMinutes);
-    }, 1000);
+    const now = new Date();
+    const diffInMs = now.getTime() - callStartTime.getTime();
+    const diffInMinutes = Math.max(0, diffInMs / (1000 * 60));
 
-    return () => clearInterval(interval);
-  }, [isLiveCall, callStartTime]);
-
-  // Calculate real-time usage including current call
-  const getRealTimeUsage = useCallback(() => {
-    const totalUsedMinutes = usageData.minutesUsed + currentCallMinutes;
-    const realTimePercentage = (totalUsedMinutes / usageData.minutesTotal) * 100;
-    const realTimeRemaining = Math.max(0, usageData.minutesTotal - totalUsedMinutes);
-    const realTimeCost = totalUsedMinutes * usageData.costPerMinute;
-
-    return {
-      ...usageData,
-      minutesUsed: totalUsedMinutes,
-      estimatedMonthlyCost: Math.round(realTimeCost * 100) / 100,
-      realTimePercentage,
-      realTimeRemaining,
-      currentCallMinutes
-    };
-  }, [usageData, currentCallMinutes]);
-
-  // Update usage when call ends
-  const finalizeCallUsage = useCallback((finalCallMinutes: number) => {
-    setUsageData(prev => ({
+    setRealtimeUsage(prev => ({
       ...prev,
-      minutesUsed: prev.minutesUsed + finalCallMinutes,
-      estimatedMonthlyCost: Math.round((prev.minutesUsed + finalCallMinutes) * prev.costPerMinute * 100) / 100
+      currentCallMinutes: diffInMinutes,
+      isActive: true,
+      callStartTime
     }));
-    setCurrentCallMinutes(0);
-  }, []);
+  }, [isCallActive, callStartTime]);
 
-  // Check if approaching limits
-  const getUsageWarnings = useCallback(() => {
-    const realTimeUsage = getRealTimeUsage();
-    const warnings = [];
-
-    if (realTimeUsage.realTimePercentage >= 95) {
-      warnings.push({
-        level: 'critical' as const,
-        message: 'Usage limit nearly reached',
-        action: 'upgrade'
-      });
-    } else if (realTimeUsage.realTimePercentage >= 85) {
-      warnings.push({
-        level: 'warning' as const,
-        message: 'Approaching usage limit',
-        action: 'monitor'
-      });
+  // Update every second when call is active
+  useEffect(() => {
+    if (!isCallActive || !callStartTime) {
+      updateCurrentCallTime();
+      return;
     }
 
-    return warnings;
-  }, [getRealTimeUsage]);
+    const interval = setInterval(updateCurrentCallTime, 1000);
+    return () => clearInterval(interval);
+  }, [isCallActive, callStartTime, updateCurrentCallTime]);
+
+  // Notify parent when call ends to update total usage
+  useEffect(() => {
+    if (!isCallActive && realtimeUsage.currentCallMinutes > 0) {
+      if (onUsageUpdate) {
+        onUsageUpdate(realtimeUsage.currentCallMinutes);
+      }
+      
+      setRealtimeUsage(prev => ({
+        ...prev,
+        totalMinutesUsed: prev.totalMinutesUsed + prev.currentCallMinutes,
+        currentCallMinutes: 0,
+        isActive: false
+      }));
+    }
+  }, [isCallActive, realtimeUsage.currentCallMinutes, onUsageUpdate]);
 
   return {
-    realTimeUsage: getRealTimeUsage(),
-    currentCallMinutes,
-    finalizeCallUsage,
-    getUsageWarnings,
-    setUsageData
+    realtimeUsage,
+    currentCallDuration: realtimeUsage.currentCallMinutes,
+    isTrackingCall: realtimeUsage.isActive
   };
 };
