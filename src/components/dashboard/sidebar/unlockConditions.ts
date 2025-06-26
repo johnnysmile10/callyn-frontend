@@ -34,8 +34,7 @@ export const checkUnlockConditions = (
     const isValid = userAgent && 
                    userAgent.id && 
                    userAgent.id.trim() !== '' && 
-                   userAgent.status !== 'inactive' &&
-                   userAgent.status !== 'error';
+                   userAgent.status !== 'inactive';
     
     console.log("🤖 Agent validation:", {
       hasUserAgent: !!userAgent,
