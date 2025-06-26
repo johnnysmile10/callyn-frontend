@@ -14,9 +14,9 @@ export const checkUnlockConditions = (
 ): { isUnlocked: boolean; missingRequirements: string[] } => {
   const missingRequirements: string[] = [];
 
-  console.log("Checking unlock conditions:", {
-    conditions,
-    userAgent: !!userAgent,
+  console.log("🔍 Checking unlock conditions:", {
+    conditions: conditions.map(c => c.type),
+    hasUserAgent: !!userAgent,
     userAgentId: userAgent?.id,
     userAgentStatus: userAgent?.status,
     progressState,
@@ -25,63 +25,65 @@ export const checkUnlockConditions = (
 
   // If no conditions, always unlocked
   if (!conditions || conditions.length === 0) {
-    console.log("No unlock conditions - always unlocked");
+    console.log("✅ No unlock conditions - always unlocked");
     return { isUnlocked: true, missingRequirements: [] };
   }
 
+  // Helper function to check if agent is valid and active
+  const hasValidAgent = () => {
+    const isValid = userAgent && 
+                   userAgent.id && 
+                   userAgent.id.trim() !== '' && 
+                   userAgent.status !== 'inactive' &&
+                   userAgent.status !== 'error';
+    
+    console.log("🤖 Agent validation:", {
+      hasUserAgent: !!userAgent,
+      hasId: userAgent?.id && userAgent.id.trim() !== '',
+      status: userAgent?.status,
+      isValid
+    });
+    
+    return isValid;
+  };
+
   for (const condition of conditions) {
+    console.log(`🔧 Checking condition: ${condition.type}`);
+    
     switch (condition.type) {
       case 'agent':
-        // More robust agent check - check for both existence and valid ID
-        const hasValidAgent = userAgent && 
-                            userAgent.id && 
-                            userAgent.id.trim() !== '' && 
-                            userAgent.status !== 'inactive';
-        
-        if (!hasValidAgent) {
-          console.log("Agent condition failed: No valid user agent found", {
-            hasUserAgent: !!userAgent,
-            agentId: userAgent?.id,
-            agentStatus: userAgent?.status
-          });
+        if (!hasValidAgent()) {
+          console.log("❌ Agent condition failed");
           missingRequirements.push('Create your AI agent first');
         } else {
-          console.log("Agent condition passed: Valid user agent exists", {
-            agentId: userAgent.id,
-            agentStatus: userAgent.status
-          });
+          console.log("✅ Agent condition passed");
         }
         break;
         
       case 'leads':
-        // Check for leads - allow access if agent exists for now
-        const hasValidAgentForLeads = userAgent && userAgent.id && userAgent.id.trim() !== '';
-        if (!hasValidAgentForLeads) {
-          console.log("Leads condition failed: No user agent found");
+        if (!hasValidAgent()) {
+          console.log("❌ Leads condition failed: No agent");
           missingRequirements.push('Create your AI agent first');
         } else {
-          console.log("Leads condition passed: User agent exists for lead management");
+          console.log("✅ Leads condition passed");
         }
         break;
         
       case 'voice':
-        const hasValidAgentForVoice = userAgent && userAgent.id && userAgent.id.trim() !== '';
-        if (!progressState.hasVoiceIntegration && !hasValidAgentForVoice) {
-          console.log("Voice condition failed: No voice integration and no agent");
-          missingRequirements.push('Complete agent setup first');
+        if (!hasValidAgent()) {
+          console.log("❌ Voice condition failed: No agent");
+          missingRequirements.push('Create your AI agent first');
         } else {
-          console.log("Voice condition passed");
+          console.log("✅ Voice condition passed");
         }
         break;
         
       case 'campaigns':
-        // Allow access if they have basic agent setup
-        const hasValidAgentForCampaigns = userAgent && userAgent.id && userAgent.id.trim() !== '';
-        if (!hasValidAgentForCampaigns) {
-          console.log("Campaigns condition failed: No user agent found");
+        if (!hasValidAgent()) {
+          console.log("❌ Campaigns condition failed: No agent");
           missingRequirements.push('Create your AI agent first');
         } else {
-          console.log("Campaigns condition passed: User agent exists for campaigns");
+          console.log("✅ Campaigns condition passed");
         }
         break;
         
@@ -92,27 +94,28 @@ export const checkUnlockConditions = (
         const currentIndex = levelHierarchy.indexOf(currentLevel);
         const requiredIndex = levelHierarchy.indexOf(requiredLevel);
         
-        console.log("Config level check:", {
+        console.log("🎚️ Config level check:", {
           requiredLevel,
           currentLevel,
           currentIndex,
           requiredIndex,
-          hasUserAgent: !!userAgent,
-          agentId: userAgent?.id
+          hasAgent: hasValidAgent()
         });
         
-        // If we have a valid user agent, upgrade to at least basic level
-        const hasValidAgentForConfig = userAgent && userAgent.id && userAgent.id.trim() !== '';
-        if (hasValidAgentForConfig && currentIndex < 1) {
-          console.log("Upgrading config level to basic due to agent existence");
+        // If we have a valid agent, consider config level at least basic
+        if (hasValidAgent() && currentIndex < 1) {
+          console.log("⬆️ Upgrading config level to basic due to agent existence");
           // Don't fail the condition if agent exists
-        } else if (currentIndex < requiredIndex) {
-          console.log("Config level condition failed");
+        } else if (currentIndex < requiredIndex && !hasValidAgent()) {
+          console.log("❌ Config level condition failed");
           missingRequirements.push(condition.description);
         } else {
-          console.log("Config level condition passed");
+          console.log("✅ Config level condition passed");
         }
         break;
+        
+      default:
+        console.log(`⚠️ Unknown condition type: ${condition.type}`);
     }
   }
 
@@ -121,6 +124,6 @@ export const checkUnlockConditions = (
     missingRequirements
   };
 
-  console.log("Unlock conditions result:", result);
+  console.log("🎯 Final unlock result:", result);
   return result;
 };

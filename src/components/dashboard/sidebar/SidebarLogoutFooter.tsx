@@ -1,11 +1,7 @@
 
+import { SidebarFooter } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
-import { 
-  SidebarFooter,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton
-} from "@/components/ui/sidebar";
 
 interface SidebarLogoutFooterProps {
   onLogout: () => void;
@@ -13,15 +9,15 @@ interface SidebarLogoutFooterProps {
 
 const SidebarLogoutFooter = ({ onLogout }: SidebarLogoutFooterProps) => {
   return (
-    <SidebarFooter>
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <SidebarMenuButton onClick={onLogout}>
-            <LogOut className="h-4 w-4" />
-            <span>Logout</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      </SidebarMenu>
+    <SidebarFooter className="border-t border-gray-200 p-4">
+      <Button 
+        variant="ghost" 
+        onClick={onLogout}
+        className="w-full justify-start gap-2 text-gray-600 hover:text-gray-900"
+      >
+        <LogOut className="h-4 w-4" />
+        Logout
+      </Button>
     </SidebarFooter>
   );
 };

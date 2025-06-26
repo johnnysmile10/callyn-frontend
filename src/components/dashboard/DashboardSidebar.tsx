@@ -27,6 +27,14 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
   const { user, logout, userAgent, progressState } = useAuth();
   const navigate = useNavigate();
   
+  console.log("🎯 DashboardSidebar render:", {
+    activeTab,
+    hasUserAgent: !!userAgent,
+    userAgentId: userAgent?.id,
+    userAgentStatus: userAgent?.status,
+    progressState
+  });
+  
   const handleLogout = () => {
     logout();
     navigate("/");

@@ -11,23 +11,32 @@ import AgentOverview from "./AgentOverview";
 import NewUserWelcome from "../shared/NewUserWelcome";
 
 const YourAgentSection = () => {
-  const { userAgent, hasCompletedSetup, progressState, user } = useAuth();
+  const { userAgent, hasCompletedSetup, progressState, user, updateProgressState } = useAuth();
   const [refreshKey, setRefreshKey] = useState(0);
   const [showQuickStart, setShowQuickStart] = useState(false);
   
   const hasAgent = !!userAgent;
   const setupComplete = hasCompletedSetup();
 
-  console.log("YourAgentSection render:", {
+  console.log("🏠 YourAgentSection render:", {
     hasAgent,
     agentId: userAgent?.id,
+    agentStatus: userAgent?.status,
     setupComplete,
     progressState,
     timestamp: new Date().toISOString()
   });
 
   const handleAgentCreated = () => {
-    console.log("Agent created callback triggered");
+    console.log("🎉 Agent created callback triggered");
+    
+    // Update progress state to reflect agent creation
+    if (updateProgressState) {
+      updateProgressState({
+        agentConfigurationLevel: 'basic'
+      });
+    }
+    
     // Force a re-render to update the UI
     setRefreshKey(prev => prev + 1);
     setShowQuickStart(false);
@@ -35,15 +44,17 @@ const YourAgentSection = () => {
     // Small delay to ensure state has propagated
     setTimeout(() => {
       setRefreshKey(prev => prev + 1);
+      console.log("🔄 Forced UI refresh after agent creation");
     }, 500);
   };
 
   const handleStartQuickSetup = () => {
+    console.log("🚀 Starting quick setup");
     setShowQuickStart(true);
   };
 
   const handleRefreshState = () => {
-    console.log("Manually refreshing state");
+    console.log("🔄 Manually refreshing state");
     setRefreshKey(prev => prev + 1);
   };
 
@@ -105,7 +116,7 @@ const YourAgentSection = () => {
                     🎉 {userAgent.name} is Active!
                   </p>
                   <p className="text-sm text-green-600">
-                    Your AI agent is configured and ready to handle calls
+                    Your AI agent is configured and ready to handle calls. All dashboard features are now unlocked!
                   </p>
                 </div>
               </div>
@@ -152,7 +163,7 @@ const YourAgentSection = () => {
         </>
       )}
 
-      {/* Debug Information Card - Only show in development */}
+      {/* Enhanced Debug Information Card - Only show in development */}
       {process.env.NODE_ENV === 'development' && (
         <Card className="bg-gray-50 border-gray-200">
           <CardHeader className="pb-3">
@@ -173,6 +184,12 @@ const YourAgentSection = () => {
                 </span>
               </div>
               <div>
+                <span className="text-gray-500">Agent Status:</span>
+                <span className="ml-2 font-medium text-gray-800">
+                  {userAgent?.status || 'None'}
+                </span>
+              </div>
+              <div>
                 <span className="text-gray-500">Setup Complete:</span>
                 <span className={`ml-2 font-medium ${setupComplete ? 'text-green-600' : 'text-red-600'}`}>
                   {setupComplete ? 'Yes' : 'No'}
@@ -182,6 +199,12 @@ const YourAgentSection = () => {
                 <span className="text-gray-500">Config Level:</span>
                 <span className="ml-2 font-medium text-gray-800">
                   {progressState.agentConfigurationLevel}
+                </span>
+              </div>
+              <div>
+                <span className="text-gray-500">Refresh Key:</span>
+                <span className="ml-2 font-medium text-gray-800">
+                  {refreshKey}
                 </span>
               </div>
             </div>
