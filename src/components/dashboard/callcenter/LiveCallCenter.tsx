@@ -62,6 +62,7 @@ const LiveCallCenter = () => {
   const [isScriptEditorOpen, setIsScriptEditorOpen] = useState(false);
   const [isEditAgentOpen, setIsEditAgentOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [callStartTime, setCallStartTime] = useState<Date | null>(null);
 
   // Script and agent states
   const [currentScript, setCurrentScript] = useState("");
@@ -77,6 +78,15 @@ const LiveCallCenter = () => {
     personality: "professional",
     useSmallTalk: false,
     handleObjections: false,
+  });
+
+  // Track call start time when connected
+  useState(() => {
+    if (isConnected && !callStartTime) {
+      setCallStartTime(new Date());
+    } else if (!isConnected && callStartTime) {
+      setCallStartTime(null);
+    }
   });
 
   // Figure out which script section is active
@@ -149,11 +159,13 @@ const LiveCallCenter = () => {
             onOutcomeSelect={handleOutcome}
           />
           
-          {/* Compact Usage Tracker */}
+          {/* Live Usage Tracker with real-time updates */}
           <div className="p-4 border-t">
             <LiveUsageTracker 
               compact={true}
               onUpgradeClick={handleUpgradeClick}
+              isLiveCall={isConnected}
+              callStartTime={callStartTime || undefined}
             />
           </div>
         </div>

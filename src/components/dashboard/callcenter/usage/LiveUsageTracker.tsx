@@ -4,17 +4,26 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Activity, BarChart3, Settings } from "lucide-react";
 import { useUsageData } from "./useUsageData";
+import { useRealTimeUsage } from "./useRealTimeUsage";
 import UsageProgressBar from "./UsageProgressBar";
 import UsageTimelineChart from "./UsageTimelineChart";
 import UsageAlertsPanel from "./UsageAlertsPanel";
 import UsageStatsCard from "./UsageStatsCard";
+import LiveUsageTimelineCard from "./LiveUsageTimelineCard";
 
 interface LiveUsageTrackerProps {
   onUpgradeClick?: () => void;
   compact?: boolean;
+  isLiveCall?: boolean;
+  callStartTime?: Date;
 }
 
-const LiveUsageTracker = ({ onUpgradeClick, compact = false }: LiveUsageTrackerProps) => {
+const LiveUsageTracker = ({ 
+  onUpgradeClick, 
+  compact = false,
+  isLiveCall = false,
+  callStartTime
+}: LiveUsageTrackerProps) => {
   const {
     usageData,
     getUsagePercentage,
@@ -23,45 +32,71 @@ const LiveUsageTracker = ({ onUpgradeClick, compact = false }: LiveUsageTrackerP
     getUsageAlerts
   } = useUsageData();
 
-  const usagePercentage = getUsagePercentage();
-  const remainingMinutes = getRemainingMinutes();
+  const {
+    realTimeUsage,
+    currentCallMinutes,
+    getUsageWarnings
+  } = useRealTimeUsage({
+    initialUsageData: usageData,
+    isLiveCall,
+    callStartTime
+  });
+
+  const usagePercentage = (realTimeUsage.minutesUsed / realTimeUsage.minutesTotal) * 100;
+  const remainingMinutes = realTimeUsage.minutesTotal - realTimeUsage.minutesUsed;
   const daysRemaining = getDaysRemaining();
   const alerts = getUsageAlerts();
+  const warnings = getUsageWarnings();
 
   if (compact) {
     return (
-      <Card className="w-full">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Activity className="h-4 w-4 text-blue-600" />
-            Usage Tracker
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <UsageProgressBar
-            percentage={usagePercentage}
-            minutesUsed={usageData.minutesUsed}
-            minutesTotal={usageData.minutesTotal}
-            size="sm"
-          />
-          
-          {alerts.length > 0 && (
-            <UsageAlertsPanel
-              alerts={alerts}
-              onUpgradeClick={onUpgradeClick}
-            />
-          )}
-        </CardContent>
-      </Card>
+      <LiveUsageTimelineCard
+        usageData={realTimeUsage}
+        usagePercentage={usagePercentage}
+        remainingMinutes={remainingMinutes}
+        daysRemaining={daysRemaining}
+        onUpgradeClick={onUpgradeClick}
+        isLiveCall={isLiveCall}
+      />
     );
   }
 
   return (
     <div className="space-y-6">
+      {/* Live Timeline Card */}
+      <LiveUsageTimelineCard
+        usageData={realTimeUsage}
+        usagePercentage={usagePercentage}
+        remainingMinutes={remainingMinutes}
+        daysRemaining={daysRemaining}
+        onUpgradeClick={onUpgradeClick}
+        isLiveCall={isLiveCall}
+      />
+
+      {/* Current Call Info (if live) */}
+      {isLiveCall && currentCallMinutes > 0 && (
+        <Card className="border-blue-200 bg-blue-50">
+          <CardContent className="pt-4">
+            <div className="text-center">
+              <div className="text-lg font-semibold text-blue-700">
+                Current Call: {currentCallMinutes} minutes
+              </div>
+              <div className="text-sm text-blue-600">
+                Real-time usage: {realTimeUsage.minutesUsed} minutes
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Alerts Panel */}
-      {alerts.length > 0 && (
+      {(alerts.length > 0 || warnings.length > 0) && (
         <UsageAlertsPanel
-          alerts={alerts}
+          alerts={[...alerts, ...warnings.map(w => ({ 
+            type: w.level === 'critical' ? 'danger' as const : 'warning' as const,
+            message: w.message,
+            threshold: w.level === 'critical' ? 95 : 85
+          }))]}
           onUpgradeClick={onUpgradeClick}
         />
       )}
@@ -85,7 +120,7 @@ const LiveUsageTracker = ({ onUpgradeClick, compact = false }: LiveUsageTrackerP
         <TabsContent value="overview" className="space-y-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <UsageStatsCard
-              usageData={usageData}
+              usageData={realTimeUsage}
               usagePercentage={usagePercentage}
               remainingMinutes={remainingMinutes}
               daysRemaining={daysRemaining}
@@ -99,8 +134,8 @@ const LiveUsageTracker = ({ onUpgradeClick, compact = false }: LiveUsageTrackerP
               <CardContent>
                 <UsageProgressBar
                   percentage={usagePercentage}
-                  minutesUsed={usageData.minutesUsed}
-                  minutesTotal={usageData.minutesTotal}
+                  minutesUsed={realTimeUsage.minutesUsed}
+                  minutesTotal={realTimeUsage.minutesTotal}
                   showThresholds={true}
                   size="lg"
                 />
