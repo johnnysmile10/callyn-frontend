@@ -36,7 +36,7 @@ export const checkUnlockConditions = (
     const hasId = userAgent?.id && userAgent.id.trim() !== '';
     const hasValidStatus = !userAgent?.status || 
                           userAgent.status === 'active' || 
-                          userAgent.status === 'ready' ||
+                          userAgent.status === 'inactive' ||
                           userAgent.status === 'training';
     
     // Also check localStorage as fallback
@@ -65,16 +65,16 @@ export const checkUnlockConditions = (
   const hasAnyAgentIndication = (): boolean => {
     const configLevel = progressState.agentConfigurationLevel;
     const hasConfigLevel = configLevel !== 'none';
-    const hasValidAgent = hasValidAgent();
+    const hasValidAgentResult = hasValidAgent();
     
     console.log("🔎 Agent indication check:", {
-      hasValidAgent,
+      hasValidAgent: hasValidAgentResult,
       configLevel,
       hasConfigLevel,
-      result: hasValidAgent || hasConfigLevel
+      result: hasValidAgentResult || hasConfigLevel
     });
     
-    return hasValidAgent || hasConfigLevel;
+    return hasValidAgentResult || hasConfigLevel;
   };
 
   for (const condition of conditions) {
