@@ -115,7 +115,7 @@ const CallCenterDashboard = () => {
         </TabsContent>
 
         <TabsContent value="usage" className="space-y-6">
-          <LiveUsageTracker onUpgradeClick={handleUpgradeClick} />
+          <LiveUsageTracker />
         </TabsContent>
       </Tabs>
     </div>

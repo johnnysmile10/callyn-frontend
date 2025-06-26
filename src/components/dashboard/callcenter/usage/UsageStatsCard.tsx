@@ -1,66 +1,95 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, Phone, TrendingUp, AlertTriangle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Clock, Phone, TrendingUp, Activity } from "lucide-react";
+import UsageProgressBar from "./UsageProgressBar";
 
 interface UsageStatsCardProps {
   totalMinutes: number;
   usedMinutes: number;
   totalCalls: number;
   averageCallDuration: number;
+  compact?: boolean;
 }
 
 const UsageStatsCard = ({ 
   totalMinutes, 
   usedMinutes, 
   totalCalls, 
-  averageCallDuration 
+  averageCallDuration,
+  compact = false
 }: UsageStatsCardProps) => {
   const remainingMinutes = totalMinutes - usedMinutes;
   const usagePercentage = (usedMinutes / totalMinutes) * 100;
 
-  const stats = [
-    {
-      title: "Minutes Used",
-      value: usedMinutes.toLocaleString(),
-      icon: Clock,
-      color: "text-blue-600"
-    },
-    {
-      title: "Total Calls",
-      value: totalCalls.toLocaleString(),
-      icon: Phone,
-      color: "text-green-600"
-    },
-    {
-      title: "Avg Duration",
-      value: `${averageCallDuration.toFixed(1)}m`,
-      icon: TrendingUp,
-      color: "text-purple-600"
-    },
-    {
-      title: "Remaining",
-      value: remainingMinutes.toLocaleString(),
-      icon: AlertTriangle,
-      color: usagePercentage > 75 ? "text-red-600" : "text-gray-600"
-    }
-  ];
+  if (compact) {
+    return (
+      <div className="space-y-3">
+        <UsageProgressBar
+          percentage={usagePercentage}
+          usedMinutes={usedMinutes}
+          totalMinutes={totalMinutes}
+          compact={true}
+        />
+        
+        <div className="grid grid-cols-2 gap-2 text-sm">
+          <div className="flex items-center gap-1">
+            <Phone className="h-3 w-3 text-gray-500" />
+            <span className="text-gray-600">Calls:</span>
+            <span className="font-medium">{totalCalls}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Clock className="h-3 w-3 text-gray-500" />
+            <span className="text-gray-600">Avg:</span>
+            <span className="font-medium">{averageCallDuration.toFixed(1)}m</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {stats.map((stat) => (
-        <Card key={stat.title}>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">{stat.title}</p>
-                <p className="text-xl font-bold">{stat.value}</p>
-              </div>
-              <stat.icon className={`h-5 w-5 ${stat.color}`} />
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Activity className="h-5 w-5 text-blue-600" />
+          Usage Statistics
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <UsageProgressBar
+          percentage={usagePercentage}
+          usedMinutes={usedMinutes}
+          totalMinutes={totalMinutes}
+        />
+
+        <div className="grid grid-cols-3 gap-4">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <Phone className="h-4 w-4 text-blue-600" />
             </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+            <div className="text-2xl font-bold">{totalCalls}</div>
+            <div className="text-sm text-gray-600">Total Calls</div>
+          </div>
+          
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <Clock className="h-4 w-4 text-green-600" />
+            </div>
+            <div className="text-2xl font-bold">{remainingMinutes}</div>
+            <div className="text-sm text-gray-600">Minutes Left</div>
+          </div>
+          
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-1 mb-1">
+              <TrendingUp className="h-4 w-4 text-purple-600" />
+            </div>
+            <div className="text-2xl font-bold">{averageCallDuration.toFixed(1)}</div>
+            <div className="text-sm text-gray-600">Avg Duration</div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

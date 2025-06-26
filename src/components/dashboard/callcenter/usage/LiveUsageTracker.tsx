@@ -7,7 +7,19 @@ import UsageStatsCard from "./UsageStatsCard";
 import { useRealTimeUsage } from "./useRealTimeUsage";
 import { useUsageData } from "./useUsageData";
 
-const LiveUsageTracker = () => {
+interface LiveUsageTrackerProps {
+  compact?: boolean;
+  onUpgradeClick?: () => void;
+  isLiveCall?: boolean;
+  callStartTime?: Date;
+}
+
+const LiveUsageTracker = ({ 
+  compact = false, 
+  onUpgradeClick,
+  isLiveCall = false,
+  callStartTime
+}: LiveUsageTrackerProps) => {
   const { realtimeUsage, isCallActive, startTestCall, endTestCall } = useRealTimeUsage();
   const { usageData, isLoading } = useUsageData();
 
@@ -26,6 +38,45 @@ const LiveUsageTracker = () => {
 
   const totalCalls = usageData.dailyUsage.reduce((sum, day) => sum + day.calls, 0);
   const averageCallDuration = totalCalls > 0 ? usageData.usedMinutes / totalCalls : 0;
+
+  if (compact) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold flex items-center gap-2">
+            <Activity className="h-5 w-5 text-blue-600" />
+            Usage Tracker
+          </h3>
+          {isLiveCall && (
+            <div className="text-xs text-green-600 font-medium">
+              Live Call Active
+            </div>
+          )}
+        </div>
+        
+        <UsageStatsCard
+          totalMinutes={usageData.totalMinutes}
+          usedMinutes={realtimeUsage.isActive 
+            ? usageData.usedMinutes + realtimeUsage.currentCallMinutes 
+            : usageData.usedMinutes}
+          totalCalls={totalCalls}
+          averageCallDuration={averageCallDuration}
+          compact={true}
+        />
+
+        {onUpgradeClick && (
+          <Button
+            onClick={onUpgradeClick}
+            variant="outline"
+            size="sm"
+            className="w-full"
+          >
+            Upgrade Plan
+          </Button>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

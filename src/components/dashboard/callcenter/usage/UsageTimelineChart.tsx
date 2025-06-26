@@ -44,11 +44,12 @@ const UsageTimelineChart = ({ dailyUsage, realtimeUsage }: UsageTimelineChartPro
             content={({ active, payload, label }) => {
               if (active && payload && payload.length) {
                 const data = payload[0].payload;
+                const value = payload[0].value;
                 return (
                   <div className="bg-white p-3 border rounded-lg shadow-lg">
                     <p className="font-medium">{label}</p>
                     <p className="text-blue-600">
-                      Minutes: {payload[0].value?.toFixed(1)}
+                      Minutes: {typeof value === 'number' ? value.toFixed(1) : value}
                     </p>
                     <p className="text-gray-600">
                       Calls: {data.calls}
@@ -68,7 +69,7 @@ const UsageTimelineChart = ({ dailyUsage, realtimeUsage }: UsageTimelineChartPro
             y={avgUsage} 
             stroke="#94a3b8" 
             strokeDasharray="5 5" 
-            label={{ value: "Avg", position: "topRight" }}
+            label={{ value: "Avg", position: "top" }}
           />
           <Line
             type="monotone"

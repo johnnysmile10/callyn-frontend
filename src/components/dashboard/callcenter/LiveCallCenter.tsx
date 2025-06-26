@@ -4,9 +4,27 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Phone, Activity, BarChart, Settings } from "lucide-react";
 import LiveCallContent from "./components/LiveCallContent";
 import LiveUsageTracker from "./usage/LiveUsageTracker";
+import { useLiveCallCenter } from "./hooks/useLiveCallCenter";
 
 const LiveCallCenter = () => {
   const [activeTab, setActiveTab] = useState("calls");
+  
+  const {
+    isConnected,
+    isMuted,
+    isHolding,
+    transcriptLines,
+    agentInstructions,
+    outcomeGoals,
+    callStartTime,
+    onMuteToggle,
+    onEndCall,
+    onHoldToggle,
+    onSpeak,
+    onVolumeChange,
+    handleOutcome,
+    handleUpgradeClick,
+  } = useLiveCallCenter();
 
   return (
     <div className="space-y-6">
@@ -39,11 +57,26 @@ const LiveCallCenter = () => {
         </TabsList>
 
         <TabsContent value="calls" className="space-y-6">
-          <LiveCallContent />
+          <LiveCallContent
+            isConnected={isConnected}
+            isMuted={isMuted}
+            isHolding={isHolding}
+            transcriptLines={transcriptLines}
+            agentInstructions={agentInstructions}
+            outcomeGoals={outcomeGoals}
+            callStartTime={callStartTime}
+            onMuteToggle={onMuteToggle}
+            onEndCall={onEndCall}
+            onHoldToggle={onHoldToggle}
+            onSpeak={onSpeak}
+            onVolumeChange={onVolumeChange}
+            onOutcomeSelect={handleOutcome}
+            onUpgradeClick={handleUpgradeClick}
+          />
         </TabsContent>
 
         <TabsContent value="usage" className="space-y-6">
-          <LiveUsageTracker />
+          <LiveUsageTracker onUpgradeClick={handleUpgradeClick} />
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
