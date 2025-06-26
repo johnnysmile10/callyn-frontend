@@ -1,68 +1,88 @@
 
 import { useState, useEffect } from 'react';
 import { UsageData, DailyUsage, UsageAlert } from './types';
+import { subDays, format } from 'date-fns';
 
 export const useUsageData = () => {
   const [usageData, setUsageData] = useState<UsageData>({
     totalMinutes: 1000,
-    usedMinutes: 650,
-    remainingMinutes: 350,
-    percentage: 65,
-    dailyUsage: [
-      { date: '2024-01-20', minutes: 45, calls: 12 },
-      { date: '2024-01-21', minutes: 67, calls: 18 },
-      { date: '2024-01-22', minutes: 89, calls: 24 },
-      { date: '2024-01-23', minutes: 120, calls: 32 },
-      { date: '2024-01-24', minutes: 78, calls: 21 },
-      { date: '2024-01-25', minutes: 95, calls: 26 },
-      { date: '2024-01-26', minutes: 156, calls: 41 },
-    ],
-    alerts: [
-      {
-        id: '1',
-        type: 'warning',
-        message: 'You have used 65% of your monthly calling minutes',
-        timestamp: new Date().toISOString()
-      }
-    ]
+    usedMinutes: 0,
+    remainingMinutes: 1000,
+    percentage: 0,
+    dailyUsage: [],
+    alerts: []
   });
+  const [isLoading, setIsLoading] = useState(true);
 
-  const updateUsage = (additionalMinutes: number) => {
-    setUsageData(prev => {
-      const newUsedMinutes = prev.usedMinutes + additionalMinutes;
-      const newRemainingMinutes = prev.totalMinutes - newUsedMinutes;
-      const newPercentage = (newUsedMinutes / prev.totalMinutes) * 100;
+  useEffect(() => {
+    const generateMockData = (): UsageData => {
+      // Generate daily usage for the past 7 days
+      const dailyUsage: DailyUsage[] = [];
+      const today = new Date();
+      
+      for (let i = 6; i >= 0; i--) {
+        const date = subDays(today, i);
+        const minutes = Math.floor(Math.random() * 120) + 20; // 20-140 minutes
+        const calls = Math.floor(Math.random() * 15) + 5; // 5-20 calls
+        
+        dailyUsage.push({
+          date: format(date, 'yyyy-MM-dd'),
+          minutes,
+          calls
+        });
+      }
+
+      const totalUsedMinutes = dailyUsage.reduce((sum, day) => sum + day.minutes, 0);
+      const totalMinutes = 1000;
+      const remainingMinutes = totalMinutes - totalUsedMinutes;
+      const percentage = (totalUsedMinutes / totalMinutes) * 100;
 
       // Generate alerts based on usage
-      const newAlerts = [...prev.alerts];
-      if (newPercentage >= 90 && !newAlerts.some(a => a.type === 'critical')) {
-        newAlerts.push({
-          id: Date.now().toString(),
+      const alerts: UsageAlert[] = [];
+      
+      if (percentage >= 90) {
+        alerts.push({
+          id: 'critical-usage',
           type: 'critical',
-          message: 'Critical: You have used 90% of your monthly calling minutes',
+          message: 'You have used 90% of your monthly minutes. Consider upgrading your plan.',
           timestamp: new Date().toISOString()
         });
-      } else if (newPercentage >= 75 && !newAlerts.some(a => a.type === 'warning')) {
-        newAlerts.push({
-          id: Date.now().toString(),
+      } else if (percentage >= 75) {
+        alerts.push({
+          id: 'warning-usage',
           type: 'warning',
-          message: 'Warning: You have used 75% of your monthly calling minutes',
+          message: 'You have used 75% of your monthly minutes.',
+          timestamp: new Date().toISOString()
+        });
+      }
+
+      // Check if today's usage is high
+      const todayUsage = dailyUsage[dailyUsage.length - 1];
+      if (todayUsage.minutes > 100) {
+        alerts.push({
+          id: 'high-daily-usage',
+          type: 'info',
+          message: `High usage detected today: ${todayUsage.minutes} minutes used.`,
           timestamp: new Date().toISOString()
         });
       }
 
       return {
-        ...prev,
-        usedMinutes: newUsedMinutes,
-        remainingMinutes: newRemainingMinutes,
-        percentage: newPercentage,
-        alerts: newAlerts
+        totalMinutes,
+        usedMinutes: totalUsedMinutes,
+        remainingMinutes,
+        percentage,
+        dailyUsage,
+        alerts
       };
-    });
-  };
+    };
 
-  return {
-    usageData,
-    updateUsage
-  };
+    // Simulate loading delay
+    setTimeout(() => {
+      setUsageData(generateMockData());
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
+  return { usageData, isLoading };
 };

@@ -1,54 +1,93 @@
 
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { DailyUsage } from './types';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { DailyUsage, RealtimeUsageUpdate } from './types';
+import { format, isToday } from 'date-fns';
 
 interface UsageTimelineChartProps {
-  data: DailyUsage[];
-  height?: number;
+  dailyUsage: DailyUsage[];
+  realtimeUsage: RealtimeUsageUpdate;
 }
 
-const UsageTimelineChart = ({ data, height = 200 }: UsageTimelineChartProps) => {
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-  };
+const UsageTimelineChart = ({ dailyUsage, realtimeUsage }: UsageTimelineChartProps) => {
+  // Combine historical data with real-time data
+  const chartData = dailyUsage.map(day => {
+    const isCurrentDay = isToday(new Date(day.date));
+    return {
+      ...day,
+      minutes: isCurrentDay && realtimeUsage.isActive 
+        ? day.minutes + realtimeUsage.currentCallMinutes 
+        : day.minutes,
+      formattedDate: format(new Date(day.date), 'MMM dd'),
+      isToday: isCurrentDay
+    };
+  });
+
+  const maxUsage = Math.max(...chartData.map(d => d.minutes));
+  const avgUsage = chartData.reduce((sum, d) => sum + d.minutes, 0) / chartData.length;
 
   return (
-    <div style={{ height }}>
+    <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
+        <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
           <XAxis 
-            dataKey="date" 
-            tickFormatter={formatDate}
+            dataKey="formattedDate" 
             fontSize={12}
-            tick={{ fill: '#6b7280' }}
+            className="text-gray-600"
           />
           <YAxis 
             fontSize={12}
-            tick={{ fill: '#6b7280' }}
+            className="text-gray-600"
             label={{ value: 'Minutes', angle: -90, position: 'insideLeft' }}
           />
-          <Tooltip 
-            labelFormatter={(value) => formatDate(value)}
-            formatter={(value, name) => [
-              `${value} ${name === 'minutes' ? 'minutes' : 'calls'}`,
-              name === 'minutes' ? 'Minutes Used' : 'Calls Made'
-            ]}
-            contentStyle={{
-              backgroundColor: 'white',
-              border: '1px solid #e5e7eb',
-              borderRadius: '8px',
-              fontSize: '12px'
+          <Tooltip
+            content={({ active, payload, label }) => {
+              if (active && payload && payload.length) {
+                const data = payload[0].payload;
+                return (
+                  <div className="bg-white p-3 border rounded-lg shadow-lg">
+                    <p className="font-medium">{label}</p>
+                    <p className="text-blue-600">
+                      Minutes: {payload[0].value?.toFixed(1)}
+                    </p>
+                    <p className="text-gray-600">
+                      Calls: {data.calls}
+                    </p>
+                    {data.isToday && realtimeUsage.isActive && (
+                      <p className="text-green-600 text-sm">
+                        + {realtimeUsage.currentCallMinutes.toFixed(1)} min (live)
+                      </p>
+                    )}
+                  </div>
+                );
+              }
+              return null;
             }}
           />
-          <Line 
-            type="monotone" 
-            dataKey="minutes" 
-            stroke="#3b82f6" 
+          <ReferenceLine 
+            y={avgUsage} 
+            stroke="#94a3b8" 
+            strokeDasharray="5 5" 
+            label={{ value: "Avg", position: "topRight" }}
+          />
+          <Line
+            type="monotone"
+            dataKey="minutes"
+            stroke="#3b82f6"
             strokeWidth={2}
-            dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-            activeDot={{ r: 6, stroke: '#3b82f6', strokeWidth: 2 }}
+            dot={(props) => {
+              const { payload } = props;
+              return (
+                <circle
+                  {...props}
+                  fill={payload.isToday && realtimeUsage.isActive ? "#10b981" : "#3b82f6"}
+                  stroke={payload.isToday && realtimeUsage.isActive ? "#10b981" : "#3b82f6"}
+                  strokeWidth={2}
+                  r={payload.isToday && realtimeUsage.isActive ? 6 : 4}
+                />
+              );
+            }}
+            activeDot={{ r: 6, fill: "#1d4ed8" }}
           />
         </LineChart>
       </ResponsiveContainer>

@@ -1,88 +1,95 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { TrendingUp, ExternalLink } from "lucide-react";
-import UsageProgressBar from "./UsageProgressBar";
+import { Badge } from "@/components/ui/badge";
+import { Clock, Activity, AlertTriangle } from "lucide-react";
 import UsageTimelineChart from "./UsageTimelineChart";
+import UsageProgressBar from "./UsageProgressBar";
 import UsageAlertsPanel from "./UsageAlertsPanel";
 import { useUsageData } from "./useUsageData";
+import { useRealTimeUsage } from "./useRealTimeUsage";
 
-interface LiveUsageTimelineCardProps {
-  compact?: boolean;
-  onUpgradeClick?: () => void;
-}
+const LiveUsageTimelineCard = () => {
+  const { usageData, isLoading } = useUsageData();
+  const { realtimeUsage, isCallActive } = useRealTimeUsage();
 
-const LiveUsageTimelineCard = ({ 
-  compact = false, 
-  onUpgradeClick 
-}: LiveUsageTimelineCardProps) => {
-  const { usageData } = useUsageData();
-
-  if (compact) {
+  if (isLoading) {
     return (
-      <div className="space-y-4">
-        <UsageProgressBar
-          percentage={usageData.percentage}
-          usedMinutes={usageData.usedMinutes}
-          totalMinutes={usageData.totalMinutes}
-          compact={true}
-        />
-        
-        <UsageAlertsPanel 
-          alerts={usageData.alerts} 
-          compact={true}
-        />
-
-        {usageData.percentage > 75 && onUpgradeClick && (
-          <Button 
-            size="sm" 
-            variant="outline" 
-            onClick={onUpgradeClick}
-            className="w-full text-xs"
-          >
-            <ExternalLink className="h-3 w-3 mr-1" />
-            Upgrade Plan
-          </Button>
-        )}
-      </div>
+      <Card>
+        <CardContent className="flex items-center justify-center py-8">
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4 animate-spin" />
+            <span>Loading usage data...</span>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
+  const currentUsage = realtimeUsage.isActive 
+    ? realtimeUsage.totalMinutesUsed 
+    : usageData.usedMinutes;
+
+  const usagePercentage = (currentUsage / usageData.totalMinutes) * 100;
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-blue-600" />
-          Usage Timeline
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <UsageProgressBar
-          percentage={usageData.percentage}
-          usedMinutes={usageData.usedMinutes}
-          totalMinutes={usageData.totalMinutes}
-        />
+    <div className="space-y-4">
+      {/* Main Usage Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Activity className="h-5 w-5 text-blue-600" />
+              Live Usage Timeline
+            </div>
+            <div className="flex items-center gap-2">
+              {isCallActive && (
+                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                  <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-pulse" />
+                  Call Active
+                </Badge>
+              )}
+              <Badge variant="outline">
+                {currentUsage}/{usageData.totalMinutes} min
+              </Badge>
+            </div>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Progress Bar */}
+          <UsageProgressBar
+            percentage={usagePercentage}
+            usedMinutes={currentUsage}
+            totalMinutes={usageData.totalMinutes}
+          />
 
-        <div>
-          <h4 className="font-medium mb-3">7-Day Usage Trend</h4>
-          <UsageTimelineChart data={usageData.dailyUsage} />
-        </div>
+          {/* Timeline Chart */}
+          <UsageTimelineChart 
+            dailyUsage={usageData.dailyUsage}
+            realtimeUsage={realtimeUsage}
+          />
 
+          {/* Current Call Info */}
+          {isCallActive && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse" />
+                  <span className="font-medium">Active Call</span>
+                </div>
+                <div className="text-sm text-gray-600">
+                  {realtimeUsage.currentCallMinutes.toFixed(1)} minutes
+                </div>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Alerts Panel */}
+      {usageData.alerts.length > 0 && (
         <UsageAlertsPanel alerts={usageData.alerts} />
-
-        {usageData.percentage > 75 && onUpgradeClick && (
-          <div className="pt-4 border-t">
-            <Button 
-              onClick={onUpgradeClick}
-              className="w-full"
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              Upgrade Plan
-            </Button>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      )}
+    </div>
   );
 };
 

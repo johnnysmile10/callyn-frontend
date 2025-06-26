@@ -1,104 +1,61 @@
 
-import LiveCallHeader from "./components/LiveCallHeader";
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Phone, Activity, BarChart, Settings } from "lucide-react";
 import LiveCallContent from "./components/LiveCallContent";
-import LiveCallModals from "./components/LiveCallModals";
-import SettingsDrawer from "./components/SettingsDrawer";
-import { useLiveCallCenter } from "./hooks/useLiveCallCenter";
+import LiveUsageTracker from "./usage/LiveUsageTracker";
 
 const LiveCallCenter = () => {
-  const {
-    // State
-    agentStatus,
-    isConnected,
-    isMuted,
-    isHolding,
-    transcriptLines,
-    agentInstructions,
-    outcomeGoals,
-    callDuration,
-    callStartTime,
-    
-    // Modal states
-    isScriptEditorOpen,
-    isEditAgentOpen,
-    isSettingsOpen,
-    
-    // Script/Agent states
-    currentScript,
-    currentPersonality,
-    useSmallTalk,
-    handleObjections,
-    agentSettings,
-    
-    // Actions
-    onMuteToggle,
-    onEndCall,
-    onHoldToggle,
-    onSpeak,
-    onVolumeChange,
-    
-    // Modal actions
-    setIsScriptEditorOpen,
-    setIsEditAgentOpen,
-    setIsSettingsOpen,
-    
-    // Handlers
-    handleScriptSave,
-    handleAgentSave,
-    handleOutcome,
-    handleUpgradeClick,
-  } = useLiveCallCenter();
+  const [activeTab, setActiveTab] = useState("calls");
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
-      {/* Clean Top Header */}
-      <LiveCallHeader
-        isConnected={isConnected}
-        callDuration={callDuration}
-        agentStatus={agentStatus}
-        onEditAgent={() => setIsEditAgentOpen(true)}
-        onEditScript={() => setIsScriptEditorOpen(true)}
-        onSettings={() => setIsSettingsOpen(true)}
-      />
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+          <Phone className="h-6 w-6 text-blue-600" />
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Live Call Center</h1>
+          <p className="text-gray-600">
+            Monitor live calls and track usage in real-time
+          </p>
+        </div>
+      </div>
 
-      {/* Main Content Layout */}
-      <LiveCallContent
-        isConnected={isConnected}
-        isMuted={isMuted}
-        isHolding={isHolding}
-        transcriptLines={transcriptLines}
-        agentInstructions={agentInstructions}
-        outcomeGoals={outcomeGoals}
-        callStartTime={callStartTime}
-        onMuteToggle={onMuteToggle}
-        onEndCall={onEndCall}
-        onHoldToggle={onHoldToggle}
-        onSpeak={onSpeak}
-        onVolumeChange={onVolumeChange}
-        onOutcomeSelect={handleOutcome}
-        onUpgradeClick={handleUpgradeClick}
-      />
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="calls" className="flex items-center gap-2">
+            <Phone className="h-4 w-4" />
+            Live Calls
+          </TabsTrigger>
+          <TabsTrigger value="usage" className="flex items-center gap-2">
+            <Activity className="h-4 w-4" />
+            Usage Tracking
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <BarChart className="h-4 w-4" />
+            Analytics
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Settings Drawer */}
-      <SettingsDrawer
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
+        <TabsContent value="calls" className="space-y-6">
+          <LiveCallContent />
+        </TabsContent>
 
-      {/* Modals */}
-      <LiveCallModals
-        isScriptEditorOpen={isScriptEditorOpen}
-        isEditAgentOpen={isEditAgentOpen}
-        onCloseScriptEditor={() => setIsScriptEditorOpen(false)}
-        onCloseEditAgent={() => setIsEditAgentOpen(false)}
-        currentScript={currentScript}
-        currentPersonality={currentPersonality}
-        useSmallTalk={useSmallTalk}
-        handleObjections={handleObjections}
-        agentSettings={agentSettings}
-        onScriptSave={handleScriptSave}
-        onAgentSave={handleAgentSave}
-      />
+        <TabsContent value="usage" className="space-y-6">
+          <LiveUsageTracker />
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-6">
+          <div className="text-center py-12">
+            <BarChart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Analytics Coming Soon</h3>
+            <p className="text-gray-600">
+              Detailed call analytics and performance metrics will be available here.
+            </p>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
