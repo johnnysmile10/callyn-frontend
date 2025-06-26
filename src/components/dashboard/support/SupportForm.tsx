@@ -148,7 +148,7 @@ const SupportForm = () => {
             {/* Screenshot Upload */}
             <div className="space-y-2">
               <Label htmlFor="screenshot">Screenshot (Optional)</Label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-colors">
+              <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 hover:border-gray-400 transition-colors">
                 <div className="flex flex-col items-center gap-2">
                   <Upload className="h-8 w-8 text-gray-400" />
                   <div className="text-center">
