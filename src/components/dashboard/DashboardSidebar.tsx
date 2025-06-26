@@ -27,12 +27,17 @@ const DashboardSidebar = ({ activeTab, setActiveTab }: DashboardSidebarProps) =>
   const { user, logout, userAgent, progressState } = useAuth();
   const navigate = useNavigate();
   
-  console.log("🎯 DashboardSidebar render:", {
+  console.log("🎯 Enhanced DashboardSidebar render:", {
     activeTab,
     hasUserAgent: !!userAgent,
     userAgentId: userAgent?.id,
     userAgentStatus: userAgent?.status,
-    progressState
+    progressState,
+    localStorage: {
+      userAgent: localStorage.getItem('user_agent'),
+      setupCompleted: localStorage.getItem('setup_completed')
+    },
+    timestamp: new Date().toISOString()
   });
   
   const handleLogout = () => {

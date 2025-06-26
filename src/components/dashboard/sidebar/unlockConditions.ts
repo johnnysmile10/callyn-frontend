@@ -14,7 +14,7 @@ export const checkUnlockConditions = (
 ): { isUnlocked: boolean; missingRequirements: string[] } => {
   const missingRequirements: string[] = [];
 
-  console.log("🔍 Checking unlock conditions:", {
+  console.log("🔍 Enhanced unlock conditions check:", {
     conditions: conditions.map(c => c.type),
     hasUserAgent: !!userAgent,
     userAgentId: userAgent?.id,
@@ -29,21 +29,52 @@ export const checkUnlockConditions = (
     return { isUnlocked: true, missingRequirements: [] };
   }
 
-  // Helper function to check if agent is valid and active
-  const hasValidAgent = () => {
-    const isValid = userAgent && 
-                   userAgent.id && 
-                   userAgent.id.trim() !== '' && 
-                   userAgent.status !== 'inactive';
+  // Enhanced helper function to check if agent is valid and active
+  const hasValidAgent = (): boolean => {
+    // More lenient validation - check multiple sources
+    const hasAgent = !!userAgent;
+    const hasId = userAgent?.id && userAgent.id.trim() !== '';
+    const hasValidStatus = !userAgent?.status || 
+                          userAgent.status === 'active' || 
+                          userAgent.status === 'ready' ||
+                          userAgent.status === 'training';
     
-    console.log("🤖 Agent validation:", {
-      hasUserAgent: !!userAgent,
-      hasId: userAgent?.id && userAgent.id.trim() !== '',
-      status: userAgent?.status,
-      isValid
+    // Also check localStorage as fallback
+    const storedAgent = localStorage.getItem('user_agent');
+    const hasStoredAgent = storedAgent && storedAgent !== 'null';
+    
+    // Check setup completion as additional validation
+    const setupComplete = localStorage.getItem('setup_completed') === 'true';
+    
+    const isValid = (hasAgent && hasId && hasValidStatus) || hasStoredAgent || setupComplete;
+    
+    console.log("🤖 Enhanced agent validation:", {
+      hasAgent,
+      hasId,
+      hasValidStatus,
+      hasStoredAgent,
+      setupComplete,
+      userAgentStatus: userAgent?.status,
+      finalResult: isValid
     });
     
     return isValid;
+  };
+
+  // Check if we have any indication of agent existence
+  const hasAnyAgentIndication = (): boolean => {
+    const configLevel = progressState.agentConfigurationLevel;
+    const hasConfigLevel = configLevel !== 'none';
+    const hasValidAgent = hasValidAgent();
+    
+    console.log("🔎 Agent indication check:", {
+      hasValidAgent,
+      configLevel,
+      hasConfigLevel,
+      result: hasValidAgent || hasConfigLevel
+    });
+    
+    return hasValidAgent || hasConfigLevel;
   };
 
   for (const condition of conditions) {
@@ -51,8 +82,8 @@ export const checkUnlockConditions = (
     
     switch (condition.type) {
       case 'agent':
-        if (!hasValidAgent()) {
-          console.log("❌ Agent condition failed");
+        if (!hasAnyAgentIndication()) {
+          console.log("❌ Agent condition failed - no agent indication");
           missingRequirements.push('Create your AI agent first');
         } else {
           console.log("✅ Agent condition passed");
@@ -60,7 +91,7 @@ export const checkUnlockConditions = (
         break;
         
       case 'leads':
-        if (!hasValidAgent()) {
+        if (!hasAnyAgentIndication()) {
           console.log("❌ Leads condition failed: No agent");
           missingRequirements.push('Create your AI agent first');
         } else {
@@ -69,7 +100,7 @@ export const checkUnlockConditions = (
         break;
         
       case 'voice':
-        if (!hasValidAgent()) {
+        if (!hasAnyAgentIndication()) {
           console.log("❌ Voice condition failed: No agent");
           missingRequirements.push('Create your AI agent first');
         } else {
@@ -78,7 +109,7 @@ export const checkUnlockConditions = (
         break;
         
       case 'campaigns':
-        if (!hasValidAgent()) {
+        if (!hasAnyAgentIndication()) {
           console.log("❌ Campaigns condition failed: No agent");
           missingRequirements.push('Create your AI agent first');
         } else {
@@ -98,14 +129,14 @@ export const checkUnlockConditions = (
           currentLevel,
           currentIndex,
           requiredIndex,
-          hasAgent: hasValidAgent()
+          hasAgent: hasAnyAgentIndication()
         });
         
-        // If we have a valid agent, consider config level at least basic
-        if (hasValidAgent() && currentIndex < 1) {
-          console.log("⬆️ Upgrading config level to basic due to agent existence");
-          // Don't fail the condition if agent exists
-        } else if (currentIndex < requiredIndex && !hasValidAgent()) {
+        // More lenient config level checking
+        if (hasAnyAgentIndication() && currentIndex < 1) {
+          console.log("⬆️ Auto-upgrading config level due to agent existence");
+          // Don't fail if agent exists
+        } else if (currentIndex < requiredIndex && !hasAnyAgentIndication()) {
           console.log("❌ Config level condition failed");
           missingRequirements.push(condition.description);
         } else {
@@ -123,6 +154,22 @@ export const checkUnlockConditions = (
     missingRequirements
   };
 
-  console.log("🎯 Final unlock result:", result);
+  console.log("🎯 Enhanced unlock result:", result);
   return result;
+};
+
+// Helper function to force unlock all features (for debugging)
+export const forceUnlockAll = (): { isUnlocked: boolean; missingRequirements: string[] } => {
+  console.log("🚨 FORCE UNLOCK ACTIVATED - All features unlocked");
+  return { isUnlocked: true, missingRequirements: [] };
+};
+
+// Helper function to check if user should have access to features
+export const shouldHaveAccess = (userAgent: UserAgent | null, progressState: ProgressState): boolean => {
+  const hasAgent = !!userAgent;
+  const hasStoredAgent = localStorage.getItem('user_agent') && localStorage.getItem('user_agent') !== 'null';
+  const setupComplete = localStorage.getItem('setup_completed') === 'true';
+  const hasBasicConfig = progressState.agentConfigurationLevel !== 'none';
+  
+  return hasAgent || hasStoredAgent || setupComplete || hasBasicConfig;
 };
