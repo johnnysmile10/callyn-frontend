@@ -173,3 +173,72 @@ export const shouldHaveAccess = (userAgent: UserAgent | null, progressState: Pro
   
   return hasAgent || hasStoredAgent || setupComplete || hasBasicConfig;
 };
+
+// Enhanced recovery function to fix state inconsistencies
+export const recoverUserState = (updateProgressState?: (updates: Partial<ProgressState>) => void) => {
+  console.log("🔄 Starting enhanced state recovery process");
+  
+  const storedAgent = localStorage.getItem('user_agent');
+  const setupComplete = localStorage.getItem('setup_completed') === 'true';
+  
+  if ((storedAgent && storedAgent !== 'null') || setupComplete) {
+    console.log("🎯 Found stored agent or setup completion, updating progress state");
+    
+    if (updateProgressState) {
+      updateProgressState({
+        agentConfigurationLevel: 'basic',
+        hasVoiceIntegration: true,
+        hasCampaigns: false,
+        hasLeads: false
+      });
+    }
+    
+    return true;
+  }
+  
+  console.log("❌ No recoverable state found");
+  return false;
+};
+
+// Function to diagnose unlock issues
+export const diagnoseUnlockIssues = (userAgent: UserAgent | null, progressState: ProgressState) => {
+  console.log("🔍 DIAGNOSTIC REPORT:");
+  console.log("===================");
+  
+  const hasAgent = !!userAgent;
+  const storedAgent = localStorage.getItem('user_agent');
+  const setupComplete = localStorage.getItem('setup_completed');
+  const shouldUnlock = shouldHaveAccess(userAgent, progressState);
+  
+  console.log("User Agent:", userAgent);
+  console.log("Has Agent:", hasAgent);
+  console.log("Stored Agent:", storedAgent);
+  console.log("Setup Complete:", setupComplete);
+  console.log("Progress State:", progressState);
+  console.log("Should Unlock:", shouldUnlock);
+  
+  const issues = [];
+  
+  if (!hasAgent && (!storedAgent || storedAgent === 'null')) {
+    issues.push("No agent found in memory or localStorage");
+  }
+  
+  if (progressState.agentConfigurationLevel === 'none' && !hasAgent) {
+    issues.push("Configuration level is 'none' and no agent exists");
+  }
+  
+  if (setupComplete !== 'true' && !hasAgent) {
+    issues.push("Setup not marked as complete and no agent exists");
+  }
+  
+  console.log("Issues found:", issues);
+  console.log("===================");
+  
+  return {
+    hasAgent,
+    storedAgent: !!storedAgent,
+    setupComplete: setupComplete === 'true',
+    shouldUnlock,
+    issues
+  };
+};

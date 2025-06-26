@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Bot, Settings, Rocket, CheckCircle, AlertCircle, RefreshCw, ArrowRight, Unlock } from "lucide-react";
+import { Bot, Settings, Rocket, CheckCircle, AlertCircle, RefreshCw, ArrowRight, Unlock, Wrench } from "lucide-react";
 import { useAuth } from "@/context";
-import { shouldHaveAccess } from "../sidebar/unlockConditions";
+import { shouldHaveAccess, recoverUserState, diagnoseUnlockIssues } from "../sidebar/unlockConditions";
+import { toast } from "@/hooks/use-toast";
 import QuickStartIntegration from "./QuickStartIntegration";
 import AgentOverview from "./AgentOverview";
 import NewUserWelcome from "../shared/NewUserWelcome";
@@ -15,6 +16,7 @@ const YourAgentSection = () => {
   const { userAgent, hasCompletedSetup, progressState, user, updateProgressState } = useAuth();
   const [refreshKey, setRefreshKey] = useState(0);
   const [showQuickStart, setShowQuickStart] = useState(false);
+  const [isRecovering, setIsRecovering] = useState(false);
   
   const hasAgent = !!userAgent;
   const setupComplete = hasCompletedSetup();
@@ -63,6 +65,53 @@ const YourAgentSection = () => {
   const handleRefreshState = () => {
     console.log("🔄 Manually refreshing state");
     setRefreshKey(prev => prev + 1);
+    
+    toast({
+      title: "State Refreshed",
+      description: "Dashboard state has been updated",
+    });
+  };
+
+  const handleRecoverState = async () => {
+    console.log("🔧 Manual state recovery requested");
+    setIsRecovering(true);
+    
+    try {
+      const recovered = recoverUserState(updateProgressState);
+      
+      if (recovered) {
+        setRefreshKey(prev => prev + 1);
+        toast({
+          title: "State Recovery Successful",
+          description: "Your agent state has been restored and sidebar features should now be unlocked.",
+        });
+      } else {
+        toast({
+          title: "No Recovery Needed",
+          description: "No recoverable agent state was found. Please create a new agent.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("State recovery failed:", error);
+      toast({
+        title: "Recovery Failed",
+        description: "Unable to recover agent state. Please try creating a new agent.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsRecovering(false);
+    }
+  };
+
+  const handleDiagnoseIssues = () => {
+    console.log("🔍 Running diagnostic check");
+    const diagnostic = diagnoseUnlockIssues(userAgent, progressState);
+    
+    toast({
+      title: "Diagnostic Complete",
+      description: `Found ${diagnostic.issues.length} potential issues. Check console for details.`,
+    });
   };
 
   const handleForceUnlock = () => {
@@ -76,6 +125,11 @@ const YourAgentSection = () => {
       });
     }
     setRefreshKey(prev => prev + 1);
+    
+    toast({
+      title: "Features Force Unlocked",
+      description: "All dashboard features have been temporarily unlocked for testing.",
+    });
   };
 
   // Show Quick Start wizard if requested
@@ -92,12 +146,63 @@ const YourAgentSection = () => {
     <div key={refreshKey} className="space-y-6">
       {!hasAgent ? (
         <>
-          {/* New User Welcome Experience */}
+          {/* Enhanced New User Welcome Experience with Recovery Options */}
           <NewUserWelcome onStartQuickSetup={handleStartQuickSetup} />
+          
+          {/* State Recovery Section for users who might have lost state */}
+          <Card className="border-yellow-200 bg-yellow-50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Wrench className="h-5 w-5 text-yellow-600" />
+                Having Issues? Try These Recovery Options
+              </CardTitle>
+              <CardDescription>
+                If you previously created an agent but can't see it, try these recovery tools
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRecoverState}
+                  disabled={isRecovering}
+                  className="flex items-center gap-2"
+                >
+                  {isRecovering ? (
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Wrench className="h-4 w-4" />
+                  )}
+                  {isRecovering ? "Recovering..." : "Recover Agent State"}
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleDiagnoseIssues}
+                  className="flex items-center gap-2"
+                >
+                  <AlertCircle className="h-4 w-4" />
+                  Run Diagnostics
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRefreshState}
+                  className="flex items-center gap-2"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  Refresh State
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </>
       ) : (
         <>
-          {/* Header for existing users */}
+          {/* Enhanced Header for existing users */}
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold tracking-tight">Your AI Agent</h2>
@@ -106,7 +211,7 @@ const YourAgentSection = () => {
               </p>
             </div>
             
-            {/* Status and controls */}
+            {/* Enhanced Status and controls */}
             <div className="flex items-center gap-3">
               <Button
                 variant="outline"
@@ -118,8 +223,26 @@ const YourAgentSection = () => {
                 Refresh
               </Button>
               
+              {/* Enhanced recovery tools */}
+              {!shouldUnlock && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRecoverState}
+                  disabled={isRecovering}
+                  className="flex items-center gap-2 border-yellow-300 text-yellow-600"
+                >
+                  {isRecovering ? (
+                    <RefreshCw className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Wrench className="h-4 w-4" />
+                  )}
+                  Fix State
+                </Button>
+              )}
+              
               {/* Debug unlock button in development */}
-              {process.env.NODE_ENV === 'development' && !shouldUnlock && (
+              {process.env.NODE_ENV === 'development' && (
                 <Button
                   variant="outline"
                   size="sm"
@@ -131,7 +254,7 @@ const YourAgentSection = () => {
                 </Button>
               )}
               
-              {/* Status indicator */}
+              {/* Enhanced Status indicator */}
               <Badge variant="secondary" className={shouldUnlock ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
                 {shouldUnlock ? (
                   <>
@@ -148,7 +271,7 @@ const YourAgentSection = () => {
             </div>
           </div>
 
-          {/* Status message */}
+          {/* Enhanced Status message with recovery guidance */}
           <Card className={shouldUnlock ? "border-green-200 bg-green-50" : "border-yellow-200 bg-yellow-50"}>
             <CardContent className="py-4">
               <div className="flex items-center gap-3">
@@ -157,10 +280,10 @@ const YourAgentSection = () => {
                 ) : (
                   <AlertCircle className="h-5 w-5 text-yellow-600" />
                 )}
-                <div>
+                <div className="flex-1">
                   <p className={`font-medium ${shouldUnlock ? 'text-green-800' : 'text-yellow-800'}`}>
                     {shouldUnlock ? (
-                      `🎉 ${userAgent.name} is Active!`
+                      `🎉 ${userAgent.name} is Active and Ready!`
                     ) : (
                       `⚠️ Setup incomplete for ${userAgent.name}`
                     )}
@@ -169,10 +292,20 @@ const YourAgentSection = () => {
                     {shouldUnlock ? (
                       'Your AI agent is configured and ready to handle calls. All dashboard features are now unlocked!'
                     ) : (
-                      'Complete the setup process to unlock all dashboard features and start making calls.'
+                      'There may be a state synchronization issue. Try the "Fix State" button to resolve unlock problems.'
                     )}
                   </p>
                 </div>
+                {!shouldUnlock && (
+                  <Button
+                    size="sm"
+                    onClick={handleRecoverState}
+                    disabled={isRecovering}
+                    className="bg-yellow-600 hover:bg-yellow-700"
+                  >
+                    {isRecovering ? "Fixing..." : "Fix Now"}
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -182,18 +315,18 @@ const YourAgentSection = () => {
           
           <Separator />
           
-          {/* Quick Actions for Existing Users */}
+          {/* Enhanced Quick Actions */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="h-5 w-5 text-blue-600" />
-                Quick Actions
+                Quick Actions & Recovery Tools
               </CardTitle>
               <CardDescription>
-                Common tasks and settings for your AI agent
+                Common tasks, settings, and troubleshooting tools for your AI agent
               </CardDescription>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CardContent className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
                 <div className="font-medium mb-1">Update Script</div>
                 <div className="text-sm text-gray-600">Modify your agent's conversation flow</div>
@@ -211,6 +344,15 @@ const YourAgentSection = () => {
               >
                 <div className="font-medium mb-1">Quick Setup</div>
                 <div className="text-sm text-gray-600">Run setup wizard again</div>
+              </Button>
+              
+              <Button 
+                onClick={handleDiagnoseIssues}
+                variant="outline" 
+                className="h-auto p-4 flex flex-col items-start border-blue-200"
+              >
+                <div className="font-medium mb-1">Run Diagnostics</div>
+                <div className="text-sm text-gray-600">Check for state issues</div>
               </Button>
             </CardContent>
           </Card>

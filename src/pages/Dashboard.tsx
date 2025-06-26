@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -23,13 +22,15 @@ import SupportSection from "@/components/dashboard/support/SupportSection";
 import { useAuth } from "@/context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Rocket, ArrowRight, CheckCircle } from "lucide-react";
+import { Rocket, ArrowRight, CheckCircle, RefreshCw } from "lucide-react";
 import CallynOutreachSystem from "@/components/dashboard/CallynOutreachSystem";
 import AICampaignBuilder from "@/components/dashboard/AICampaignBuilder";
 import { initializeDemoData } from "@/utils/demoDataUtils";
+import { recoverUserState, shouldHaveAccess } from "@/components/dashboard/sidebar/unlockConditions";
+import { toast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
-  const { isAuthenticated, userAgent, hasCompletedSetup, onboardingData, outreachData, updateProgressState, setOutreachData } = useAuth();
+  const { isAuthenticated, userAgent, hasCompletedSetup, onboardingData, outreachData, updateProgressState, setOutreachData, progressState } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -51,7 +52,9 @@ const Dashboard = () => {
   const [showOnboardingSuccess, setShowOnboardingSuccess] = useState(false);
   const [dashboardKey, setDashboardKey] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [showRecoveryBanner, setShowRecoveryBanner] = useState(false);
   
+  // Enhanced state checking
   useEffect(() => {
     // Redirect to login if not authenticated
     if (!isAuthenticated) {
@@ -61,7 +64,7 @@ const Dashboard = () => {
 
     // Initialize dashboard once
     if (!isInitialized) {
-      console.log("Dashboard: Initializing");
+      console.log("Dashboard: Enhanced initialization");
       
       // Check if user just completed onboarding
       if (location.state?.fromOnboarding && userAgent) {
@@ -86,9 +89,18 @@ const Dashboard = () => {
         initializeDemoData(updateProgressState, setOutreachData);
       }
       
+      // Check for state inconsistencies and offer recovery
+      const hasStoredAgent = localStorage.getItem('user_agent') && localStorage.getItem('user_agent') !== 'null';
+      const setupComplete = localStorage.getItem('setup_completed') === 'true';
+      
+      if (!userAgent && (hasStoredAgent || setupComplete)) {
+        console.log("🚨 State inconsistency detected - showing recovery banner");
+        setShowRecoveryBanner(true);
+      }
+      
       setIsInitialized(true);
     }
-  }, [isAuthenticated, userAgent, navigate, activeTab, location.state, outreachData, updateProgressState, setOutreachData, isInitialized]);
+  }, [isAuthenticated, userAgent, navigate, activeTab, location.state, outreachData, updateProgressState, setOutreachData, isInitialized, progressState]);
 
   // Force dashboard refresh when userAgent changes (but only after initialization)
   useEffect(() => {
@@ -98,8 +110,33 @@ const Dashboard = () => {
         agentId: userAgent?.id
       });
       setDashboardKey(prev => prev + 1);
+      
+      // Hide recovery banner if agent is now available
+      if (userAgent) {
+        setShowRecoveryBanner(false);
+      }
     }
   }, [userAgent, isInitialized]);
+
+  const handleRecoverState = async () => {
+    console.log("🔧 Dashboard state recovery initiated");
+    const recovered = recoverUserState(updateProgressState);
+    
+    if (recovered) {
+      setDashboardKey(prev => prev + 1);
+      setShowRecoveryBanner(false);
+      toast({
+        title: "State Recovered Successfully",
+        description: "Your agent has been restored and features should now be unlocked.",
+      });
+    } else {
+      toast({
+        title: "No Recoverable State Found",
+        description: "Please create a new agent to access dashboard features.",
+        variant: "destructive"
+      });
+    }
+  };
 
   if (!isAuthenticated) return null;
 
@@ -175,7 +212,7 @@ const Dashboard = () => {
         <DashboardSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <div className="flex-1 overflow-auto">
           <div className="container mx-auto py-8 px-4">
-            {/* Onboarding Success Banner */}
+            {/* Enhanced Onboarding Success Banner */}
             {showOnboardingSuccess && userAgent && (
               <div className="mb-6">
                 <Alert className="bg-green-50 border-green-200">
@@ -184,6 +221,37 @@ const Dashboard = () => {
                   <AlertDescription className="text-green-700">
                     Your AI agent "{userAgent.name}" is now live and ready to start making calls. 
                     Set up your first campaign below to begin generating leads.
+                  </AlertDescription>
+                </Alert>
+              </div>
+            )}
+
+            {/* State Recovery Banner */}
+            {showRecoveryBanner && (
+              <div className="mb-6">
+                <Alert className="bg-yellow-50 border-yellow-200">
+                  <RefreshCw className="h-4 w-4 text-yellow-600" />
+                  <AlertTitle className="text-yellow-800">State Recovery Available</AlertTitle>
+                  <AlertDescription className="text-yellow-700 flex items-center justify-between">
+                    <span>
+                      We detected you may have previously created an agent. Would you like to restore your settings?
+                    </span>
+                    <div className="flex gap-2 ml-4">
+                      <Button
+                        size="sm"
+                        onClick={handleRecoverState}
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white"
+                      >
+                        Recover Now
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setShowRecoveryBanner(false)}
+                      >
+                        Dismiss
+                      </Button>
+                    </div>
                   </AlertDescription>
                 </Alert>
               </div>

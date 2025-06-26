@@ -8,10 +8,12 @@ import {
   SidebarMenuButton 
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
-import { Lock, CheckCircle, AlertTriangle } from "lucide-react";
+import { Lock, CheckCircle, AlertTriangle, Info } from "lucide-react";
 import { MenuItem } from "./menuItems";
-import { checkUnlockConditions, shouldHaveAccess } from "./unlockConditions";
+import { checkUnlockConditions, shouldHaveAccess, diagnoseUnlockIssues, recoverUserState } from "./unlockConditions";
 import { UserAgent, ProgressState } from "@/context/types/authTypes";
+import { useAuth } from "@/context";
+import { toast } from "@/hooks/use-toast";
 
 interface SidebarMenuSectionProps {
   title?: string;
@@ -30,6 +32,8 @@ const SidebarMenuSection = ({
   userAgent, 
   progressState 
 }: SidebarMenuSectionProps) => {
+  const { updateProgressState } = useAuth();
+  
   console.log("🎛️ Enhanced SidebarMenuSection render:", {
     title,
     itemCount: items.length,
@@ -69,8 +73,37 @@ const SidebarMenuSection = ({
       onTabChange(item.id);
     } else {
       console.log("🔒 Item locked, requirements:", missingRequirements);
+      
+      // Enhanced user feedback with recovery options
+      const diagnostic = diagnoseUnlockIssues(userAgent, progressState);
+      
+      if (diagnostic.storedAgent && !diagnostic.hasAgent) {
+        // Attempt automatic recovery
+        console.log("🔄 Attempting automatic state recovery");
+        const recovered = recoverUserState(updateProgressState);
+        
+        if (recovered) {
+          toast({
+            title: "State Recovered",
+            description: "Your agent state has been restored. Please try again.",
+          });
+          return;
+        }
+      }
+      
       // Show helpful message for locked items
-      console.log("ℹ️ Would show unlock requirements:", missingRequirements[0]);
+      toast({
+        title: "Feature Locked",
+        description: missingRequirements[0] || "Complete agent setup to unlock this feature",
+        action: item.id !== 'your-agent' ? (
+          <button 
+            onClick={() => onTabChange('your-agent')}
+            className="text-sm underline"
+          >
+            Go to Agent Setup
+          </button>
+        ) : undefined
+      });
     }
   };
 
@@ -103,6 +136,10 @@ const SidebarMenuSection = ({
                   >
                     <Icon className={`h-4 w-4 ${isActive ? 'text-blue-600' : 'text-gray-500'}`} />
                     <span className="flex-1 text-left">{item.name}</span>
+                    {/* Entry point indicator */}
+                    <Badge variant="secondary" className="text-xs bg-green-100 text-green-700">
+                      Start Here
+                    </Badge>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               );
@@ -139,10 +176,9 @@ const SidebarMenuSection = ({
                   className={`
                     relative w-full justify-start gap-3 px-3 py-2
                     ${isActive ? 'bg-blue-100 text-blue-900 font-medium' : ''}
-                    ${!canAccess ? 'opacity-60 cursor-default' : 'cursor-pointer hover:bg-gray-100'}
+                    ${!canAccess ? 'opacity-60 cursor-pointer' : 'cursor-pointer hover:bg-gray-100'}
                     transition-all duration-200
                   `}
-                  disabled={!canAccess}
                 >
                   <Icon className={`h-4 w-4 ${isActive ? 'text-blue-600' : canAccess ? 'text-gray-500' : 'text-gray-400'}`} />
                   <span className="flex-1 text-left">{item.name}</span>
@@ -151,6 +187,7 @@ const SidebarMenuSection = ({
                   {!canAccess && (
                     <div className="flex items-center gap-1">
                       <Lock className="h-3 w-3 text-gray-400" />
+                      <Info className="h-3 w-3 text-blue-500" title="Click for setup guidance" />
                     </div>
                   )}
                   
