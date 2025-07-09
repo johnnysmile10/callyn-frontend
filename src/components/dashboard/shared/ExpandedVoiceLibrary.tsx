@@ -24,7 +24,7 @@ const AVAILABLE_VOICES: Voice[] = [
   },
   {
     id: "CwhRBWXzGAHq8TQ4Fs17",
-    name: "Roger", 
+    name: "Roger",
     gender: "Male",
     accent: "British",
     description: "Authoritative and clear"
@@ -32,7 +32,7 @@ const AVAILABLE_VOICES: Voice[] = [
   {
     id: "EXAVITQu4vr4xnSDxMaL",
     name: "Sarah",
-    gender: "Female", 
+    gender: "Female",
     accent: "Australian",
     description: "Friendly and approachable"
   },
@@ -40,7 +40,7 @@ const AVAILABLE_VOICES: Voice[] = [
     id: "IKne3meq5aSn9XLyUdCD",
     name: "Charlie",
     gender: "Male",
-    accent: "American", 
+    accent: "American",
     description: "Confident and engaging"
   },
   {
@@ -58,24 +58,61 @@ interface ExpandedVoiceLibraryProps {
   showTestingFeatures?: boolean;
 }
 
-const ExpandedVoiceLibrary = ({ 
-  selectedVoice, 
-  onVoiceSelect, 
-  showTestingFeatures = false 
+const ExpandedVoiceLibrary = ({
+  selectedVoice,
+  onVoiceSelect,
+  showTestingFeatures = false
 }: ExpandedVoiceLibraryProps) => {
+  const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
   const [playingVoice, setPlayingVoice] = useState<string | null>(null);
 
   const handleVoiceSelect = (voiceId: string) => {
     onVoiceSelect(voiceId);
   };
 
-  const handlePlayPreview = (voiceId: string) => {
+  const handlePlayPreview = async (voiceId: string) => {
+    console.log(voiceId)
     if (playingVoice === voiceId) {
       setPlayingVoice(null);
     } else {
       setPlayingVoice(voiceId);
-      // In a real implementation, this would play the voice preview
-      setTimeout(() => setPlayingVoice(null), 3000);
+      try {
+        const response = await fetch(
+          `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "xi-api-key": ELEVENLABS_API_KEY,
+            },
+            body: JSON.stringify({
+              text: "Hello! I'm calling from {company} to discuss how we can help your business grow.",
+              model_id: "eleven_monolingual_v1", // Or another appropriate model for your case
+              voice_settings: {
+                stability: 0.5,
+                similarity_boost: 0.5,
+              },
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch audio preview");
+        }
+
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+
+        const audio = new Audio(audioUrl);
+        audio.play();
+
+        audio.onended = () => {
+          setPlayingVoice(null);
+        };
+      } catch (error) {
+        console.error("Error playing voice preview:", error);
+        setPlayingVoice(null);
+      }
     }
   };
 
@@ -83,11 +120,10 @@ const ExpandedVoiceLibrary = ({
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {AVAILABLE_VOICES.map((voice) => (
-          <Card 
+          <Card
             key={voice.id}
-            className={`cursor-pointer transition-all hover:shadow-md ${
-              selectedVoice === voice.id ? "ring-2 ring-blue-500 bg-blue-50" : ""
-            }`}
+            className={`cursor-pointer transition-all hover:shadow-md ${selectedVoice === voice.id ? "ring-2 ring-blue-500 bg-blue-50" : ""
+              }`}
             onClick={() => handleVoiceSelect(voice.id)}
           >
             <CardHeader className="pb-3">
@@ -141,8 +177,8 @@ const ExpandedVoiceLibrary = ({
                 <span className="font-medium">Selected Voice: </span>
                 {AVAILABLE_VOICES.find(v => v.id === selectedVoice)?.name}
               </div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 onClick={() => handlePlayPreview(selectedVoice)}
               >

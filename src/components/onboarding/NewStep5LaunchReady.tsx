@@ -14,7 +14,7 @@ const NewStep5LaunchReady = ({ onboardingData }: NewStep5LaunchReadyProps) => {
   const [isLaunching, setIsLaunching] = useState(false);
   const [launchStage, setLaunchStage] = useState("");
   const navigate = useNavigate();
-  const { createUserAgent } = useAuth();
+  const { createUserAgent, user } = useAuth();
 
   const handleLaunch = async () => {
     setIsLaunching(true);

@@ -1,11 +1,22 @@
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CallRecord, CallLogStats } from "./types";
 import { mockCallData } from "./mockCallData";
+import { useAuth } from "@/context";
+import ApiService from "@/context/services/apiSErvice";
 
 export const useCallLogData = () => {
-  const calls: CallRecord[] = useMemo(() => 
-    mockCallData.calls.map(call => {
+  const { user } = useAuth()
+  const [calls, setCalls] = useState([])
+
+  useEffect(() => {
+    ApiService.get('/calls', { user_id: user.email }).then(data => {
+      setCalls(data)
+    })
+  }, [user])
+
+  const callRecords: CallRecord[] = useMemo(() => 
+    calls.map(call => {
       // Parse duration from string format (e.g., "2:30" to seconds)
       const durationParts = call.duration.split(':');
       const durationInSeconds = parseInt(durationParts[0]) * 60 + parseInt(durationParts[1]);
@@ -30,10 +41,10 @@ export const useCallLogData = () => {
         sentiment: call.outcome === 'booked' || call.outcome === 'interested' ? 'positive' : 
                   call.outcome === 'not-interested' ? 'negative' : 'neutral'
       };
-    }), []
+    }), [calls]
   );
 
-  return calls;
+  return callRecords;
 };
 
 export const useCallLogStats = (filteredCalls: CallRecord[]): CallLogStats => {

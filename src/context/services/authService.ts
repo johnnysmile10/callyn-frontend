@@ -1,5 +1,6 @@
 
 import { User, UserAgent, OnboardingData } from '../types/authTypes';
+import ApiService from './apiSErvice';
 
 export const authService = {
   login: async (email: string, password: string): Promise<User> => {
@@ -28,7 +29,7 @@ export const authService = {
     return newUser;
   },
 
-  createUserAgent: async (data: OnboardingData): Promise<UserAgent> => {
+  createUserAgent: async (data: OnboardingData, user_id: string): Promise<UserAgent | null> => {
     const newAgent: UserAgent = {
       id: `agent_${Date.now()}`,
       name: data.businessName || 'My AI Agent',
@@ -47,10 +48,36 @@ export const authService = {
       }
     };
 
-    localStorage.setItem('user_agent', JSON.stringify(newAgent));
+    const payload = {
+      user_id: user_id,
+      name: data.businessName || 'My AI Agent',
+      customScript: data.customScript || null,
+      model_provider: "openai",
+      model_id: "chatgpt-4o-latest",
+      voice_provider: "11labs",
+      voice_id: data.selectedVoice || "IKne3meq5aSn9XLyUdCD",
+      industry: data.industry || null,
+      targetAudience: data.targetAudience || null,
+      mainGoal: data.mainGoal || null,
+      scriptMethod: data.scriptMethod || null,
+      websiteUrl: data.websiteUrl || null,
+      uploadedFile: data.uploadedFile || null,
+      speakingSpeed: data.speakingSpeed || 1.0,
+      enthusiasm: data.enthusiasm || 5.0,
+      useSmallTalk: data.useSmallTalk || true,
+      handleObjections: data.handleObjections || true,
+      languageConfig: data.languageConfig || null,
+      selectedScenario: data.selectedScenario || null,
+      trainingMethod: data.trainingMethod || null,
+      voicePreview: data.voicePreview || null,
+    };
+
+    await ApiService.post('/create-assistant', payload);
+
+    // localStorage.setItem('user_agent', JSON.stringify(newAgent));
     localStorage.setItem('setup_completed', 'true');
     
-    console.log('Agent created successfully:', newAgent);
+    // console.log('Agent created successfully:', newAgent);
     return newAgent;
   },
 

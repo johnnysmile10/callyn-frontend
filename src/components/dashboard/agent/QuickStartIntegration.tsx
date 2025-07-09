@@ -18,35 +18,35 @@ interface QuickStartIntegrationProps {
 const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartIntegrationProps) => {
   const [showWizard, setShowWizard] = useState(false);
   const [isCreatingAgent, setIsCreatingAgent] = useState(false);
-  const { setUserAgent, setOnboardingData, markSetupCompleted, updateProgressState } = useAuth();
+  const { createUserAgent, setUserAgent, setOnboardingData, markSetupCompleted, updateProgressState } = useAuth();
 
   const handleWizardComplete = async (data: any) => {
     console.log("Quick Start wizard completed with enhanced data:", data);
     setIsCreatingAgent(true);
     
     try {
-      const agentId = `agent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      const currentTime = new Date().toISOString();
+      // const agentId = `agent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      // const currentTime = new Date().toISOString();
       
-      const newAgent: UserAgent = {
-        id: agentId,
-        name: data.businessName || "My AI Agent",
-        status: 'active',
-        createdAt: currentTime,
-        configuration: {
-          voice: data.selectedVoice || data.languageConfig?.voiceId || "9BWtsMINqrJLrRacOk9x",
-          personality: "professional",
-          script: data.script || "",
-          businessInfo: {
-            name: data.businessName || "",
-            industry: data.industry || "",
-            targetAudience: "prospects",
-            mainGoal: "generate leads"
-          }
-        }
-      };
+      // const newAgent: UserAgent = {
+      //   id: agentId,
+      //   name: data.businessName || "My AI Agent",
+      //   status: 'active',
+      //   createdAt: currentTime,
+      //   configuration: {
+      //     voice: data.selectedVoice || data.languageConfig?.voiceId || "9BWtsMINqrJLrRacOk9x",
+      //     personality: "professional",
+      //     script: data.script || "",
+      //     businessInfo: {
+      //       name: data.businessName || "",
+      //       industry: data.industry || "",
+      //       targetAudience: "prospects",
+      //       mainGoal: "generate leads"
+      //     }
+      //   }
+      // };
 
-      console.log("Created UserAgent object with language support:", newAgent);
+      // console.log("Created UserAgent object with language support:", newAgent);
 
       const onboardingData: OnboardingData = {
         businessName: data.businessName || "",
@@ -64,10 +64,11 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
         languageConfig: data.languageConfig
       };
 
-      console.log("Setting enhanced onboarding data with language config:", onboardingData);
+      // console.log("Setting enhanced onboarding data with language config:", onboardingData);
 
-      setOnboardingData(onboardingData);
-      setUserAgent(newAgent);
+      // setOnboardingData(onboardingData);
+      // setUserAgent(newAgent);
+      createUserAgent(onboardingData)
       markSetupCompleted();
       
       updateProgressState({

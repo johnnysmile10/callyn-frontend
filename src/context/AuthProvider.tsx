@@ -132,7 +132,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     console.log("AuthProvider: Creating user agent with enhanced language data:", data);
     
     try {
-      const newAgent = await authService.createUserAgent(data);
+      const newAgent = await authService.createUserAgent(data, user.email);
       console.log("AuthProvider: Successfully created agent with language support:", newAgent);
       
       setUserAgentStorage(newAgent);

@@ -19,7 +19,7 @@ import PersonalAgentManager from "@/components/dashboard/PersonalAgentManager";
 import LiveCallCenter from "@/components/dashboard/callcenter/LiveCallCenter";
 import DashboardPricingTable from "@/components/dashboard/DashboardPricingTable";
 import SupportSection from "@/components/dashboard/support/SupportSection";
-import { useAuth } from "@/context";
+import { OnboardingData, useAuth } from "@/context";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Rocket, ArrowRight, CheckCircle, RefreshCw } from "lucide-react";
@@ -28,9 +28,11 @@ import AICampaignBuilder from "@/components/dashboard/AICampaignBuilder";
 import { initializeDemoData } from "@/utils/demoDataUtils";
 import { recoverUserState, shouldHaveAccess } from "@/components/dashboard/sidebar/unlockConditions";
 import { toast } from "@/hooks/use-toast";
+import ApiService from "@/context/services/apiSErvice";
+import { getAgentFromOnboardingData } from "@/utils/agent";
 
 const Dashboard = () => {
-  const { isAuthenticated, userAgent, hasCompletedSetup, onboardingData, outreachData, updateProgressState, setOutreachData, progressState } = useAuth();
+  const { user, isAuthenticated, setUserAgent, userAgent, hasCompletedSetup, onboardingData, outreachData, updateProgressState, setOutreachData, progressState } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -117,6 +119,18 @@ const Dashboard = () => {
       }
     }
   }, [userAgent, isInitialized]);
+
+  useEffect(() => {
+    (async() => {
+      if (!user) return
+      const assistants = await ApiService.get('/assistants', {
+        user_id: user.email
+      });
+      if (assistants && assistants.length > 0) {
+        setUserAgent(getAgentFromOnboardingData(assistants[0] as OnboardingData))
+      }
+    })()
+  }, [user])
 
   const handleRecoverState = async () => {
     console.log("🔧 Dashboard state recovery initiated");
