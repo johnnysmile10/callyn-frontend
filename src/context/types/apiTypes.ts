@@ -1,0 +1,23 @@
+export interface ApiAgent {
+    id: string,
+    user_id?: string,
+    assistant_id?: string,
+    name: string,
+    voice: string,
+    model: string,
+    instructions?: string,
+    industry: string,
+    target_audience: string,
+    main_goal: string,
+    custom_script: string,
+    speaking_speed: number,
+    enthusiasm: number,
+    use_small_talk: boolean,
+    handle_objections: boolean,
+    tone: string,
+    formality: string,
+    scriptMethod: string,
+    websiteUrl: string | null,
+    uploadedFile: string | null,
+    timestamp?: string
+}

@@ -17,7 +17,7 @@ const FinalReviewStep = ({ onComplete, initialData, isCompleted }: FinalReviewSt
 
   const handleDeploy = async () => {
     setIsDeploying(true);
-    
+
     // Simulate deployment process
     setTimeout(() => {
       setIsDeploying(false);
@@ -28,7 +28,6 @@ const FinalReviewStep = ({ onComplete, initialData, isCompleted }: FinalReviewSt
 
   const handleEdit = (section: string) => {
     // Logic to go back to specific section for editing
-    console.log(`Edit ${section}`);
   };
 
   const summaryData = [
@@ -74,7 +73,7 @@ const FinalReviewStep = ({ onComplete, initialData, isCompleted }: FinalReviewSt
     }
   ];
 
-  const isReadyToDeploy = summaryData.every(section => 
+  const isReadyToDeploy = summaryData.every(section =>
     section.items.some(item => item.value !== "Not set" && item.value !== "No")
   );
 
@@ -116,11 +115,10 @@ const FinalReviewStep = ({ onComplete, initialData, isCompleted }: FinalReviewSt
                     {section.items.map((item, itemIndex) => (
                       <div key={itemIndex} className="flex justify-between text-xs">
                         <span className="text-gray-600">{item.label}:</span>
-                        <span className={`font-medium ${
-                          item.value === "Not set" || item.value === "No" 
-                            ? "text-red-500" 
+                        <span className={`font-medium ${item.value === "Not set" || item.value === "No"
+                            ? "text-red-500"
                             : "text-gray-900"
-                        }`}>
+                          }`}>
                           {item.value}
                         </span>
                       </div>
@@ -198,7 +196,7 @@ const FinalReviewStep = ({ onComplete, initialData, isCompleted }: FinalReviewSt
                 🎉 Agent Successfully Deployed!
               </h3>
               <p className="text-green-700 mb-6">
-                Your AI sales agent is now live and ready to start calling leads. 
+                Your AI sales agent is now live and ready to start calling leads.
                 You can monitor performance and make adjustments anytime.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">

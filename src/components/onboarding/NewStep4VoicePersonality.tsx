@@ -40,7 +40,6 @@ const NewStep4VoicePersonality = ({ handleNext, handleBack, onDataUpdate, initia
 
   const handleVoiceTest = (voiceId: string) => {
     // In a real implementation, this would play a voice sample
-    console.log(`Testing voice: ${voiceId}`);
     // For demo purposes, we'll just show a message
   };
 
@@ -53,7 +52,7 @@ const NewStep4VoicePersonality = ({ handleNext, handleBack, onDataUpdate, initia
       useSmallTalk,
       handleObjections
     };
-    
+
     onDataUpdate(data);
     handleNext();
   };
@@ -70,7 +69,7 @@ const NewStep4VoicePersonality = ({ handleNext, handleBack, onDataUpdate, initia
             Choose how Callyn sounds and behaves during calls. You can always adjust this later.
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-8">
           {/* Voice Selection */}
           <div>
@@ -79,11 +78,10 @@ const NewStep4VoicePersonality = ({ handleNext, handleBack, onDataUpdate, initia
               {voices.map((voice) => (
                 <div
                   key={voice.id}
-                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                    selectedVoice === voice.id
+                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedVoice === voice.id
                       ? "border-blue-500 bg-blue-50"
                       : "border-gray-200 hover:border-gray-300"
-                  }`}
+                    }`}
                   onClick={() => setSelectedVoice(voice.id)}
                 >
                   <div className="flex items-center justify-between mb-2">

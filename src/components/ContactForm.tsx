@@ -41,10 +41,9 @@ const ContactForm = () => {
   });
 
   function onSubmit(values: FormValues) {
-    console.log(values);
     setIsSubmitted(true);
     form.reset();
-    
+
     // Reset submission status after 5 seconds
     setTimeout(() => {
       setIsSubmitted(false);
@@ -122,18 +121,18 @@ const ContactForm = () => {
                       <FormItem>
                         <FormLabel className="text-rosie-darkPurple">Message</FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder="How can we help you?" 
-                            className="min-h-[120px]" 
-                            {...field} 
+                          <Textarea
+                            placeholder="How can we help you?"
+                            className="min-h-[120px]"
+                            {...field}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="w-full rounded-full bg-rosie-purple hover:bg-rosie-darkPurple text-white py-6"
                   >
                     Submit

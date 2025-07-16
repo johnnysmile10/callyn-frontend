@@ -1,10 +1,9 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { ProgressState } from '../types/authTypes';
-import { useLocalStorage } from './useLocalStorage';
 
 export const useProgressState = () => {
-  const [progressState, setProgressState] = useLocalStorage<ProgressState>('progress_state', {
+  const [progressState, setProgressState] = useState<ProgressState>({
     hasLeads: false,
     hasVoiceIntegration: false,
     hasCampaigns: false,
@@ -20,13 +19,12 @@ export const useProgressState = () => {
       hasCampaigns: false,
       agentConfigurationLevel: 'none' as const
     };
-    
-    const hasChanges = Object.entries(updates).some(([key, value]) => 
+
+    const hasChanges = Object.entries(updates).some(([key, value]) =>
       currentState[key as keyof ProgressState] !== value
     );
-    
+
     if (hasChanges) {
-      console.log("Progress state updating:", { current: currentState, updates });
       setProgressState({ ...currentState, ...updates });
     }
   }, [progressState, setProgressState]);
@@ -53,60 +51,55 @@ export const useProgressState = () => {
     if (detectionRunRef.current) {
       return;
     }
-    
+
     detectionRunRef.current = true;
-    
+
     const updates: Partial<ProgressState> = {};
-    
+
     // Enhanced voice detection - check for voice integration including language config and campaign builder
-    if (onboardingData?.selectedVoice || 
-        onboardingData?.languageConfig?.voiceId || 
-        onboardingData?.languageConfig?.primaryLanguage ||
-        campaignBuilderData?.voiceSettings?.voiceId ||
-        campaignBuilderData?.voiceSettings?.primaryLanguage) {
+    if (onboardingData?.selectedVoice ||
+      onboardingData?.languageConfig?.voiceId ||
+      onboardingData?.languageConfig?.primaryLanguage ||
+      campaignBuilderData?.voiceSettings?.voiceId ||
+      campaignBuilderData?.voiceSettings?.primaryLanguage) {
       updates.hasVoiceIntegration = true;
-      console.log("Voice integration detected via enhanced language config or campaign builder");
     }
-    
+
     // Enhanced lead detection to check campaign builder leadManagement structure
-    if (outreachData?.leadList?.length > 0 || 
-        campaignBuilderData?.leadManagement?.leadList?.length > 0) {
+    if (outreachData?.leadList?.length > 0 ||
+      campaignBuilderData?.leadManagement?.leadList?.length > 0) {
       updates.hasLeads = true;
-      console.log("Leads detected in outreach or campaign builder");
     }
-    
+
     // Check if campaigns should be marked as created
     if ((outreachData && (outreachData.targetAudience || outreachData.script || outreachData.scheduling)) ||
-        (campaignBuilderData && (campaignBuilderData.agentProfile || campaignBuilderData.targetAudience || campaignBuilderData.script))) {
+      (campaignBuilderData && (campaignBuilderData.agentProfile || campaignBuilderData.targetAudience || campaignBuilderData.script))) {
       updates.hasCampaigns = true;
     }
-    
+
     // Enhanced agent configuration level detection
     if (userAgent && userAgent.id) {
-      const hasBasicConfig = userAgent.configuration?.businessInfo?.name && 
-                           (userAgent.configuration?.voice || onboardingData?.selectedVoice);
-      
-      const hasLanguageConfig = onboardingData?.languageConfig?.primaryLanguage || 
-                               campaignBuilderData?.voiceSettings?.primaryLanguage;
-      const hasCompleteConfig = hasBasicConfig && 
-                              userAgent.configuration?.script && 
-                              userAgent.configuration?.personality &&
-                              hasLanguageConfig;
-      
+      const hasBasicConfig = userAgent.configuration?.businessInfo?.name &&
+        (userAgent.configuration?.voice || onboardingData?.selectedVoice);
+
+      const hasLanguageConfig = onboardingData?.languageConfig?.primaryLanguage ||
+        campaignBuilderData?.voiceSettings?.primaryLanguage;
+      const hasCompleteConfig = hasBasicConfig &&
+        userAgent.configuration?.script &&
+        userAgent.configuration?.personality &&
+        hasLanguageConfig;
+
       if (hasCompleteConfig) {
         updates.agentConfigurationLevel = 'complete';
-        console.log("Complete agent configuration detected (including language)");
       } else if (hasBasicConfig) {
         updates.agentConfigurationLevel = 'basic';
-        console.log("Basic agent configuration detected");
       }
     }
-    
+
     if (Object.keys(updates).length > 0) {
-      console.log("Enhanced smart detection found updates:", updates);
       updateProgressState(updates);
     }
-    
+
     setTimeout(() => {
       detectionRunRef.current = false;
     }, 1000);

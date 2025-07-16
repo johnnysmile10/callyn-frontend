@@ -8,9 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
-import { OnboardingData, useAuth } from "@/context";
-import ApiService from "@/context/services/apiSErvice";
-import { getAgentFromOnboardingData } from "@/utils/agent";
+import { useAuth } from "@/context";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -35,9 +33,9 @@ const LoginForm = () => {
   const onSubmit = async (data: FormValues) => {
     setLoading(true);
     try {
-      await login(data.email, data.password);
-      toast.success("Login successful!");
-      navigate("/dashboard");
+      await login(data.email, data.password).then(() => {
+        navigate("/dashboard");
+      });
     } catch (error) {
       toast.error("Login failed. Please try again.");
     } finally {
@@ -55,10 +53,10 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input 
-                  type="email" 
-                  placeholder="you@example.com" 
-                  {...field} 
+                <Input
+                  type="email"
+                  placeholder="you@example.com"
+                  {...field}
                   className="rounded-md py-5"
                 />
               </FormControl>
@@ -74,10 +72,10 @@ const LoginForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input 
-                  type="password" 
-                  placeholder="Enter your password" 
-                  {...field} 
+                <Input
+                  type="password"
+                  placeholder="Enter your password"
+                  {...field}
                   className="rounded-md py-5"
                 />
               </FormControl>
@@ -86,7 +84,7 @@ const LoginForm = () => {
           )}
         />
 
-        <Button 
+        <Button
           type="submit"
           className="w-full bg-callyn-blue hover:bg-callyn-darkBlue text-white rounded-full py-6 text-base font-medium"
           disabled={loading}

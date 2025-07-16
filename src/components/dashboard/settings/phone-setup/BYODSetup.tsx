@@ -7,11 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Download, 
-  Clock, 
-  CheckCircle, 
-  AlertCircle, 
+import {
+  Download,
+  Clock,
+  CheckCircle,
+  AlertCircle,
   FileText,
   Phone
 } from "lucide-react";
@@ -31,7 +31,6 @@ const BYODSetup = () => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsSubmitting(false);
-    console.log("Port request submitted");
   };
 
   const isFormValid = currentNumber && currentProvider && accountNumber;
@@ -151,7 +150,7 @@ const BYODSetup = () => {
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          <strong>Important:</strong> Make sure your current account is in good standing and that you are the authorized account holder. 
+          <strong>Important:</strong> Make sure your current account is in good standing and that you are the authorized account holder.
           The name on your current account must match the name on file for this service.
         </AlertDescription>
       </Alert>

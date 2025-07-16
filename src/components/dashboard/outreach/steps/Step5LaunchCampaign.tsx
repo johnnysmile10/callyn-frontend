@@ -16,16 +16,16 @@ interface Step5LaunchCampaignProps {
   onLaunch: () => void;
 }
 
-const Step5LaunchCampaign = ({ data, onUpdate, outreachData, onLaunch }: Step5LaunchCampaignProps) => {
+const Step5LaunchCampaign = ({ outreachData, onLaunch }: Step5LaunchCampaignProps) => {
   const { updateProgressState } = useAuth();
   const [isLaunching, setIsLaunching] = useState(false);
 
   const handleLaunchCampaign = async () => {
     setIsLaunching(true);
-    
+
     // Mark campaign as created when launching
     updateProgressState({ hasCampaigns: true });
-    
+
     // Simulate launch process
     setTimeout(() => {
       setIsLaunching(false);
@@ -36,25 +36,25 @@ const Step5LaunchCampaign = ({ data, onUpdate, outreachData, onLaunch }: Step5La
   const campaignSummary = createCampaignSummary(outreachData);
 
   const readinessChecks = [
-    { 
-      item: "Target Audience Defined", 
-      status: !!outreachData?.targetAudience, 
-      description: campaignSummary.targetAudience 
+    {
+      item: "Target Audience Defined",
+      status: !!outreachData?.targetAudience,
+      description: campaignSummary.targetAudience
     },
-    { 
-      item: "Lead List Imported", 
-      status: !!outreachData?.leadList && outreachData.leadList.length > 0, 
-      description: `${campaignSummary.leadCount} qualified leads` 
+    {
+      item: "Lead List Imported",
+      status: !!outreachData?.leadManagement?.leadList && outreachData.leadManagement.leadList.length > 0,
+      description: `${campaignSummary.leadCount} qualified leads`
     },
-    { 
-      item: "Script & Language", 
-      status: !!outreachData?.script, 
-      description: `${campaignSummary.scriptType} script in ${campaignSummary.language}` 
+    {
+      item: "Script & Language",
+      status: !!outreachData?.script,
+      description: `${campaignSummary.scriptType} script in ${campaignSummary.language}`
     },
-    { 
-      item: "Call Scheduling", 
-      status: !!outreachData?.scheduling, 
-      description: `${campaignSummary.callScheduling.hours}, ${campaignSummary.callScheduling.daysPerWeek}` 
+    {
+      item: "Call Scheduling",
+      status: !!outreachData?.callScheduling,
+      description: `${campaignSummary.callScheduling.hours}, ${campaignSummary.callScheduling.daysPerWeek}`
     },
   ];
 
@@ -63,8 +63,8 @@ const Step5LaunchCampaign = ({ data, onUpdate, outreachData, onLaunch }: Step5La
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <LaunchHeader />
-      
-      <ReadinessCheckList 
+
+      <ReadinessCheckList
         outreachData={outreachData}
         campaignSummary={campaignSummary}
       />

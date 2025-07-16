@@ -13,19 +13,19 @@ export interface OnboardingData {
   // Step 1 data
   selectedRole?: string;
   timeframe?: string;
-  
+
   // Step 2 data  
   businessName?: string;
   industry?: string;
   targetAudience?: string;
   mainGoal?: string;
-  
+
   // Step 3 data
   scriptMethod?: string;
   websiteUrl?: string;
   uploadedFile?: File | null;
   customScript?: string;
-  
+
   // Step 4 data
   selectedVoice?: string;
   personality?: string;
@@ -33,10 +33,10 @@ export interface OnboardingData {
   enthusiasm?: number;
   useSmallTalk?: boolean;
   handleObjections?: boolean;
-  
+
   // Language configuration
   languageConfig?: LanguageConfig;
-  
+
   // Legacy data for backward compatibility
   selectedScenario?: ScenarioProps | null;
   trainingMethod?: string | null;
@@ -51,10 +51,24 @@ export interface UserAgent {
   name: string;
   status: 'active' | 'inactive' | 'training';
   createdAt: string;
+  other: {
+    userId: string;
+    assistantId: string;
+  }
   configuration: {
     voice: string;
+    model: string;
     personality: string;
     script: string;
+    instructions: string;
+    speakingSpeed: number;
+    enthusiasm: number;
+    useSmallTalk: boolean;
+    handleObjections: boolean;
+    formality: string;
+    scriptMethod: string;
+    websiteUrl: string | null;
+    uploadedFile: string | null;
     businessInfo: {
       name: string;
       industry: string;
@@ -79,8 +93,8 @@ export interface AuthContextType {
   campaignBuilderData: any;
   setupCompleted: boolean;
   progressState: ProgressState;
-  isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginByToken: (token: string) => Promise<void>;
   googleLogin: () => Promise<void>;
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;

@@ -1,10 +1,10 @@
 
 import { useState } from "react";
-import { 
-  Target, 
-  Users, 
-  MessageSquare, 
-  Calendar, 
+import {
+  Target,
+  Users,
+  MessageSquare,
+  Calendar,
   Rocket
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,7 @@ const CallynOutreachSystem = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const { canProceedFromStep, getCurrentStepData, handleStepDataUpdate, outreachData } = useOutreachFlow();
-  
+
   const steps = [
     {
       id: 1,
@@ -36,7 +36,7 @@ const CallynOutreachSystem = () => {
     },
     {
       id: 2,
-      title: "Build Lead List", 
+      title: "Build Lead List",
       description: "Import or create your prospect database",
       icon: Users,
       component: Step2LeadList
@@ -81,8 +81,7 @@ const CallynOutreachSystem = () => {
       title: "🎉 Campaign Launched!",
       description: "Your AI outreach campaign is now live and making calls.",
     });
-    console.log("Launching campaign with outreach data", outreachData);
-    
+
     // Navigate to call log to show activity
     setTimeout(() => {
       navigate('/dashboard', { state: { activeTab: 'call-log' } });
@@ -93,12 +92,12 @@ const CallynOutreachSystem = () => {
 
   return (
     <div className="space-y-6">
-      <OutreachHeader 
+      <OutreachHeader
         currentStep={currentStep}
         totalSteps={steps.length}
       />
 
-      <StepProgressIndicator 
+      <StepProgressIndicator
         steps={steps}
         currentStep={currentStep}
       />
@@ -118,7 +117,7 @@ const CallynOutreachSystem = () => {
             onUpdate={(data) => handleStepDataUpdate(currentStep, data)}
           />
         )}
-        
+
         {currentStep !== 5 && (
           <StepNavigation
             currentStep={currentStep}

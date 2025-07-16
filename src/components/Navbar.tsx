@@ -5,7 +5,7 @@ import { useAuth } from "@/context";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Navbar = () => {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { logout, user } = useAuth();
 
   return (
     <nav className="bg-white py-4 px-6 md:px-10 flex justify-between items-center shadow-sm">
@@ -17,7 +17,7 @@ const Navbar = () => {
         <Link to="/#features" className="text-gray-700 hover:text-callyn-blue">Features</Link>
         <Link to="/#solutions" className="text-gray-700 hover:text-callyn-blue">Solutions</Link>
         <Link to="/#pricing" className="text-gray-700 hover:text-callyn-blue">Pricing</Link>
-        {isAuthenticated ? (
+        {!!user ? (
           <>
             <Link to="/dashboard" className="text-gray-700 hover:text-callyn-blue">Dashboard</Link>
             <button onClick={logout} className="text-gray-700 hover:text-callyn-blue">Logout</button>
@@ -26,15 +26,15 @@ const Navbar = () => {
           <Link to="/login" className="text-gray-700 hover:text-callyn-blue">Login</Link>
         )}
       </div>
-        
+
       <div className="hidden md:flex items-center gap-4">
         <Button variant="outline" className="rounded-full border-callyn-darkBlue text-callyn-darkBlue hover:text-white hover:bg-callyn-darkBlue">
           <Phone size={16} className="mr-2" />
           <span>Contact Sales</span>
         </Button>
-        {isAuthenticated ? (
-          <Button 
-            asChild 
+        {!!user ? (
+          <Button
+            asChild
             className="rounded-full bg-callyn-darkBlue hover:bg-callyn-blue text-white"
           >
             <Link to="/dashboard" className="flex items-center gap-2">
@@ -53,7 +53,7 @@ const Navbar = () => {
           </Button>
         )}
       </div>
-      
+
       <button className="md:hidden text-gray-700">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />

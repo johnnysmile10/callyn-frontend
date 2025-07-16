@@ -8,64 +8,64 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Play, Pause, Square, Plus, Calendar, Phone, Target, BarChart, Edit, Trash2 } from "lucide-react";
 
 // Mock campaign data
-const mockCampaigns = [
-  {
-    id: 1,
-    name: "Dental Practice Outreach",
-    status: "active",
-    leadList: "Dentists - Bergen County",
-    totalLeads: 238,
-    contacted: 89,
-    progress: 37,
-    startDate: "2024-01-15",
-    callsPerHour: 15,
-    agent: "Dr. Sarah AI",
-    outcomes: {
-      interested: 12,
-      notInterested: 45,
-      callbacks: 8,
-      noAnswer: 24
-    }
-  },
-  {
-    id: 2,
-    name: "B2B Software Demo Campaign",
-    status: "paused",
-    leadList: "B2B Software Leads",
-    totalLeads: 156,
-    contacted: 23,
-    progress: 15,
-    startDate: "2024-01-14",
-    callsPerHour: 12,
-    agent: "Tech Expert AI",
-    outcomes: {
-      interested: 8,
-      notInterested: 12,
-      callbacks: 2,
-      noAnswer: 1
-    }
-  },
-  {
-    id: 3,
-    name: "Real Estate Investment",
-    status: "completed",
-    leadList: "Real Estate Investors",
-    totalLeads: 89,
-    contacted: 89,
-    progress: 100,
-    startDate: "2024-01-10",
-    callsPerHour: 10,
-    agent: "Property AI",
-    outcomes: {
-      interested: 15,
-      notInterested: 58,
-      callbacks: 12,
-      noAnswer: 4
-    }
-  }
-];
+// const mockCampaigns = [
+//   {
+//     id: 1,
+//     name: "Dental Practice Outreach",
+//     status: "active",
+//     leadList: "Dentists - Bergen County",
+//     totalLeads: 238,
+//     contacted: 89,
+//     progress: 37,
+//     startDate: "2024-01-15",
+//     callsPerHour: 15,
+//     agent: "Dr. Sarah AI",
+//     outcomes: {
+//       interested: 12,
+//       notInterested: 45,
+//       callbacks: 8,
+//       noAnswer: 24
+//     }
+//   },
+//   {
+//     id: 2,
+//     name: "B2B Software Demo Campaign",
+//     status: "paused",
+//     leadList: "B2B Software Leads",
+//     totalLeads: 156,
+//     contacted: 23,
+//     progress: 15,
+//     startDate: "2024-01-14",
+//     callsPerHour: 12,
+//     agent: "Tech Expert AI",
+//     outcomes: {
+//       interested: 8,
+//       notInterested: 12,
+//       callbacks: 2,
+//       noAnswer: 1
+//     }
+//   },
+//   {
+//     id: 3,
+//     name: "Real Estate Investment",
+//     status: "completed",
+//     leadList: "Real Estate Investors",
+//     totalLeads: 89,
+//     contacted: 89,
+//     progress: 100,
+//     startDate: "2024-01-10",
+//     callsPerHour: 10,
+//     agent: "Property AI",
+//     outcomes: {
+//       interested: 15,
+//       notInterested: 58,
+//       callbacks: 12,
+//       noAnswer: 4
+//     }
+//   }
+// ];
 
-const CampaignsTab = () => {
+const CampaignsTab = ({ campaigns }) => {
   const [selectedCampaign, setSelectedCampaign] = useState<number | null>(null);
 
   const getStatusColor = (status: string) => {
@@ -97,7 +97,6 @@ const CampaignsTab = () => {
   };
 
   const handleCampaignAction = (id: number, action: string) => {
-    console.log(`Campaign ${id}: ${action}`);
     // Implementation would depend on the action
   };
 
@@ -124,13 +123,13 @@ const CampaignsTab = () => {
               <div className="ml-2">
                 <p className="text-sm font-medium text-muted-foreground">Active</p>
                 <p className="text-2xl font-bold">
-                  {mockCampaigns.filter(c => c.status === 'active').length}
+                  {campaigns.filter(c => c.status === 'active').length}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center">
@@ -138,13 +137,13 @@ const CampaignsTab = () => {
               <div className="ml-2">
                 <p className="text-sm font-medium text-muted-foreground">Total Calls</p>
                 <p className="text-2xl font-bold">
-                  {mockCampaigns.reduce((sum, c) => sum + c.contacted, 0)}
+                  {campaigns.reduce((sum, c) => sum + c.contacted, 0)}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center">
@@ -152,13 +151,13 @@ const CampaignsTab = () => {
               <div className="ml-2">
                 <p className="text-sm font-medium text-muted-foreground">Interested</p>
                 <p className="text-2xl font-bold">
-                  {mockCampaigns.reduce((sum, c) => sum + c.outcomes.interested, 0)}
+                  {campaigns.reduce((sum, c) => sum + c.outcomes.interested, 0)}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center">
@@ -166,8 +165,8 @@ const CampaignsTab = () => {
               <div className="ml-2">
                 <p className="text-sm font-medium text-muted-foreground">Conversion</p>
                 <p className="text-2xl font-bold">
-                  {Math.round((mockCampaigns.reduce((sum, c) => sum + c.outcomes.interested, 0) / 
-                    mockCampaigns.reduce((sum, c) => sum + c.contacted, 0)) * 100)}%
+                  {Math.round((campaigns.reduce((sum, c) => sum + c.outcomes.interested, 0) /
+                    campaigns.reduce((sum, c) => sum + c.contacted, 0)) * 100)}%
                 </p>
               </div>
             </div>
@@ -196,7 +195,7 @@ const CampaignsTab = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockCampaigns.map((campaign) => (
+              {campaigns.map((campaign) => (
                 <TableRow key={campaign.id} className="hover:bg-gray-50">
                   <TableCell>
                     <div>

@@ -1,7 +1,16 @@
 import axios from 'axios';
+import { toast } from 'sonner';
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_SERVER_URL
+  baseURL: import.meta.env.VITE_SERVER_URL
+})
+
+api.interceptors.response.use((res) => {
+  if (res.status === 401) {
+    toast.error('Not authorized');
+    ApiService.setToken(null);
+  }
+  return res;
 })
 
 class ApiService {
@@ -42,6 +51,14 @@ class ApiService {
     } catch (error) {
       console.error('DELETE request failed:', error);
       throw error;
+    }
+  }
+
+  static setToken(token: string | null) {
+    if (!token) {
+      delete api.defaults.headers['Authorization']
+    } else {
+      api.defaults.headers['Authorization'] = `Bearer ${token}`;
     }
   }
 }

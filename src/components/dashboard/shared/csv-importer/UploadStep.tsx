@@ -5,6 +5,7 @@ import { Upload, Download, FileText } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { CSVRow } from './types';
 import { REQUIRED_FIELDS } from './constants';
+import ApiService from "@/context/services/apiService";
 
 interface UploadStepProps {
   onCSVParsed: (headers: string[], data: CSVRow[]) => void;
@@ -71,7 +72,7 @@ const UploadStep = ({ onCSVParsed }: UploadStepProps) => {
       'John Doe,(555) 123-4567,john@example.com,Acme Corp,Sales Manager,Technology,Interested in solar solutions',
       'Jane Smith,(555) 987-6543,jane@sample.com,Sample LLC,CEO,Healthcare,Follow up next week'
     ].join('\n');
-    
+
     const csvContent = headers + '\n' + sampleData;
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -92,7 +93,7 @@ const UploadStep = ({ onCSVParsed }: UploadStepProps) => {
             Select a CSV file containing your lead information
           </p>
         </div>
-        <Button 
+        <Button
           onClick={() => fileInputRef.current?.click()}
           className="mt-4 bg-blue-600 hover:bg-blue-700"
         >
@@ -112,8 +113,8 @@ const UploadStep = ({ onCSVParsed }: UploadStepProps) => {
           <FileText className="h-5 w-5 text-blue-600" />
           <span className="font-medium">Need a template?</span>
         </div>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           size="sm"
           onClick={downloadTemplate}
           className="flex items-center gap-2"

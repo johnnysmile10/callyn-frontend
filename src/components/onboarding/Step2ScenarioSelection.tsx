@@ -27,7 +27,6 @@ const Step2ScenarioSelection = ({
 
   const handlePlayAudio = (scenario: ScenarioProps) => {
     // In a real implementation, this would actually play audio
-    console.log(`Playing scenario: ${scenario.title}`);
   };
 
   const handleCustomPlayClick = () => {
@@ -38,7 +37,6 @@ const Step2ScenarioSelection = ({
     }
     setWordCountError(false);
     setIsCustomPlaying(!isCustomPlaying);
-    console.log(`Playing custom script: ${customScript}`);
   };
 
   const wordCount = customScript.trim().split(/\s+/).length;
@@ -48,12 +46,12 @@ const Step2ScenarioSelection = ({
       <h2 className="text-2xl font-bold text-callyn-darkBlue mb-6 text-center">
         STEP 2: Pick Your Sales Script + Hear Voice
       </h2>
-      
+
       <div className="mt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {salesScenarios.map((scenario, index) => (
-            <ScenarioCard 
-              key={index} 
+            <ScenarioCard
+              key={index}
               scenario={scenario}
               isSelected={selectedScenario?.title === scenario.title}
               onSelect={handleScenarioSelect}
@@ -62,15 +60,15 @@ const Step2ScenarioSelection = ({
           ))}
         </div>
       </div>
-      
+
       <div className="mt-8 max-w-2xl mx-auto">
         <div className="mb-2">
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Want to try your own sales script? Paste it here (max 50 words):
           </label>
           <div className="flex items-start gap-2">
-            <Textarea 
-              value={customScript} 
+            <Textarea
+              value={customScript}
               onChange={(e) => setCustomScript(e.target.value)}
               className={`flex-1 ${wordCountError ? 'border-red-500' : ''}`}
               placeholder="Enter your custom script here..."
@@ -98,17 +96,17 @@ const Step2ScenarioSelection = ({
           </div>
         </div>
       </div>
-      
+
       <div className="mt-12 text-center flex flex-col items-center">
         <div>
-          <Button 
+          <Button
             onClick={handleBack}
             variant="outline"
             className="rounded-full px-8 py-2 text-lg font-medium mr-4"
           >
             Back
           </Button>
-          <Button 
+          <Button
             onClick={handleNext}
             variant="default"
             className="rounded-full px-8 py-2 text-lg font-medium bg-callyn-blue hover:bg-callyn-blue/90 transition-all transform hover:scale-105"

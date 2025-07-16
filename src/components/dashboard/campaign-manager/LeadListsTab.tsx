@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,37 +9,37 @@ import { Upload, Plus, Search, Filter, Download, Users, FileText, CheckCircle, A
 import { useToast } from "@/hooks/use-toast";
 
 // Mock data for lead lists
-const mockLeadLists = [
-  {
-    id: 1,
-    name: "Dentists - Bergen County",
-    count: 238,
-    status: "active",
-    lastUsed: "2 hours ago",
-    tags: ["Healthcare", "New Jersey"],
-    uploadDate: "2024-01-15"
-  },
-  {
-    id: 2,
-    name: "B2B Software Leads",
-    count: 156,
-    status: "processing",
-    lastUsed: "Yesterday",
-    tags: ["B2B", "Software"],
-    uploadDate: "2024-01-14"
-  },
-  {
-    id: 3,
-    name: "Real Estate Investors",
-    count: 89,
-    status: "active",
-    lastUsed: "3 days ago",
-    tags: ["Real Estate", "Investment"],
-    uploadDate: "2024-01-12"
-  }
-];
+// const mockLeadLists = [
+//   {
+//     id: 1,
+//     name: "Dentists - Bergen County",
+//     count: 238,
+//     status: "active",
+//     lastUsed: "2 hours ago",
+//     tags: ["Healthcare", "New Jersey"],
+//     uploadDate: "2024-01-15"
+//   },
+//   {
+//     id: 2,
+//     name: "B2B Software Leads",
+//     count: 156,
+//     status: "processing",
+//     lastUsed: "Yesterday",
+//     tags: ["B2B", "Software"],
+//     uploadDate: "2024-01-14"
+//   },
+//   {
+//     id: 3,
+//     name: "Real Estate Investors",
+//     count: 89,
+//     status: "active",
+//     lastUsed: "3 days ago",
+//     tags: ["Real Estate", "Investment"],
+//     uploadDate: "2024-01-12"
+//   }
+// ];
 
-const LeadListsTab = () => {
+const LeadListsTab = ({ campaigns }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isDragging, setIsDragging] = useState(false);
   const { toast } = useToast();
@@ -57,7 +57,7 @@ const LeadListsTab = () => {
   const handleFileDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
       handleFileUpload(file);
@@ -83,10 +83,18 @@ const LeadListsTab = () => {
     }
   };
 
-  const filteredLists = mockLeadLists.filter(list =>
-    list.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    list.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredLists = useMemo(() => {
+    return campaigns.filter(campaign =>
+      campaign.name.toLowerCase().includes(searchTerm.toLowerCase())
+    ).map(campaign => ({
+      id: campaign.id,
+      name: campaign.name,
+      status: campaign.status,
+      tags: [],
+      count: campaign.totalLeads,
+      lastUsed: campaign.updateDate
+    }));
+  }, [searchTerm, campaigns])
 
   return (
     <div className="space-y-6">
@@ -197,10 +205,9 @@ const LeadListsTab = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div 
-                className={`border-2 border-dashed rounded-lg p-6 text-center transition-all cursor-pointer ${
-                  isDragging ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
-                }`}
+              <div
+                className={`border-2 border-dashed rounded-lg p-6 text-center transition-all cursor-pointer ${isDragging ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-gray-400'
+                  }`}
                 onDragOver={handleFileDragOver}
                 onDragLeave={handleFileDragLeave}
                 onDrop={handleFileDrop}
@@ -237,18 +244,18 @@ const LeadListsTab = () => {
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Total Lists</span>
-                <span className="font-semibold">{mockLeadLists.length}</span>
+                <span className="font-semibold">{campaigns.length}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Total Leads</span>
                 <span className="font-semibold">
-                  {mockLeadLists.reduce((sum, list) => sum + list.count, 0).toLocaleString()}
+                  {campaigns.reduce((sum, list) => sum + list.count, 0).toLocaleString()}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm text-gray-600">Active Lists</span>
                 <span className="font-semibold">
-                  {mockLeadLists.filter(list => list.status === 'active').length}
+                  {campaigns.filter(list => list.status === 'active').length}
                 </span>
               </div>
             </CardContent>

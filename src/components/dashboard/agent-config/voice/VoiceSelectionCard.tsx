@@ -19,12 +19,12 @@ interface VoiceSelectionCardProps {
 }
 
 const voices: Voice[] = [
-  { id: "Aria", name: "Aria", gender: "female", accent: "American" },
-  { id: "Roger", name: "Roger", gender: "male", accent: "American" },
-  { id: "Sarah", name: "Sarah", gender: "female", accent: "British" },
-  { id: "Charlie", name: "Charlie", gender: "male", accent: "British" },
-  { id: "Laura", name: "Laura", gender: "female", accent: "American" },
-  { id: "Liam", name: "Liam", gender: "male", accent: "Irish" }
+  { id: "9BWtsMINqrJLrRacOk9x", name: "Aria", gender: "female", accent: "American" },
+  { id: "CwhRBWXzGAHq8TQ4Fs17", name: "Roger", gender: "male", accent: "American" },
+  { id: "EXAVITQu4vr4xnSDxMaL", name: "Sarah", gender: "female", accent: "British" },
+  { id: "IKne3meq5aSn9XLyUdCD", name: "Charlie", gender: "male", accent: "British" },
+  { id: "FGY2WhTYpPnrIDTdsKH5", name: "Laura", gender: "female", accent: "American" },
+  { id: "TX3LPaxmHKxFdv7VOQHJ", name: "Liam", gender: "male", accent: "Irish" }
 ];
 
 const VoiceSelectionCard = ({ selectedVoice, onVoiceChange }: VoiceSelectionCardProps) => {
@@ -57,11 +57,10 @@ const VoiceSelectionCard = ({ selectedVoice, onVoiceChange }: VoiceSelectionCard
           {voices.map((voice) => (
             <div
               key={voice.id}
-              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                selectedVoice === voice.id
+              className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${selectedVoice === voice.id
                   ? 'border-blue-500 bg-blue-50'
                   : 'border-gray-200 hover:border-gray-300'
-              }`}
+                }`}
               onClick={() => onVoiceChange(voice.id)}
             >
               <div className="flex items-center justify-between mb-2">

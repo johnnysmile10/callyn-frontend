@@ -1,11 +1,11 @@
 
-import { 
-  SidebarGroup, 
-  SidebarGroupLabel, 
-  SidebarGroupContent, 
-  SidebarMenu, 
-  SidebarMenuItem, 
-  SidebarMenuButton 
+import {
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton
 } from "@/components/ui/sidebar";
 import { Badge } from "@/components/ui/badge";
 import { Lock, CheckCircle, AlertTriangle, Info } from "lucide-react";
@@ -24,31 +24,19 @@ interface SidebarMenuSectionProps {
   progressState: ProgressState;
 }
 
-const SidebarMenuSection = ({ 
-  title, 
-  items, 
-  activeTab, 
-  onTabChange, 
-  userAgent, 
-  progressState 
+const SidebarMenuSection = ({
+  title,
+  items,
+  activeTab,
+  onTabChange,
+  userAgent,
+  progressState
 }: SidebarMenuSectionProps) => {
   const { updateProgressState } = useAuth();
-  
-  console.log("🎛️ Enhanced SidebarMenuSection render:", {
-    title,
-    itemCount: items.length,
-    activeTab,
-    hasUserAgent: !!userAgent,
-    progressState,
-    shouldHaveGlobalAccess: shouldHaveAccess(userAgent, progressState)
-  });
 
   const handleMenuClick = (item: MenuItem) => {
-    console.log("🖱️ Enhanced menu item clicked:", item.name, "ID:", item.id);
-    
     // Always allow access to "your-agent" - it's the entry point
     if (item.id === 'your-agent') {
-      console.log("✅ Your-agent always accessible");
       onTabChange(item.id);
       return;
     }
@@ -56,32 +44,27 @@ const SidebarMenuSection = ({
     // Check global access first
     const hasGlobalAccess = shouldHaveAccess(userAgent, progressState);
     if (hasGlobalAccess) {
-      console.log("✅ Global access granted, allowing navigation");
       onTabChange(item.id);
       return;
     }
-    
+
     // Check specific unlock conditions
     const { isUnlocked, missingRequirements } = checkUnlockConditions(
-      item.unlockConditions || [], 
-      userAgent, 
+      item.unlockConditions || [],
+      userAgent,
       progressState
     );
 
     if (isUnlocked) {
-      console.log("✅ Item unlocked via conditions, changing tab to:", item.id);
       onTabChange(item.id);
     } else {
-      console.log("🔒 Item locked, requirements:", missingRequirements);
-      
       // Enhanced user feedback with recovery options
       const diagnostic = diagnoseUnlockIssues(userAgent, progressState);
-      
+
       if (diagnostic.storedAgent && !diagnostic.hasAgent) {
         // Attempt automatic recovery
-        console.log("🔄 Attempting automatic state recovery");
         const recovered = recoverUserState(updateProgressState);
-        
+
         if (recovered) {
           toast({
             title: "State Recovered",
@@ -90,13 +73,13 @@ const SidebarMenuSection = ({
           return;
         }
       }
-      
+
       // Show helpful message for locked items
       toast({
         title: "Feature Locked",
         description: missingRequirements[0] || "Complete agent setup to unlock this feature",
         action: item.id !== 'your-agent' ? (
-          <button 
+          <button
             onClick={() => onTabChange('your-agent')}
             className="text-sm underline"
           >
@@ -119,7 +102,7 @@ const SidebarMenuSection = ({
           {items.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
-            
+
             // Always allow access to "your-agent"
             if (item.id === 'your-agent') {
               return (
@@ -147,26 +130,16 @@ const SidebarMenuSection = ({
 
             // Check global access for other items
             const hasGlobalAccess = shouldHaveAccess(userAgent, progressState);
-            
+
             // Check unlock status for items with conditions
             const { isUnlocked, missingRequirements } = checkUnlockConditions(
-              item.unlockConditions || [], 
-              userAgent, 
+              item.unlockConditions || [],
+              userAgent,
               progressState
             );
 
             // Determine if item should be accessible
             const canAccess = hasGlobalAccess || isUnlocked || !item.unlockConditions || item.unlockConditions.length === 0;
-            
-            console.log(`🔍 Enhanced menu item "${item.name}":`, {
-              id: item.id,
-              isActive,
-              hasGlobalAccess,
-              isUnlocked,
-              canAccess,
-              hasConditions: (item.unlockConditions || []).length > 0,
-              missingRequirements
-            });
 
             return (
               <SidebarMenuItem key={item.id}>
@@ -182,7 +155,7 @@ const SidebarMenuSection = ({
                 >
                   <Icon className={`h-4 w-4 ${isActive ? 'text-blue-600' : canAccess ? 'text-gray-500' : 'text-gray-400'}`} />
                   <span className="flex-1 text-left">{item.name}</span>
-                  
+
                   {/* Enhanced status indicators */}
                   {!canAccess && (
                     <div className="flex items-center gap-1">
@@ -190,7 +163,7 @@ const SidebarMenuSection = ({
                       <Info className="h-3 w-3 text-blue-500" />
                     </div>
                   )}
-                  
+
                   {canAccess && hasGlobalAccess && (
                     <CheckCircle className="h-3 w-3 text-green-500" />
                   )}

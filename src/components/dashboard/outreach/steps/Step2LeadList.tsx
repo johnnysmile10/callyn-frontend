@@ -19,12 +19,12 @@ const Step2LeadList = ({ data, onUpdate }: Step2LeadListProps) => {
   const [newLead, setNewLead] = useState({
     name: "",
     company: "",
-    phone: "",
+    number: "",
     email: ""
   });
 
   const addManualLead = () => {
-    if (!newLead.name || !newLead.phone) {
+    if (!newLead.name || !newLead.number) {
       toast({
         title: "Missing Information",
         description: "Name and phone number are required",
@@ -37,7 +37,7 @@ const Step2LeadList = ({ data, onUpdate }: Step2LeadListProps) => {
       id: `lead_${Date.now()}`,
       name: newLead.name,
       company: newLead.company || undefined,
-      phone: newLead.phone,
+      number: newLead.number,
       email: newLead.email || undefined,
       status: 'new',
       source: 'manual',
@@ -46,8 +46,8 @@ const Step2LeadList = ({ data, onUpdate }: Step2LeadListProps) => {
     };
 
     onUpdate([...data, lead]);
-    setNewLead({ name: "", company: "", phone: "", email: "" });
-    
+    setNewLead({ name: "", company: "", number: "", email: "" });
+
     toast({
       title: "Lead Added",
       description: "Lead has been added to your list"
@@ -67,23 +67,23 @@ const Step2LeadList = ({ data, onUpdate }: Step2LeadListProps) => {
       const csv = e.target?.result as string;
       const lines = csv.split('\n');
       const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
-      
+
       const newLeads: LeadRecord[] = [];
-      
+
       for (let i = 1; i < lines.length; i++) {
         const values = lines[i].split(',').map(v => v.trim());
         if (values.length < 2) continue;
-        
+
         const nameIndex = headers.findIndex(h => h.includes('name'));
-        const phoneIndex = headers.findIndex(h => h.includes('phone'));
+        const phoneIndex = headers.findIndex(h => h.includes('number'));
         const emailIndex = headers.findIndex(h => h.includes('email'));
         const companyIndex = headers.findIndex(h => h.includes('company'));
-        
+
         if (nameIndex >= 0 && phoneIndex >= 0 && values[nameIndex] && values[phoneIndex]) {
           newLeads.push({
             id: `lead_${Date.now()}_${i}`,
             name: values[nameIndex],
-            phone: values[phoneIndex],
+            number: values[phoneIndex],
             email: emailIndex >= 0 ? values[emailIndex] : undefined,
             company: companyIndex >= 0 ? values[companyIndex] : undefined,
             status: 'new',
@@ -93,19 +93,19 @@ const Step2LeadList = ({ data, onUpdate }: Step2LeadListProps) => {
           });
         }
       }
-      
+
       onUpdate([...data, ...newLeads]);
       toast({
         title: "CSV Imported",
         description: `${newLeads.length} leads imported successfully`
       });
     };
-    
+
     reader.readAsText(file);
   };
 
   const downloadTemplate = () => {
-    const csvContent = "name,phone,email,company\nJohn Doe,+1234567890,john@example.com,Example Corp";
+    const csvContent = "name,number,email,company\nJohn Doe,+1234567890,john@example.com,Example Corp";
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -132,7 +132,7 @@ const Step2LeadList = ({ data, onUpdate }: Step2LeadListProps) => {
             <TabsTrigger value="import">Import Leads</TabsTrigger>
             <TabsTrigger value="manual">Add Manually</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="import" className="space-y-4">
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
               <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -163,7 +163,7 @@ const Step2LeadList = ({ data, onUpdate }: Step2LeadListProps) => {
               </div>
             </div>
           </TabsContent>
-          
+
           <TabsContent value="manual" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -176,11 +176,11 @@ const Step2LeadList = ({ data, onUpdate }: Step2LeadListProps) => {
                 />
               </div>
               <div>
-                <Label htmlFor="phone">Phone *</Label>
+                <Label htmlFor="number">Phone *</Label>
                 <Input
-                  id="phone"
-                  value={newLead.phone}
-                  onChange={(e) => setNewLead({ ...newLead, phone: e.target.value })}
+                  id="number"
+                  value={newLead.number}
+                  onChange={(e) => setNewLead({ ...newLead, number: e.target.value })}
                   placeholder="+1 (555) 123-4567"
                 />
               </div>
@@ -223,7 +223,7 @@ const Step2LeadList = ({ data, onUpdate }: Step2LeadListProps) => {
                   <div>
                     <div className="font-medium">{lead.name}</div>
                     <div className="text-sm text-gray-600">
-                      {lead.phone} {lead.email && `• ${lead.email}`} {lead.company && `• ${lead.company}`}
+                      {lead.number} {lead.email && `• ${lead.email}`} {lead.company && `• ${lead.company}`}
                     </div>
                   </div>
                   <Button

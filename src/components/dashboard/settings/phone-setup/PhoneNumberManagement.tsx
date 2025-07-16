@@ -1,19 +1,21 @@
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  CheckCircle, 
-  Copy, 
-  ExternalLink, 
-  Phone, 
+import {
+  CheckCircle,
+  Copy,
+  ExternalLink,
+  Phone,
   Clock,
   Download,
   AlertTriangle,
   Settings
 } from "lucide-react";
+import ApiService from "@/context/services/apiService";
+import { date2Str } from "@/lib/utils";
 
 interface PhoneNumber {
   id: string;
@@ -30,31 +32,46 @@ interface PhoneNumber {
   };
 }
 
-const PhoneNumberManagement = () => {
+type PhoneNumberManagementProps = {
+  numbers: any[]
+}
+
+// [
+//   {
+//     id: "1",
+//     number: "+1 (555) 123-4567",
+//     status: "active",
+//     type: "provisioned",
+//     activatedAt: "Dec 15, 2024",
+//     monthlyRate: "$1.00"
+//   },
+//   {
+//     id: "2",
+//     number: "+1 (555) 987-6543",
+//     status: "porting",
+//     type: "ported",
+//     monthlyRate: "$1.00",
+//     portingProgress: {
+//       step: 2,
+//       totalSteps: 4,
+//       currentStatus: "Awaiting carrier approval",
+//       estimatedCompletion: "Dec 22, 2024"
+//     }
+//   }
+// ]
+
+const PhoneNumberManagement = ({ numbers }: PhoneNumberManagementProps) => {
   // Mock data - in real app this would come from backend
-  const [phoneNumbers] = useState<PhoneNumber[]>([
-    {
-      id: "1",
-      number: "+1 (555) 123-4567",
-      status: "active",
-      type: "provisioned",
-      activatedAt: "Dec 15, 2024",
+  const phoneNumbers = useMemo(() => {
+    return numbers.map(item => ({
+      id: item.id,
+      number: item.number,
+      status: item.status,
+      type: 'provisioned',
+      activatedAt: date2Str(new Date(item.createdAt)),
       monthlyRate: "$1.00"
-    },
-    {
-      id: "2", 
-      number: "+1 (555) 987-6543",
-      status: "porting",
-      type: "ported",
-      monthlyRate: "$1.00",
-      portingProgress: {
-        step: 2,
-        totalSteps: 4,
-        currentStatus: "Awaiting carrier approval",
-        estimatedCompletion: "Dec 22, 2024"
-      }
-    }
-  ]);
+    }))
+  }, [numbers])
 
   const copyToClipboard = (number: string) => {
     navigator.clipboard.writeText(number);
@@ -128,7 +145,7 @@ const PhoneNumberManagement = () => {
               </div>
 
               {/* Porting Progress */}
-              {phoneNumber.status === "porting" && phoneNumber.portingProgress && (
+              {/* {phoneNumber.status === "porting" && phoneNumber.portingProgress && (
                 <Alert className="border-blue-200 bg-blue-50">
                   <Clock className="h-4 w-4 text-blue-600" />
                   <AlertDescription>
@@ -140,8 +157,8 @@ const PhoneNumberManagement = () => {
                         </span>
                       </div>
                       <div className="w-full bg-blue-200 rounded-full h-2">
-                        <div 
-                          className="bg-blue-600 h-2 rounded-full" 
+                        <div
+                          className="bg-blue-600 h-2 rounded-full"
                           style={{ width: `${(phoneNumber.portingProgress.step / phoneNumber.portingProgress.totalSteps) * 100}%` }}
                         ></div>
                       </div>
@@ -154,7 +171,7 @@ const PhoneNumberManagement = () => {
                     </div>
                   </AlertDescription>
                 </Alert>
-              )}
+              )} */}
             </div>
           </CardContent>
         </Card>

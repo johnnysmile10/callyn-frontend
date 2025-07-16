@@ -23,7 +23,7 @@ interface BasicGatewaySettings {
 
 const EliteGatewaySetupCard = () => {
   const { toast } = useToast();
-  
+
   // Basic gateway settings state
   const [basicSettings, setBasicSettings] = useState<BasicGatewaySettings>({
     phoneSystemType: 'ivr',
@@ -31,7 +31,7 @@ const EliteGatewaySetupCard = () => {
     firstAction: 'press_1',
     fallbackAction: 'press_0'
   });
-  
+
   // Mock Elite gateway setup data
   const [eliteGatewaySetup, setEliteGatewaySetup] = useState<EliteGatewaySetup>({
     id: 'elite_gateway_1',
@@ -58,9 +58,6 @@ const EliteGatewaySetupCard = () => {
   };
 
   const handleSave = () => {
-    console.log('Saving Elite gateway setup:', eliteGatewaySetup);
-    console.log('Saving basic settings:', basicSettings);
-    
     toast({
       title: "Elite Gateway Setup Saved",
       description: "Your advanced gateway configuration has been saved with AI learning enabled.",
@@ -105,7 +102,7 @@ const EliteGatewaySetupCard = () => {
             </Badge>
           </CardTitle>
           <CardDescription>
-            Advanced AI-powered gateway navigation with multi-language support, voice recognition, 
+            Advanced AI-powered gateway navigation with multi-language support, voice recognition,
             adaptive learning, and real-time optimization for maximum call success rates.
           </CardDescription>
         </CardHeader>
@@ -114,7 +111,7 @@ const EliteGatewaySetupCard = () => {
           <Alert className="bg-gradient-to-r from-purple-50 to-indigo-50 border-purple-200">
             <Sparkles className="h-4 w-4 text-purple-600" />
             <AlertDescription>
-              <strong>Elite Features Active:</strong> AI Gateway Optimization Enabled. Describe your phone system, 
+              <strong>Elite Features Active:</strong> AI Gateway Optimization Enabled. Describe your phone system,
               and let the AI build your path through.
             </AlertDescription>
           </Alert>
@@ -154,7 +151,7 @@ const EliteGatewaySetupCard = () => {
             <TabsContent value="menu-options" className="space-y-4">
               <EliteMenuOptionsManager
                 gatewaySetup={eliteGatewaySetup}
-                onMenuOptionsChange={(options) => 
+                onMenuOptionsChange={(options) =>
                   setEliteGatewaySetup(prev => ({ ...prev, menuOptions: options, updatedAt: new Date() }))
                 }
               />
@@ -169,7 +166,7 @@ const EliteGatewaySetupCard = () => {
             </TabsContent>
 
             <TabsContent value="settings" className="space-y-4">
-              <EliteGlobalSettingsPanel 
+              <EliteGlobalSettingsPanel
                 settings={eliteGatewaySetup.globalSettings}
                 onSettingsChange={handleGlobalSettingsChange}
               />
@@ -178,8 +175,8 @@ const EliteGatewaySetupCard = () => {
 
           {/* Save Button */}
           <div className="flex justify-end pt-4 border-t">
-            <Button 
-              onClick={handleSave} 
+            <Button
+              onClick={handleSave}
               className="bg-purple-600 hover:bg-purple-700 flex items-center gap-2"
             >
               <Save className="h-4 w-4" />

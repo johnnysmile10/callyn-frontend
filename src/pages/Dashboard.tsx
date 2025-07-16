@@ -28,11 +28,12 @@ import AICampaignBuilder from "@/components/dashboard/AICampaignBuilder";
 import { initializeDemoData } from "@/utils/demoDataUtils";
 import { recoverUserState, shouldHaveAccess } from "@/components/dashboard/sidebar/unlockConditions";
 import { toast } from "@/hooks/use-toast";
-import ApiService from "@/context/services/apiSErvice";
-import { getAgentFromOnboardingData } from "@/utils/agent";
+import ApiService from "@/context/services/apiService";
+import { mapApiAgentToOnboardingData, mapApiAgentToUserAgent } from "@/utils/agent";
+import { ApiAgent } from "@/context/types/apiTypes";
 
 const Dashboard = () => {
-  const { user, isAuthenticated, setUserAgent, userAgent, hasCompletedSetup, onboardingData, outreachData, updateProgressState, setOutreachData, progressState } = useAuth();
+  const { user, setUserAgent, userAgent, setupCompleted, setOnboardingData, outreachData, updateProgressState, setOutreachData, progressState } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -41,12 +42,12 @@ const Dashboard = () => {
     if (requestedTab) {
       return requestedTab;
     }
-    
+
     // If user has no agent, always start with your-agent which includes quick-start
     if (!userAgent) {
       return "your-agent";
     }
-    
+
     // If user has an agent, default to overview
     return "overview";
   });
@@ -55,19 +56,11 @@ const Dashboard = () => {
   const [dashboardKey, setDashboardKey] = useState(0);
   const [isInitialized, setIsInitialized] = useState(false);
   const [showRecoveryBanner, setShowRecoveryBanner] = useState(false);
-  
+
   // Enhanced state checking
   useEffect(() => {
-    // Redirect to login if not authenticated
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
-
     // Initialize dashboard once
     if (!isInitialized) {
-      console.log("Dashboard: Enhanced initialization");
-      
       // Check if user just completed onboarding
       if (location.state?.fromOnboarding && userAgent) {
         setShowOnboardingSuccess(true);
@@ -87,32 +80,22 @@ const Dashboard = () => {
 
       // Initialize demo data if user has an agent but no outreach data (for testing unlock system)
       if (userAgent && !outreachData) {
-        console.log('Initializing demo data for unlock system testing');
         initializeDemoData(updateProgressState, setOutreachData);
       }
-      
-      // Check for state inconsistencies and offer recovery
-      const hasStoredAgent = localStorage.getItem('user_agent') && localStorage.getItem('user_agent') !== 'null';
-      const setupComplete = localStorage.getItem('setup_completed') === 'true';
-      
-      if (!userAgent && (hasStoredAgent || setupComplete)) {
-        console.log("🚨 State inconsistency detected - showing recovery banner");
+
+      if (!userAgent && (!!userAgent || setupCompleted)) {
         setShowRecoveryBanner(true);
       }
-      
+
       setIsInitialized(true);
     }
-  }, [isAuthenticated, userAgent, navigate, activeTab, location.state, outreachData, updateProgressState, setOutreachData, isInitialized, progressState]);
+  }, [userAgent, navigate, activeTab, location.state, outreachData, updateProgressState, setOutreachData, isInitialized, progressState]);
 
   // Force dashboard refresh when userAgent changes (but only after initialization)
   useEffect(() => {
     if (isInitialized) {
-      console.log("Dashboard: UserAgent changed, forcing refresh", {
-        hasAgent: !!userAgent,
-        agentId: userAgent?.id
-      });
       setDashboardKey(prev => prev + 1);
-      
+
       // Hide recovery banner if agent is now available
       if (userAgent) {
         setShowRecoveryBanner(false);
@@ -121,21 +104,24 @@ const Dashboard = () => {
   }, [userAgent, isInitialized]);
 
   useEffect(() => {
-    (async() => {
-      if (!user) return
-      const assistants = await ApiService.get('/assistants', {
-        user_id: user.email
-      });
-      if (assistants && assistants.length > 0) {
-        setUserAgent(getAgentFromOnboardingData(assistants[0] as OnboardingData))
+    if (!user) return
+    (async () => {
+      try {
+        const { assistant } = await ApiService.get('/assistant');
+        setUserAgent(mapApiAgentToUserAgent(assistant as ApiAgent))
+        setOnboardingData(mapApiAgentToOnboardingData(assistant as ApiAgent))
+      } catch (err) {
+        toast({
+          title: "Error",
+          description: err.message,
+        });
       }
     })()
   }, [user])
 
   const handleRecoverState = async () => {
-    console.log("🔧 Dashboard state recovery initiated");
     const recovered = recoverUserState(updateProgressState);
-    
+
     if (recovered) {
       setDashboardKey(prev => prev + 1);
       setShowRecoveryBanner(false);
@@ -152,69 +138,67 @@ const Dashboard = () => {
     }
   };
 
-  if (!isAuthenticated) return null;
-
   const renderActiveTab = () => {
     switch (activeTab) {
       case "overview":
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;
-      
+
       case "call-log":
         return <CallLogView />;
-      
+
       // Your Agent section
       case "your-agent":
         return <YourAgentSection />;
-      
+
       // User Database section
       case "user-database":
         return <UserDatabaseSection />;
-      
+
       // Settings & Integrations section
       case "settings-integrations":
         return <SettingsIntegrationsSection />;
-      
+
       // Price Plan section
       case "price-plan":
         return <DashboardPricingTable />;
-      
+
       // Support section
       case "support":
         return <SupportSection />;
-      
+
       // AI Campaign Builder
       case "ai-campaign-builder":
         return <AICampaignBuilder />;
-      
+
       // Live Call Center
       case "live-call-center":
         return <LiveCallCenter />;
-      
+
       // Call Analytics (new)
       case "call-analytics":
         return <CallLogView />;
-      
+
       // Campaign Manager - Updated to handle all campaign-related functionality
       case "campaigns":
       case "lead-lists":
       case "analytics":
         return <DashboardCampaignManager />;
-      
+
       // Legacy routes (redirect to new components)
       case "agent-setup":
       case "outreach-system":
       case "actions":
         return <AICampaignBuilder />;
-      
+
       case "call-center":
       case "elite-call-interface":
         return <LiveCallCenter />;
-      
+
       // Gateway Setup - Check for Elite vs Lite
       case "gateway-setup":
         // For demo, show Elite version if user has an agent, otherwise show Lite
         return userAgent ? <EliteGatewaySetupCard /> : <GatewaySetupCard />;
-      
+
       default:
         return <DashboardOverview onCampaignToggle={setCampaignActive} campaignActive={campaignActive} />;
     }
@@ -233,7 +217,7 @@ const Dashboard = () => {
                   <CheckCircle className="h-4 w-4 text-green-600" />
                   <AlertTitle className="text-green-800">🎉 Agent Successfully Created!</AlertTitle>
                   <AlertDescription className="text-green-700">
-                    Your AI agent "{userAgent.name}" is now live and ready to start making calls. 
+                    Your AI agent "{userAgent.name}" is now live and ready to start making calls.
                     Set up your first campaign below to begin generating leads.
                   </AlertDescription>
                 </Alert>
@@ -270,7 +254,7 @@ const Dashboard = () => {
                 </Alert>
               </div>
             )}
-            
+
             {renderActiveTab()}
           </div>
         </div>

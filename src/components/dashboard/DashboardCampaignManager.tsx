@@ -1,13 +1,24 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, Calendar, BarChart } from "lucide-react";
 import LeadListsTab from "./campaign-manager/LeadListsTab";
 import CampaignsTab from "./campaign-manager/CampaignsTab";
 import ResultsTab from "./campaign-manager/ResultsTab";
 
+import ApiService from "@/context/services/apiService";
+import { mapApiCampaignToCampaign } from "@/utils/campaign";
+
 const DashboardCampaignManager = () => {
+  const [campaigns, setCampaigns] = useState([]);
   const [activeTab, setActiveTab] = useState("lead-lists");
+
+  useEffect(() => {
+    (async () => {
+      const data = await ApiService.get('/campaign');
+      setCampaigns(data.map(mapApiCampaignToCampaign))
+    })()
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -40,11 +51,11 @@ const DashboardCampaignManager = () => {
         </TabsList>
 
         <TabsContent value="lead-lists" className="space-y-6">
-          <LeadListsTab />
+          <LeadListsTab campaigns={campaigns} />
         </TabsContent>
 
         <TabsContent value="campaigns" className="space-y-6">
-          <CampaignsTab />
+          <CampaignsTab campaigns={campaigns} />
         </TabsContent>
 
         <TabsContent value="results" className="space-y-6">

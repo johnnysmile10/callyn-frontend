@@ -1,19 +1,21 @@
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { 
-  Settings, 
-  Phone, 
-  Globe, 
-  Calendar, 
+import { useNavigate } from "react-router-dom";
+import {
+  Settings,
+  Phone,
+  Globe,
+  Calendar,
   Database,
   CheckCircle,
   AlertCircle,
   ExternalLink
 } from "lucide-react";
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context";
 import PhoneNumberSetup from "./PhoneNumberSetup";
 import TwilioIntegration from "./TwilioIntegration";
@@ -23,6 +25,7 @@ import CRMCalendarIntegrations from "./CRMCalendarIntegrations";
 const SettingsIntegrationsSection = () => {
   const { userAgent, onboardingData } = useAuth();
   const [activeTab, setActiveTab] = useState("phone");
+  const navigate = useNavigate();
 
   // Mock setup status - in real app this would come from your backend
   const setupStatus = {
@@ -80,7 +83,9 @@ const SettingsIntegrationsSection = () => {
         <Settings className="h-16 w-16 text-gray-400 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-gray-900 mb-2">Settings Not Available</h2>
         <p className="text-gray-600 mb-6">Complete your agent setup first to access settings.</p>
-        <Button onClick={() => window.location.href = '/onboarding'}>
+        <Button onClick={() => {
+          navigate('/onboarding');
+        }}>
           Complete Setup
         </Button>
       </div>
@@ -119,13 +124,12 @@ const SettingsIntegrationsSection = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {integrationCategories.map((category) => (
-              <div 
+              <div
                 key={category.id}
-                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                  activeTab === category.id 
-                    ? 'border-blue-500 bg-blue-100' 
-                    : 'border-gray-200 bg-white hover:border-gray-300'
-                }`}
+                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${activeTab === category.id
+                  ? 'border-blue-500 bg-blue-100'
+                  : 'border-gray-200 bg-white hover:border-gray-300'
+                  }`}
                 onClick={() => setActiveTab(category.id)}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -143,7 +147,7 @@ const SettingsIntegrationsSection = () => {
                   {category.description}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge 
+                  <Badge
                     variant={category.status ? "default" : "secondary"}
                     className="text-xs"
                   >

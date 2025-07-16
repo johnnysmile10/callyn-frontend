@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import { SupportFormData } from "../types/supportTypes";
 import { validateFile } from "../utils/supportUtils";
+import ApiService from "@/context/services/apiService";
 
 export const useSupportForm = () => {
   const { toast } = useToast();
@@ -25,21 +26,15 @@ export const useSupportForm = () => {
 
   const onSubmit = async (data: SupportFormData) => {
     setIsSubmitting(true);
-    
+
     // Simulate API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      console.log("Support request submitted:", {
-        ...data,
-        screenshot: selectedFile?.name || null,
-        timestamp: new Date().toISOString()
-      });
+      await ApiService.post('/support', { title: data.title, content: data.description, category: data.category, priority: data.priority })
 
       setIsSubmitted(true);
       reset();
       setSelectedFile(null);
-      
+
       toast({
         title: "Support Request Submitted",
         description: "Thank you for your feedback! Our team will review your request and get back to you soon.",
@@ -60,7 +55,7 @@ export const useSupportForm = () => {
     const file = event.target.files?.[0];
     if (file) {
       const validation = validateFile(file);
-      
+
       if (!validation.isValid) {
         toast({
           title: validation.error?.includes("size") ? "File too large" : "Invalid file type",
@@ -69,7 +64,7 @@ export const useSupportForm = () => {
         });
         return;
       }
-      
+
       setSelectedFile(file);
     }
   };

@@ -68,14 +68,12 @@ const QuickStartWizard = ({ onComplete, onSkip }: QuickStartWizardProps) => {
 
   const handleComplete = () => {
     try {
-      console.log("QuickStart completed with data:", formData);
       onComplete(formData);
       toast({
         title: "Quick Start Complete!",
         description: `Your AI agent is ready with ${formData.languageConfig.primaryLanguage.toUpperCase()} language support.`,
       });
     } catch (error) {
-      console.error('Quick Start completion error:', error);
       toast({
         title: "Error",
         description: "Something went wrong. Please try again.",
@@ -134,11 +132,10 @@ const QuickStartWizard = ({ onComplete, onSkip }: QuickStartWizardProps) => {
             <div className="flex items-center justify-center space-x-2 mb-8 overflow-x-auto">
               {STEPS.map((step, index) => (
                 <div key={step.id} className="flex items-center flex-shrink-0">
-                  <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 text-xs ${
-                    index <= currentStep 
-                      ? 'bg-blue-600 border-blue-600 text-white'
-                      : 'border-gray-300 text-gray-400'
-                  }`}>
+                  <div className={`flex items-center justify-center w-8 h-8 rounded-full border-2 text-xs ${index <= currentStep
+                    ? 'bg-blue-600 border-blue-600 text-white'
+                    : 'border-gray-300 text-gray-400'
+                    }`}>
                     {index < currentStep ? (
                       <CheckCircle className="h-4 w-4" />
                     ) : (
@@ -146,9 +143,8 @@ const QuickStartWizard = ({ onComplete, onSkip }: QuickStartWizardProps) => {
                     )}
                   </div>
                   {index < STEPS.length - 1 && (
-                    <div className={`w-8 h-0.5 mx-1 ${
-                      index < currentStep ? 'bg-blue-600' : 'bg-gray-300'
-                    }`} />
+                    <div className={`w-8 h-0.5 mx-1 ${index < currentStep ? 'bg-blue-600' : 'bg-gray-300'
+                      }`} />
                   )}
                 </div>
               ))}

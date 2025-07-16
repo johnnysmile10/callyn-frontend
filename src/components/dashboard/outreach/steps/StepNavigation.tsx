@@ -31,13 +31,13 @@ const StepNavigation = ({
         <ArrowLeft className="mr-2 h-4 w-4" />
         Previous
       </Button>
-      
+
       <div className="text-sm text-gray-500">
         Step {currentStep} of {totalSteps}
       </div>
-      
+
       {isLastStep ? (
-        <Button 
+        <Button
           onClick={onComplete}
           disabled={!canProceed}
           className="bg-green-600 hover:bg-green-700"
@@ -45,7 +45,7 @@ const StepNavigation = ({
           Launch Campaign
         </Button>
       ) : (
-        <Button 
+        <Button
           onClick={onNext}
           disabled={!canProceed}
         >

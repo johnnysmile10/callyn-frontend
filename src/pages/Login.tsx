@@ -10,7 +10,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
-      
+
       <main className="flex-grow py-16 px-4 bg-gray-50">
         <div className="container mx-auto max-w-md">
           <div className="bg-white rounded-lg p-8 shadow-sm border">
@@ -22,19 +22,19 @@ const Login = () => {
                 Welcome back to Callyn, your AI sales agent
               </p>
             </div>
-            
+
             <div className="space-y-6">
               <GoogleSignupButton />
-              
+
               <div className="flex items-center gap-4 my-6">
-                <Separator className="flex-grow" />
+                <Separator className="grow w-auto" />
                 <span className="text-gray-400 text-sm">or</span>
-                <Separator className="flex-grow" />
+                <Separator className="grow w-auto" />
               </div>
-              
+
               <LoginForm />
             </div>
-            
+
             <div className="mt-6 text-center border-t pt-6">
               <p className="text-gray-600">
                 Don't have an account?{" "}
@@ -46,7 +46,7 @@ const Login = () => {
           </div>
         </div>
       </main>
-      
+
       <Footer />
     </div>
   );

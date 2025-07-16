@@ -4,10 +4,10 @@ import { Play, SkipForward, Repeat, Clock, ListChecks, Ban } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Switch } from "@/components/ui/switch";
-import { 
-  DropdownMenu, 
-  DropdownMenuTrigger, 
-  DropdownMenuContent, 
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
@@ -22,33 +22,27 @@ const CallControlBar = ({ isActive }: CallControlBarProps) => {
   if (!isActive) return null;
 
   const handlePlayAI = () => {
-    console.log("Replay AI message");
     // Implementation would connect to actual voice replay functionality
   };
 
   const handleNextCall = () => {
-    console.log("Next call triggered");
     // Implementation would trigger the next call in sequence
   };
 
   const handleToggleAutoCall = (enabled: boolean) => {
-    console.log("Auto-call toggled:", enabled);
     setAutoCallEnabled(enabled);
     // Implementation would toggle actual auto-calling behavior
   };
 
   const handleCallbackSchedule = (time: string) => {
-    console.log("Callback scheduled for:", time);
     // Implementation would connect to actual callback scheduling
   };
 
   const handleLogOutcome = (outcome: string) => {
-    console.log("Call outcome logged:", outcome);
     // Implementation would log the actual call outcome
   };
 
   const handleSkip = (isDNC: boolean) => {
-    console.log("Lead skipped", isDNC ? "(marked as DNC)" : "");
     // Implementation would skip or mark lead as do-not-call
   };
 
@@ -66,16 +60,16 @@ const CallControlBar = ({ isActive }: CallControlBarProps) => {
               <span className="text-sm font-medium">Callyn is calling</span>
             </div>
           </div>
-          
+
           {/* Controls section */}
           <div className="flex flex-wrap items-center justify-center gap-3">
             {/* Play/Replay button */}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     className="text-white hover:bg-slate-800"
                     onClick={handlePlayAI}
                   >
@@ -93,9 +87,9 @@ const CallControlBar = ({ isActive }: CallControlBarProps) => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     className="text-white hover:bg-slate-800"
                     onClick={handleNextCall}
                   >
@@ -116,9 +110,9 @@ const CallControlBar = ({ isActive }: CallControlBarProps) => {
                   <div className="flex items-center gap-2">
                     <Repeat className="h-4 w-4" />
                     <span className="hidden sm:inline text-sm whitespace-nowrap">Auto-Call:</span>
-                    <Switch 
-                      checked={autoCallEnabled} 
-                      onCheckedChange={handleToggleAutoCall} 
+                    <Switch
+                      checked={autoCallEnabled}
+                      onCheckedChange={handleToggleAutoCall}
                     />
                   </div>
                 </TooltipTrigger>
@@ -134,9 +128,9 @@ const CallControlBar = ({ isActive }: CallControlBarProps) => {
                 <TooltipTrigger asChild>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         className="text-white hover:bg-slate-800"
                       >
                         <Clock className="h-4 w-4 mr-1" />
@@ -169,9 +163,9 @@ const CallControlBar = ({ isActive }: CallControlBarProps) => {
                 <TooltipTrigger asChild>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         className="text-white hover:bg-slate-800"
                       >
                         <ListChecks className="h-4 w-4 mr-1" />
@@ -206,9 +200,9 @@ const CallControlBar = ({ isActive }: CallControlBarProps) => {
                 <TooltipTrigger asChild>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         className="text-white hover:bg-slate-800"
                       >
                         <Ban className="h-4 w-4 mr-1" />

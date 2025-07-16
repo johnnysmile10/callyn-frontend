@@ -7,10 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { 
-  Database, 
-  ExternalLink, 
-  CheckCircle, 
+import {
+  Database,
+  ExternalLink,
+  CheckCircle,
   AlertTriangle,
   Eye,
   EyeOff,
@@ -33,7 +33,6 @@ const TwilioIntegration = () => {
     await new Promise(resolve => setTimeout(resolve, 2000));
     setIsConnecting(false);
     setIsConnected(true);
-    console.log('Connected to Twilio');
   };
 
   const handleDisconnect = () => {
@@ -71,9 +70,9 @@ const TwilioIntegration = () => {
                 </div>
               </div>
             </div>
-            
+
             <Separator />
-            
+
             <div className="flex justify-between items-center">
               <div>
                 <h4 className="font-medium text-green-800">Connection Health</h4>
@@ -133,9 +132,9 @@ const TwilioIntegration = () => {
             <Key className="h-4 w-4" />
             <AlertDescription>
               You'll need your Twilio Account SID and Auth Token. Find these in your{" "}
-              <a 
-                href="https://console.twilio.com/" 
-                target="_blank" 
+              <a
+                href="https://console.twilio.com/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:underline inline-flex items-center gap-1"
               >
@@ -210,7 +209,7 @@ const TwilioIntegration = () => {
           </div>
 
           {/* Connect Button */}
-          <Button 
+          <Button
             onClick={handleConnect}
             disabled={!accountSid || !authToken || isConnecting}
             className="w-full"

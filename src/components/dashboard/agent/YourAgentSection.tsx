@@ -17,55 +17,36 @@ const YourAgentSection = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [showQuickStart, setShowQuickStart] = useState(false);
   const [isRecovering, setIsRecovering] = useState(false);
-  
+
   const hasAgent = !!userAgent;
   const setupComplete = hasCompletedSetup();
   const shouldUnlock = shouldHaveAccess(userAgent, progressState);
 
-  console.log("🏠 Enhanced YourAgentSection render:", {
-    hasAgent,
-    agentId: userAgent?.id,
-    agentStatus: userAgent?.status,
-    setupComplete,
-    shouldUnlock,
-    progressState,
-    localStorage: {
-      userAgent: localStorage.getItem('user_agent'),
-      setupCompleted: localStorage.getItem('setup_completed')
-    },
-    timestamp: new Date().toISOString()
-  });
-
   const handleAgentCreated = () => {
-    console.log("🎉 Enhanced agent created callback triggered");
-    
     // Update progress state to reflect agent creation
     if (updateProgressState) {
       updateProgressState({
         agentConfigurationLevel: 'basic'
       });
     }
-    
+
     // Force a re-render to update the UI
     setRefreshKey(prev => prev + 1);
     setShowQuickStart(false);
-    
+
     // Small delay to ensure state has propagated
     setTimeout(() => {
       setRefreshKey(prev => prev + 1);
-      console.log("🔄 Forced UI refresh after agent creation");
     }, 500);
   };
 
   const handleStartQuickSetup = () => {
-    console.log("🚀 Starting quick setup");
     setShowQuickStart(true);
   };
 
   const handleRefreshState = () => {
-    console.log("🔄 Manually refreshing state");
     setRefreshKey(prev => prev + 1);
-    
+
     toast({
       title: "State Refreshed",
       description: "Dashboard state has been updated",
@@ -73,12 +54,11 @@ const YourAgentSection = () => {
   };
 
   const handleRecoverState = async () => {
-    console.log("🔧 Manual state recovery requested");
     setIsRecovering(true);
-    
+
     try {
       const recovered = recoverUserState(updateProgressState);
-      
+
       if (recovered) {
         setRefreshKey(prev => prev + 1);
         toast({
@@ -105,9 +85,8 @@ const YourAgentSection = () => {
   };
 
   const handleDiagnoseIssues = () => {
-    console.log("🔍 Running diagnostic check");
     const diagnostic = diagnoseUnlockIssues(userAgent, progressState);
-    
+
     toast({
       title: "Diagnostic Complete",
       description: `Found ${diagnostic.issues.length} potential issues. Check console for details.`,
@@ -115,7 +94,6 @@ const YourAgentSection = () => {
   };
 
   const handleForceUnlock = () => {
-    console.log("🚨 Force unlock requested");
     if (updateProgressState) {
       updateProgressState({
         agentConfigurationLevel: 'basic',
@@ -125,7 +103,7 @@ const YourAgentSection = () => {
       });
     }
     setRefreshKey(prev => prev + 1);
-    
+
     toast({
       title: "Features Force Unlocked",
       description: "All dashboard features have been temporarily unlocked for testing.",
@@ -135,8 +113,8 @@ const YourAgentSection = () => {
   // Show Quick Start wizard if requested
   if (showQuickStart) {
     return (
-      <QuickStartIntegration 
-        hasAgent={hasAgent} 
+      <QuickStartIntegration
+        hasAgent={hasAgent}
         onAgentCreated={handleAgentCreated}
       />
     );
@@ -148,7 +126,7 @@ const YourAgentSection = () => {
         <>
           {/* Enhanced New User Welcome Experience with Recovery Options */}
           <NewUserWelcome onStartQuickSetup={handleStartQuickSetup} />
-          
+
           {/* State Recovery Section for users who might have lost state */}
           <Card className="border-yellow-200 bg-yellow-50">
             <CardHeader>
@@ -176,7 +154,7 @@ const YourAgentSection = () => {
                   )}
                   {isRecovering ? "Recovering..." : "Recover Agent State"}
                 </Button>
-                
+
                 <Button
                   variant="outline"
                   size="sm"
@@ -186,7 +164,7 @@ const YourAgentSection = () => {
                   <AlertCircle className="h-4 w-4" />
                   Run Diagnostics
                 </Button>
-                
+
                 <Button
                   variant="outline"
                   size="sm"
@@ -210,7 +188,7 @@ const YourAgentSection = () => {
                 Manage and optimize your AI calling agent
               </p>
             </div>
-            
+
             {/* Enhanced Status and controls */}
             <div className="flex items-center gap-3">
               <Button
@@ -222,7 +200,7 @@ const YourAgentSection = () => {
                 <RefreshCw className="h-4 w-4" />
                 Refresh
               </Button>
-              
+
               {/* Enhanced recovery tools */}
               {!shouldUnlock && (
                 <Button
@@ -240,7 +218,7 @@ const YourAgentSection = () => {
                   Fix State
                 </Button>
               )}
-              
+
               {/* Debug unlock button in development */}
               {process.env.NODE_ENV === 'development' && (
                 <Button
@@ -253,7 +231,7 @@ const YourAgentSection = () => {
                   Force Unlock
                 </Button>
               )}
-              
+
               {/* Enhanced Status indicator */}
               <Badge variant="secondary" className={shouldUnlock ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
                 {shouldUnlock ? (
@@ -312,9 +290,9 @@ const YourAgentSection = () => {
 
           {/* Agent Overview for Existing Users */}
           <AgentOverview />
-          
+
           <Separator />
-          
+
           {/* Enhanced Quick Actions */}
           <Card>
             <CardHeader>
@@ -331,24 +309,24 @@ const YourAgentSection = () => {
                 <div className="font-medium mb-1">Update Script</div>
                 <div className="text-sm text-gray-600">Modify your agent's conversation flow</div>
               </Button>
-              
+
               <Button variant="outline" className="h-auto p-4 flex flex-col items-start">
                 <div className="font-medium mb-1">Voice Settings</div>
                 <div className="text-sm text-gray-600">Change voice and personality</div>
               </Button>
-              
-              <Button 
+
+              <Button
                 onClick={handleStartQuickSetup}
-                variant="outline" 
+                variant="outline"
                 className="h-auto p-4 flex flex-col items-start"
               >
                 <div className="font-medium mb-1">Quick Setup</div>
                 <div className="text-sm text-gray-600">Run setup wizard again</div>
               </Button>
-              
-              <Button 
+
+              <Button
                 onClick={handleDiagnoseIssues}
-                variant="outline" 
+                variant="outline"
                 className="h-auto p-4 flex flex-col items-start border-blue-200"
               >
                 <div className="font-medium mb-1">Run Diagnostics</div>
@@ -382,7 +360,7 @@ const YourAgentSection = () => {
               <div>
                 <span className="text-gray-500">Agent ID:</span>
                 <span className="ml-2 font-medium text-gray-800">
-                  {userAgent?.id ? userAgent.id.substring(0, 12) + '...' : 'None'}
+                  {userAgent?.id ?? 'None'}
                 </span>
               </div>
               <div>

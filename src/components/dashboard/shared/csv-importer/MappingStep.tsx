@@ -16,20 +16,20 @@ interface MappingStepProps {
   onReset: () => void;
 }
 
-const MappingStep = ({ 
-  csvHeaders, 
-  csvDataLength, 
-  fieldMappings, 
-  onMappingUpdate, 
-  onProceed, 
-  onReset 
+const MappingStep = ({
+  csvHeaders,
+  csvDataLength,
+  fieldMappings,
+  onMappingUpdate,
+  onProceed,
+  onReset
 }: MappingStepProps) => {
   const validateMappings = (): boolean => {
     const requiredFields = REQUIRED_FIELDS.filter(f => f.required);
-    const mappedRequired = requiredFields.filter(field => 
+    const mappedRequired = requiredFields.filter(field =>
       fieldMappings.some(mapping => mapping.callynField === field.id)
     );
-    
+
     if (mappedRequired.length !== requiredFields.length) {
       toast({
         title: "Missing Required Fields",
@@ -61,7 +61,7 @@ const MappingStep = ({
               {field.label}
               {field.required && <Badge variant="destructive" className="text-xs">Required</Badge>}
             </Label>
-            <Select 
+            <Select
               value={fieldMappings.find(m => m.callynField === field.id)?.csvField || ''}
               onValueChange={(value) => value && onMappingUpdate(field.id, value)}
             >
@@ -69,7 +69,7 @@ const MappingStep = ({
                 <SelectValue placeholder="Select CSV column" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">-- No mapping --</SelectItem>
+                <SelectItem value="no-mapping">-- No mapping --</SelectItem>
                 {csvHeaders.map(header => (
                   <SelectItem key={header} value={header}>{header}</SelectItem>
                 ))}

@@ -17,7 +17,7 @@ import { useAuth } from "@/context";
 const GatewaySetupCard = () => {
   const { toast } = useToast();
   const { userAgent } = useAuth();
-  
+
   // If user has no agent, show the lite version
   if (!userAgent) {
     return <LiteGatewaySetupCard />;
@@ -54,8 +54,6 @@ const GatewaySetupCard = () => {
 
   const handleSave = () => {
     // In real app, this would save to backend
-    console.log('Saving gateway setup:', gatewaySetup, { alwaysTryZero });
-    
     toast({
       title: "Gateway Setup Saved",
       description: "Your gateway configuration has been saved successfully.",
@@ -85,19 +83,19 @@ const GatewaySetupCard = () => {
           <Alert className="bg-blue-50 border-blue-200">
             <Phone className="h-4 w-4 text-blue-600" />
             <AlertDescription>
-              <strong>How it works:</strong> When your AI agent encounters a phone menu (like "Press 1 for sales"), 
+              <strong>How it works:</strong> When your AI agent encounters a phone menu (like "Press 1 for sales"),
               it will use these configured options to navigate automatically. Add common scenarios your agent will encounter.
             </AlertDescription>
           </Alert>
 
           {/* Basic Information */}
-          <GatewayBasicInfoSection 
+          <GatewayBasicInfoSection
             gatewaySetup={gatewaySetup}
             onFieldChange={handleBasicInfoChange}
           />
 
           {/* Setup Status */}
-          <GatewaySetupStatus 
+          <GatewaySetupStatus
             gatewaySetup={gatewaySetup}
             isSetupComplete={isSetupComplete}
           />
@@ -112,8 +110,8 @@ const GatewaySetupCard = () => {
 
           {/* Save Button */}
           <div className="flex justify-end pt-4 border-t">
-            <Button 
-              onClick={handleSave} 
+            <Button
+              onClick={handleSave}
               className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
             >
               <Save className="h-4 w-4" />

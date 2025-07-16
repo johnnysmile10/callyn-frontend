@@ -18,36 +18,14 @@ interface QuickStartIntegrationProps {
 const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartIntegrationProps) => {
   const [showWizard, setShowWizard] = useState(false);
   const [isCreatingAgent, setIsCreatingAgent] = useState(false);
-  const { createUserAgent, setUserAgent, setOnboardingData, markSetupCompleted, updateProgressState } = useAuth();
+  const { createUserAgent, setUserAgent, markSetupCompleted, updateProgressState } = useAuth();
 
   const handleWizardComplete = async (data: any) => {
-    console.log("Quick Start wizard completed with enhanced data:", data);
     setIsCreatingAgent(true);
-    
+
+    console.error('Onboarding data', data);
+
     try {
-      // const agentId = `agent_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      // const currentTime = new Date().toISOString();
-      
-      // const newAgent: UserAgent = {
-      //   id: agentId,
-      //   name: data.businessName || "My AI Agent",
-      //   status: 'active',
-      //   createdAt: currentTime,
-      //   configuration: {
-      //     voice: data.selectedVoice || data.languageConfig?.voiceId || "9BWtsMINqrJLrRacOk9x",
-      //     personality: "professional",
-      //     script: data.script || "",
-      //     businessInfo: {
-      //       name: data.businessName || "",
-      //       industry: data.industry || "",
-      //       targetAudience: "prospects",
-      //       mainGoal: "generate leads"
-      //     }
-      //   }
-      // };
-
-      // console.log("Created UserAgent object with language support:", newAgent);
-
       const onboardingData: OnboardingData = {
         businessName: data.businessName || "",
         industry: data.industry || "",
@@ -64,37 +42,25 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
         languageConfig: data.languageConfig
       };
 
-      // console.log("Setting enhanced onboarding data with language config:", onboardingData);
+      createUserAgent(onboardingData).then(agent => {
+        setUserAgent(agent)
 
-      // setOnboardingData(onboardingData);
-      // setUserAgent(newAgent);
-      createUserAgent(onboardingData)
-      markSetupCompleted();
-      
-      updateProgressState({
-        hasVoiceIntegration: true,
-        agentConfigurationLevel: 'complete'
-      });
-      
-      console.log("Agent creation completed successfully with language support");
-      
-      setShowWizard(false);
-      
-      const languageInfo = data.languageConfig?.primaryLanguage !== 'en' 
-        ? ` with ${data.languageConfig.primaryLanguage.toUpperCase()} language support`
-        : '';
-      
-      toast({
-        title: "Agent Created Successfully!",
-        description: `Your AI calling agent is ready to start making calls${languageInfo}.`,
-      });
+        markSetupCompleted();
+        updateProgressState({
+          hasVoiceIntegration: true,
+          agentConfigurationLevel: 'complete'
+        });
+        setShowWizard(false);
 
-      setTimeout(() => {
-        if (onAgentCreated) {
-          onAgentCreated();
-        }
-      }, 100);
+        const languageInfo = data.languageConfig?.primaryLanguage !== 'en'
+          ? ` with ${data.languageConfig.primaryLanguage.toUpperCase()} language support`
+          : '';
 
+        toast({
+          title: "Agent Created Successfully!",
+          description: `Your AI calling agent is ready to start making calls${languageInfo}.`,
+        });
+      })
     } catch (error) {
       console.error("Error creating agent:", error);
       toast({
@@ -125,7 +91,7 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
     return (
       <QuickStartErrorBoundary onRetry={handleRetryWizard}>
         <div className={isCreatingAgent ? "pointer-events-none opacity-50" : ""}>
-          <QuickStartWizard 
+          <QuickStartWizard
             onComplete={handleWizardComplete}
             onSkip={handleWizardSkip}
           />
@@ -217,7 +183,7 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
             </div>
 
             <div className="flex gap-2">
-              <Button 
+              <Button
                 onClick={() => setShowWizard(true)}
                 disabled={isCreatingAgent}
                 className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
@@ -274,7 +240,7 @@ const QuickStartIntegration = ({ hasAgent = false, onAgentCreated }: QuickStartI
             </div>
 
             <div className="flex items-center gap-2">
-              <Button 
+              <Button
                 onClick={() => setShowWizard(true)}
                 variant="outline"
                 size="sm"

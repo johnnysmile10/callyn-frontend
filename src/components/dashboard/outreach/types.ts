@@ -6,7 +6,7 @@ export interface LeadRecord {
   id: string;
   name: string;
   email?: string;
-  phone: string;
+  number: string;
   company?: string;
   title?: string;
   status: 'new' | 'called' | 'interested' | 'not_interested';
@@ -65,10 +65,16 @@ export interface CampaignData {
   launchedAt?: string | null;
 }
 
+export interface LeadManagement {
+  leadList?: LeadRecord[];
+  importMethod?: string;
+  leadSources: [];
+}
+
 export interface OutreachData {
   targetAudience?: TargetAudience;
-  leadList?: LeadRecord[];
+  leadManagement?: LeadManagement;
   script?: ScriptConfig;
-  scheduling?: SchedulingConfig;
+  callScheduling?: SchedulingConfig;
   campaign?: CampaignData;
 }

@@ -17,7 +17,7 @@ import LiteMenuOptionCard from "./components/LiteMenuOptionCard";
 
 const LiteGatewaySetupCard = () => {
   const { toast } = useToast();
-  
+
   const [gatewaySetup, setGatewaySetup] = useState<LiteGatewaySetup>({
     id: 'lite_gateway_1',
     name: 'My Gateway Setup',
@@ -49,7 +49,7 @@ const LiteGatewaySetupCard = () => {
       updatedAt: new Date()
     }));
     setShowAddForm(false);
-    
+
     toast({
       title: "Menu Option Added",
       description: "Your menu option has been added successfully.",
@@ -67,7 +67,7 @@ const LiteGatewaySetupCard = () => {
       menuOptions: prev.menuOptions.filter(opt => opt.id !== optionId),
       updatedAt: new Date()
     }));
-    
+
     toast({
       title: "Menu Option Deleted",
       description: "The menu option has been removed.",
@@ -75,8 +75,6 @@ const LiteGatewaySetupCard = () => {
   };
 
   const handleSave = () => {
-    console.log('Saving lite gateway setup:', gatewaySetup);
-    
     toast({
       title: "Gateway Setup Saved",
       description: "Your gateway configuration has been saved successfully.",
@@ -105,7 +103,7 @@ const LiteGatewaySetupCard = () => {
           <Alert className="bg-blue-50 border-blue-200">
             <Info className="h-4 w-4 text-blue-600" />
             <AlertDescription>
-              <strong>How it works:</strong> When your AI agent encounters a phone menu, 
+              <strong>How it works:</strong> When your AI agent encounters a phone menu,
               it will use these options to navigate automatically. Add the common scenarios your agent will encounter.
             </AlertDescription>
           </Alert>
@@ -113,7 +111,7 @@ const LiteGatewaySetupCard = () => {
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Basic Information</h3>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Setup Name</Label>
@@ -158,7 +156,7 @@ const LiteGatewaySetupCard = () => {
           {/* Fallback Options */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Fallback Options</h3>
-            
+
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -208,9 +206,9 @@ const LiteGatewaySetupCard = () => {
               ))}
 
               {!showAddForm ? (
-                <Button 
+                <Button
                   onClick={() => setShowAddForm(true)}
-                  variant="outline" 
+                  variant="outline"
                   className="w-full border-dashed"
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -230,8 +228,8 @@ const LiteGatewaySetupCard = () => {
 
           {/* Save Button */}
           <div className="flex justify-end pt-4 border-t">
-            <Button 
-              onClick={handleSave} 
+            <Button
+              onClick={handleSave}
               className="bg-blue-600 hover:bg-blue-700 flex items-center gap-2"
             >
               <Save className="h-4 w-4" />

@@ -17,6 +17,7 @@ export interface CallRecord {
   leadScore?: number;
   followUpDate?: string;
   sentiment?: "positive" | "neutral" | "negative";
+  status: string;
 }
 
 export interface CallLogStats {

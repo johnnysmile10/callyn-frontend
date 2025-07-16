@@ -20,7 +20,7 @@ const CustomAPIActions = () => {
       url: "https://hooks.zapier.com/hooks/catch/123/abc",
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      payload: JSON.stringify({ 
+      payload: JSON.stringify({
         lead_source: "callyn_ai",
         status: "new"
       }, null, 2)
@@ -40,13 +40,12 @@ const CustomAPIActions = () => {
   const [newActionUrl, setNewActionUrl] = useState("");
 
   const toggleCustomAction = (id: string) => {
-    setCustomActions(prev => prev.map(action => 
+    setCustomActions(prev => prev.map(action =>
       action.id === id ? { ...action, enabled: !action.enabled } : action
     ));
   };
 
   const testAction = async (action: CustomAction) => {
-    console.log("Testing action:", action.name);
     // Here we would implement the actual test functionality
   };
 

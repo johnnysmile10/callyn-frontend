@@ -6,11 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { 
-  Calendar, 
-  Database, 
-  ExternalLink, 
-  CheckCircle, 
+import {
+  Calendar,
+  Database,
+  ExternalLink,
+  CheckCircle,
   Clock,
   Users,
   Mail,
@@ -91,7 +91,6 @@ const CRMCalendarIntegrations = () => {
   const handleConnect = (integrationId: string) => {
     setConnectedIntegrations(prev => [...prev, integrationId]);
     // In real implementation, this would trigger OAuth flow
-    console.log(`Connecting to ${integrationId}`);
   };
 
   const handleDisconnect = (integrationId: string) => {
@@ -106,7 +105,7 @@ const CRMCalendarIntegrations = () => {
       <Alert>
         <Zap className="h-4 w-4" />
         <AlertDescription>
-          Connect your business tools to automatically sync data and streamline your workflow. 
+          Connect your business tools to automatically sync data and streamline your workflow.
           Your AI agent will handle the integration seamlessly.
         </AlertDescription>
       </Alert>
@@ -117,10 +116,10 @@ const CRMCalendarIntegrations = () => {
           <Database className="h-5 w-5 text-blue-600" />
           <h3 className="text-lg font-semibold">CRM Integrations</h3>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {crmIntegrations.map((integration) => (
-            <Card 
+            <Card
               key={integration.id}
               className={`relative ${isConnected(integration.id) ? 'border-green-200 bg-green-50' : ''}`}
             >
@@ -129,7 +128,7 @@ const CRMCalendarIntegrations = () => {
                   Popular
                 </Badge>
               )}
-              
+
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -144,7 +143,7 @@ const CRMCalendarIntegrations = () => {
                   {integration.description}
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="space-y-3">
                 <div className="space-y-1">
                   {integration.features.slice(0, 3).map((feature, index) => (
@@ -154,16 +153,16 @@ const CRMCalendarIntegrations = () => {
                     </div>
                   ))}
                 </div>
-                
+
                 {isConnected(integration.id) ? (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
                       <Badge className="bg-green-600">Connected</Badge>
                       <span className="text-xs text-green-700">Syncing data</span>
                     </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleDisconnect(integration.id)}
                       className="w-full"
                     >
@@ -171,7 +170,7 @@ const CRMCalendarIntegrations = () => {
                     </Button>
                   </div>
                 ) : (
-                  <Button 
+                  <Button
                     onClick={() => handleConnect(integration.id)}
                     className="w-full"
                     size="sm"
@@ -192,25 +191,24 @@ const CRMCalendarIntegrations = () => {
           <Calendar className="h-5 w-5 text-purple-600" />
           <h3 className="text-lg font-semibold">Calendar Integrations</h3>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {calendarIntegrations.map((integration) => (
-            <Card 
+            <Card
               key={integration.id}
-              className={`relative ${
-                isConnected(integration.id) 
-                  ? 'border-green-200 bg-green-50' 
-                  : integration.status === 'coming-soon' 
-                    ? 'border-gray-200 bg-gray-50 opacity-75' 
+              className={`relative ${isConnected(integration.id)
+                  ? 'border-green-200 bg-green-50'
+                  : integration.status === 'coming-soon'
+                    ? 'border-gray-200 bg-gray-50 opacity-75'
                     : ''
-              }`}
+                }`}
             >
               {integration.popular && (
                 <Badge className="absolute -top-2 -right-2 bg-orange-500">
                   Popular
                 </Badge>
               )}
-              
+
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -227,7 +225,7 @@ const CRMCalendarIntegrations = () => {
                   {integration.description}
                 </CardDescription>
               </CardHeader>
-              
+
               <CardContent className="space-y-3">
                 <div className="space-y-1">
                   {integration.features.slice(0, 3).map((feature, index) => (
@@ -237,11 +235,11 @@ const CRMCalendarIntegrations = () => {
                     </div>
                   ))}
                 </div>
-                
+
                 {integration.status === 'coming-soon' ? (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     disabled
                     className="w-full"
                   >
@@ -253,9 +251,9 @@ const CRMCalendarIntegrations = () => {
                       <Badge className="bg-green-600">Connected</Badge>
                       <span className="text-xs text-green-700">Active sync</span>
                     </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleDisconnect(integration.id)}
                       className="w-full"
                     >
@@ -263,7 +261,7 @@ const CRMCalendarIntegrations = () => {
                     </Button>
                   </div>
                 ) : (
-                  <Button 
+                  <Button
                     onClick={() => handleConnect(integration.id)}
                     className="w-full"
                     size="sm"

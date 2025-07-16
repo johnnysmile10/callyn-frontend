@@ -1,21 +1,24 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { 
-  Phone, 
-  Users, 
-  CheckCircle, 
-  Clock, 
-  TrendingUp, 
-  Bot, 
+import { Link } from "react-router-dom";
+import {
+  Phone,
+  Users,
+  CheckCircle,
+  Clock,
+  TrendingUp,
+  Bot,
   Calendar,
   ArrowRight,
   Plus,
   Play,
   Settings
 } from "lucide-react";
+
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useAuth } from "@/context";
 
 interface DashboardOverviewProps {
@@ -76,10 +79,10 @@ const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOvervi
                     Complete the onboarding process to create your AI agent
                   </div>
                   <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
-                    <a href="/onboarding">
+                    <Link to="/onboarding">
                       <Bot className="mr-2 h-4 w-4" />
                       Complete Setup
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               </CardContent>
@@ -270,8 +273,8 @@ const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOvervi
                 <Badge variant="secondary" className="w-full justify-center">
                   Ready to Start
                 </Badge>
-                <Button 
-                  onClick={handleStartCampaign} 
+                <Button
+                  onClick={handleStartCampaign}
                   className={`w-full ${campaignActive ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'}`}
                 >
                   <Play className="mr-2 h-4 w-4" />

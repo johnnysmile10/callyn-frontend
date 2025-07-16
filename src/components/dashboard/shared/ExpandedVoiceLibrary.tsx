@@ -71,7 +71,6 @@ const ExpandedVoiceLibrary = ({
   };
 
   const handlePlayPreview = async (voiceId: string) => {
-    console.log(voiceId)
     if (playingVoice === voiceId) {
       setPlayingVoice(null);
     } else {

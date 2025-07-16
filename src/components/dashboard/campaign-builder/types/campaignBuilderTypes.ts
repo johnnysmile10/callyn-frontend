@@ -9,11 +9,12 @@ export interface CampaignBuilderData {
     personality: string;
   };
   targetAudience?: {
-    industry: string[];
-    companySize: string[];
-    jobTitles: string[];
-    location: string[];
-    customCriteria?: string;
+    // industry: string[];
+    // companySize: string[];
+    // jobTitles: string[];
+    // location: string[];
+    // customCriteria?: string;
+    description: string;
   };
   script?: {
     greeting: string;
