@@ -84,5 +84,6 @@ export const authService = {
 
   logout: () => {
     ApiService.setToken(null)
+    localStorage.removeItem('token');
   }
 };
