@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import LoginForm from "@/components/auth/LoginForm";
-import GoogleSignupButton from "@/components/auth/GoogleSignupButton";
+// import GoogleSignupButton from "@/components/auth/GoogleSignupButton";
 import { Separator } from "@/components/ui/separator";
 
 const Login = () => {
@@ -24,7 +24,7 @@ const Login = () => {
             </div>
 
             <div className="space-y-6">
-              <GoogleSignupButton />
+              {/* <GoogleSignupButton /> */}
 
               <div className="flex items-center gap-4 my-6">
                 <Separator className="grow w-auto" />
