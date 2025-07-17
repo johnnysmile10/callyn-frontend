@@ -25,18 +25,13 @@ export const authService = {
       name: 'Demo User',
       photoURL: 'https://ui-avatars.com/api/?name=Demo+User&background=random'
     };
-    localStorage.setItem('user', JSON.stringify(mockGoogleUser));
+    // localStorage.setItem('user', JSON.stringify(mockGoogleUser));
     return mockGoogleUser;
   },
 
   signup: async (email: string, password: string, name: string): Promise<User> => {
-    const newUser = {
-      email,
-      name,
-      photoURL: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`
-    };
-    localStorage.setItem('user', JSON.stringify(newUser));
-    return newUser;
+    const user = await ApiService.post('/register', { name, email, password });
+    return user as User;
   },
 
   createUserAgent: async (data: OnboardingData): Promise<UserAgent | null> => {
