@@ -32,7 +32,7 @@ const AgentOverview = () => {
   const [showVoiceEdit, setShowVoiceEdit] = useState(false);
 
   const voiceName = useMemo(() => {
-    const availableVoices = getVoicesForLanguage(onboardingData.languageConfig.primaryLanguage);
+    const availableVoices = getVoicesForLanguage(onboardingData?.languageConfig?.primaryLanguage) || [];
     const voice = availableVoices.find(item =>
       item.id === userAgent.configuration.voice || item.name.toLowerCase() === userAgent.configuration.voice.toLowerCase())
     return voice?.name || '';

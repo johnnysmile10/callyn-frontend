@@ -44,10 +44,10 @@ const SignUp = () => {
 
               <GoogleSignupButton />*/}
 
-              <div className="flex items-center gap-4 my-6">
-                <Separator className="flex-grow" />
+              <div className="flex items-center gap-4 my-6 w-full">
+                <Separator className="grow w-auto" />
                 <span className="text-gray-400 text-sm">or</span>
-                <Separator className="flex-grow" />
+                <Separator className="grow w-auto" />
               </div>
 
               <SignUpForm />

@@ -30,7 +30,7 @@ export const authService = {
   },
 
   signup: async (email: string, password: string, name: string): Promise<User> => {
-    const user = await ApiService.post('/register', { name, email, password });
+    const { user } = await ApiService.post('/auth/register', { name, email, password });
     return user as User;
   },
 

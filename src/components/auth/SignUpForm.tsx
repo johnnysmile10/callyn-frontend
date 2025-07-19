@@ -36,8 +36,8 @@ const SignUpForm = () => {
     setLoading(true);
     try {
       await signup(values.email, values.password, values.name);
-      toast.success("Account created successfully!");
-      navigate("/dashboard");
+      toast.success("Register success!");
+      navigate("/login");
     } catch (error) {
       console.error("Signup error:", error);
       toast.error("Failed to create account. Please try again.");
@@ -56,9 +56,9 @@ const SignUpForm = () => {
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input 
-                  placeholder="Enter your name" 
-                  {...field} 
+                <Input
+                  placeholder="Enter your name"
+                  {...field}
                   className="rounded-md py-5"
                 />
               </FormControl>
@@ -66,7 +66,7 @@ const SignUpForm = () => {
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="email"
@@ -74,10 +74,10 @@ const SignUpForm = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input 
-                  type="email" 
-                  placeholder="you@example.com" 
-                  {...field} 
+                <Input
+                  type="email"
+                  placeholder="you@example.com"
+                  {...field}
                   className="rounded-md py-5"
                 />
               </FormControl>
@@ -93,10 +93,10 @@ const SignUpForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input 
-                  type="password" 
-                  placeholder="Create a secure password" 
-                  {...field} 
+                <Input
+                  type="password"
+                  placeholder="Create a secure password"
+                  {...field}
                   className="rounded-md py-5"
                 />
               </FormControl>
@@ -105,8 +105,8 @@ const SignUpForm = () => {
           )}
         />
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           className="w-full bg-callyn-blue hover:bg-callyn-darkBlue text-white rounded-full py-6 text-base font-medium"
           disabled={loading}
         >

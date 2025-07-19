@@ -92,8 +92,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const signup = async (email: string, password: string, name: string) => {
-    const newUser = await authService.signup(email, password, name);
-    setUser(newUser);
+    await authService.signup(email, password, name);
   };
 
   const logout = () => {
