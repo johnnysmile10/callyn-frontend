@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Volume2, Play } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
+
 interface Voice {
   id: string;
   name: string;
@@ -31,13 +33,50 @@ const VoiceSelectionCard = ({ selectedVoice, onVoiceChange }: VoiceSelectionCard
   const [isPlaying, setIsPlaying] = useState(false);
   const { toast } = useToast();
 
-  const handleVoiceTest = (voiceId: string) => {
+  const handleVoiceTest = async (voiceId: string, voiceName: string) => {
     setIsPlaying(true);
     // Simulate voice playback
-    setTimeout(() => setIsPlaying(false), 3000);
+    try {
+      const response = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "xi-api-key": ELEVENLABS_API_KEY,
+          },
+          body: JSON.stringify({
+            text: "Hello! I'm calling from {company} to discuss how we can help your business grow.",
+            model_id: "eleven_monolingual_v1", // Or another appropriate model for your case
+            voice_settings: {
+              stability: 0.5,
+              similarity_boost: 0.5,
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch audio preview");
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      const audio = new Audio(audioUrl);
+      audio.play();
+
+      audio.onended = () => {
+        setIsPlaying(false);
+      };
+    } catch (error) {
+      console.error("Error playing voice preview:", error);
+      setIsPlaying(false);
+    }
+    ///////////////////////////
     toast({
       title: "Voice Preview",
-      description: `Playing sample with ${voiceId} voice`,
+      description: `Playing sample with ${voiceName} voice`,
     });
   };
 
@@ -58,8 +97,8 @@ const VoiceSelectionCard = ({ selectedVoice, onVoiceChange }: VoiceSelectionCard
             <div
               key={voice.id}
               className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${selectedVoice === voice.id
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-gray-200 hover:border-gray-300'
                 }`}
               onClick={() => onVoiceChange(voice.id)}
             >
@@ -80,7 +119,7 @@ const VoiceSelectionCard = ({ selectedVoice, onVoiceChange }: VoiceSelectionCard
                 className="w-full"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleVoiceTest(voice.id);
+                  handleVoiceTest(voice.id, voice.name);
                 }}
                 disabled={isPlaying}
               >

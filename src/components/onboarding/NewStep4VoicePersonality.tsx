@@ -8,6 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Mic, Play, Volume2, ArrowRight, ArrowLeft, Settings } from "lucide-react";
+const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
 
 interface NewStep4VoicePersonalityProps {
   handleNext: () => void;
@@ -23,6 +24,7 @@ const NewStep4VoicePersonality = ({ handleNext, handleBack, onDataUpdate, initia
   const [enthusiasm, setEnthusiasm] = useState(initialData.enthusiasm || [0.7]);
   const [useSmallTalk, setUseSmallTalk] = useState(initialData.useSmallTalk ?? true);
   const [handleObjections, setHandleObjections] = useState(initialData.handleObjections ?? true);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const voices = [
     { id: "sarah", name: "Sarah", description: "Professional, warm female voice", accent: "American" },
@@ -38,9 +40,42 @@ const NewStep4VoicePersonality = ({ handleNext, handleBack, onDataUpdate, initia
     { id: "direct", name: "Direct", description: "Straight to the point, results-focused" }
   ];
 
-  const handleVoiceTest = (voiceId: string) => {
-    // In a real implementation, this would play a voice sample
-    // For demo purposes, we'll just show a message
+  const handleVoiceTest = async (voiceId: string) => {
+    if (!voiceId) return;
+    setIsPlaying(true);
+    try {
+      const response = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "xi-api-key": ELEVENLABS_API_KEY,
+          },
+          body: JSON.stringify({
+            text: "Hello, this is a call from Acme Corp. We'd love to speak with you about your recent inquiry.",
+            model_id: "eleven_multilingual_v2", // Or another appropriate model for your case
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch audio preview");
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      const audio = new Audio(audioUrl);
+      audio.play();
+
+      audio.onended = () => {
+        setIsPlaying(false);
+      };
+    } catch (error) {
+      console.error("Error playing voice preview:", error);
+      setIsPlaying(false);
+    }
   };
 
   const handleContinue = () => {
@@ -79,8 +114,8 @@ const NewStep4VoicePersonality = ({ handleNext, handleBack, onDataUpdate, initia
                 <div
                   key={voice.id}
                   className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedVoice === voice.id
-                      ? "border-blue-500 bg-blue-50"
-                      : "border-gray-200 hover:border-gray-300"
+                    ? "border-blue-500 bg-blue-50"
+                    : "border-gray-200 hover:border-gray-300"
                     }`}
                   onClick={() => setSelectedVoice(voice.id)}
                 >
@@ -99,7 +134,7 @@ const NewStep4VoicePersonality = ({ handleNext, handleBack, onDataUpdate, initia
                     className="w-full"
                   >
                     <Play className="h-3 w-3 mr-2" />
-                    Test Voice
+                    {isPlaying ? "Testing..." : "Test Voice"}
                   </Button>
                 </div>
               ))}

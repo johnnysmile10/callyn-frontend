@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { Play, Volume2, Globe } from "lucide-react";
 import { getLanguageByCode, getVoicesForLanguage } from "./languageConfig";
 
+const ELEVENLABS_API_KEY = import.meta.env.VITE_ELEVENLABS_API_KEY;
+
 interface LanguagePreviewSystemProps {
   selectedLanguage: string;
   selectedVoice?: string;
@@ -13,22 +15,58 @@ interface LanguagePreviewSystemProps {
   onVoiceChange?: (voiceId: string) => void;
 }
 
-const LanguagePreviewSystem = ({ 
-  selectedLanguage, 
+const LanguagePreviewSystem = ({
+  selectedLanguage,
   selectedVoice,
   onLanguageChange,
-  onVoiceChange 
+  onVoiceChange
 }: LanguagePreviewSystemProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  
+
   const language = getLanguageByCode(selectedLanguage);
   const voices = getVoicesForLanguage(selectedLanguage);
   const currentVoice = selectedVoice ? voices.find(v => v.id === selectedVoice) : voices[0];
 
-  const handlePlayPreview = () => {
+  const handlePlayPreview = async (text) => {
+    if (!text) return;
     setIsPlaying(true);
-    // Simulate audio playback
-    setTimeout(() => setIsPlaying(false), 3000);
+    try {
+      const response = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${currentVoice.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "xi-api-key": ELEVENLABS_API_KEY,
+          },
+          body: JSON.stringify({
+            text,
+            model_id: "eleven_monolingual_v1", // Or another appropriate model for your case
+            voice_settings: {
+              stability: 0.5,
+              similarity_boost: 0.5,
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch audio preview");
+      }
+
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      const audio = new Audio(audioUrl);
+      audio.play();
+
+      audio.onended = () => {
+        setIsPlaying(false);
+      };
+    } catch (error) {
+      console.error("Error playing voice preview:", error);
+      setIsPlaying(false);
+    }
   };
 
   const getPreviewText = (langCode: string) => {
@@ -62,7 +100,7 @@ const LanguagePreviewSystem = ({
             {language?.flag} {language?.name}
           </Badge>
         </div>
-        
+
         <div className="bg-white rounded-lg p-3 mb-3">
           <p className="text-sm text-gray-700 italic" dir={language?.rtl ? 'rtl' : 'ltr'}>
             "{getPreviewText(selectedLanguage)}"
@@ -78,10 +116,12 @@ const LanguagePreviewSystem = ({
                 {currentVoice.gender}
               </Badge>
             </div>
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               variant="outline"
-              onClick={handlePlayPreview}
+              onClick={() => {
+                handlePlayPreview(getPreviewText(selectedLanguage))
+              }}
               disabled={isPlaying}
               className="text-blue-600 border-blue-300 hover:bg-blue-100"
             >
