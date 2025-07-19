@@ -114,7 +114,11 @@ const AICampaignBuilder = () => {
         ${campaignData.script.mainPitch}
         ${campaignData.script.closingStatement}
       `,
-      customers: campaignData.leadManagement.leadList
+      customers: campaignData.leadManagement.leadList.map(lead => ({
+        name: lead.name,
+        email: lead.email,
+        number: lead.number
+      }))
     };
 
     try {
