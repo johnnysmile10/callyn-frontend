@@ -18,8 +18,8 @@ export const useCallLogData = () => {
   const callRecords: CallRecord[] = useMemo(() =>
     calls.map(call => {
       // Parse duration from string format (e.g., "2:30" to seconds)
-      const durationParts = (call.duration || "0:0").split(':');
-      const durationInSeconds = parseInt(durationParts[0]) * 60 + parseInt(durationParts[1]);
+      // const durationParts = (call.duration || "0:0").split(':');
+      // const durationInSeconds = parseInt(durationParts[0]) * 60 + parseInt(durationParts[1]);
 
       return {
         id: call.id,
@@ -27,7 +27,7 @@ export const useCallLogData = () => {
         contactName: call.customer.name,
         contactPhone: call.customer.number,
         contactCompany: undefined, // Not available in mock data
-        duration: durationInSeconds,
+        duration: Math.floor(call.duration),
         outcome: call.outcome as CallRecord['outcome'] || 'no-answer',
         campaign: undefined, // Not available in mock data
         agent: call.assistant,

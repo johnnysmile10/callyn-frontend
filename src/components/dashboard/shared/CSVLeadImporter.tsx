@@ -58,7 +58,7 @@ const CSVLeadImporter = ({ onLeadsImported }: CSVLeadImporterProps) => {
     setIsProcessing(true);
 
     // Simulate processing
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // await new Promise(resolve => setTimeout(resolve, 2000));
 
     const errors: string[] = [];
     const successRows: Record<string, string>[] = [];
@@ -67,7 +67,7 @@ const CSVLeadImporter = ({ onLeadsImported }: CSVLeadImporterProps) => {
 
     csvData.forEach((row, index) => {
       const nameMapping = fieldMappings.find(m => m.callynField === 'name');
-      const phoneMapping = fieldMappings.find(m => m.callynField === 'phone');
+      const phoneMapping = fieldMappings.find(m => m.callynField === 'number');
 
       if (!nameMapping || !row[nameMapping.csvField]) {
         errors.push(`Row ${index + 1}: Missing name`);
@@ -97,16 +97,17 @@ const CSVLeadImporter = ({ onLeadsImported }: CSVLeadImporterProps) => {
     // Call the callback to notify parent component
     if (onLeadsImported && successful > 0) {
       onLeadsImported(successful);
-      const { count } = await ApiService.post('/import-leads', successRows)
-      if (count > 0) {
-        updateProgressState({ hasLeads: true });
-        setImportStep('complete');
+      // const { count } = await ApiService.post('/import-leads', successRows)
+      // if (count > 0) {
+      await ApiService.post('/contact', successRows);
+      updateProgressState({ hasLeads: true });
+      setImportStep('complete');
 
-        toast({
-          title: "Import Complete",
-          description: `Successfully imported ${count} of ${csvData.length} leads.`,
-        });
-      }
+      toast({
+        title: "Import Complete",
+        description: `Successfully imported ${successful} of ${csvData.length} leads.`,
+      });
+      // }
     }
 
     // setImportStep('complete');

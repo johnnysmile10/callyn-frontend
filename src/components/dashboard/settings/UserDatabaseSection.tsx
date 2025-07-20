@@ -1,19 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Database, Upload, Users, Settings, FileText, Download } from "lucide-react";
 import CSVLeadImporter from "../shared/CSVLeadImporter";
 import UserDatabaseIntegration from "./UserDatabaseIntegration";
+import ApiService from "@/context/services/apiService";
+import { REQUIRED_FIELDS } from "../shared/csv-importer/constants";
+import ContactRow from "./ContactRow";
+
+const fieldMappings = ['name', 'email', 'number'];
 
 const UserDatabaseSection = () => {
   const [activeTab, setActiveTab] = useState("import");
   const [leadCount, setLeadCount] = useState(0);
+  const [contacts, setContacts] = useState([]);
+
+  const loadContacts = async () => {
+    try {
+      const contacts = await ApiService.get('/contact');
+      setContacts(contacts);
+      setLeadCount(contacts.length);
+    } catch (err) {
+      toast.error(err.response.data);
+    }
+  }
 
   const handleLeadsImported = (count: number) => {
-    setLeadCount(prev => prev + count);
+    // setLeadCount(prev => prev + count);
   };
+
+  const handleDelete = (id: number) => () => {
+    setContacts(contacts => contacts.filter(c => c.id !== id));
+  }
+
+  useEffect(() => {
+    if (activeTab === 'manage') {
+      loadContacts();
+    }
+  }, [activeTab]);
 
   return (
     <div className="space-y-6">
@@ -81,7 +110,25 @@ const UserDatabaseSection = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="text-center py-8">
+              {contacts.length > 0 ? <div className="max-h-96 overflow-auto border rounded-lg">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      {REQUIRED_FIELDS.filter(f =>
+                        fieldMappings.some(m => m === f.id)
+                      ).map(field => (
+                        <TableHead key={field.id}>{field.label}</TableHead>
+                      ))}
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {contacts.map((row) => (
+                      <ContactRow key={row.id} contact={row} onDelete={handleDelete(row.id)} />
+                    ))}
+                  </TableBody>
+                </Table>
+              </div> : <div className="text-center py-8">
                 <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">No Contact Lists Yet</h3>
                 <p className="text-gray-600 mb-4">
@@ -92,6 +139,7 @@ const UserDatabaseSection = () => {
                   Import Contacts
                 </Button>
               </div>
+              }
             </CardContent>
           </Card>
         </TabsContent>

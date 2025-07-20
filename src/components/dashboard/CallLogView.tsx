@@ -1,7 +1,7 @@
 
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, Phone } from "lucide-react";
+import { Download } from "lucide-react";
 import { useCallLogData, useCallLogStats } from "./calls/useCallLogData";
 import { useCallLogFilters } from "./calls/useCallLogFilters";
 import { CallRecord } from "./calls/types";
@@ -38,8 +38,6 @@ const CallLogView = () => {
     setSortOrder
   } = useCallLogFilters(calls);
 
-  const activeCalls = useMemo(() => calls.filter(call => call.status === 'active'), [calls])
-
   // Calculate statistics
   const stats = useCallLogStats(filteredCalls);
 
@@ -52,16 +50,6 @@ const CallLogView = () => {
     exportCallsToCSV(filteredCalls);
   };
 
-  const handleStartCall = async () => {
-    try {
-      const data = await ApiService.get('/call-leads');
-    } catch (err) {
-      if (err.status === 400) {
-        toast.error(err.response.data)
-      }
-    }
-  }
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -71,10 +59,6 @@ const CallLogView = () => {
           <p className="text-muted-foreground">Track and analyze all your AI agent calls</p>
         </div>
         <div className="flex gap-x-2">
-          <Button onClick={handleStartCall} variant="outline" disabled={!activeCalls.length}>
-            <Phone className="mr-2 h-4 w-4" />
-            Start Call
-          </Button>
           <Button onClick={handleExportData} variant="outline">
             <Download className="mr-2 h-4 w-4" />
             Export CSV
