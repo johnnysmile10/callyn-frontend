@@ -19,19 +19,19 @@ interface CalendarIntegrationData {
 }
 
 interface SchedulingSummarySectionProps {
-  operatingHours: OperatingHours;
-  timezone: string;
-  bufferTime: number;
+  // operatingHours: OperatingHours;
+  // timezone: string;
+  // bufferTime: number;
   calendarIntegration?: CalendarIntegrationData;
   connectedCalendar: string | null;
 }
 
-const SchedulingSummarySection = ({ 
-  operatingHours, 
-  timezone, 
-  bufferTime, 
+const SchedulingSummarySection = ({
+  // operatingHours,
+  // timezone,
+  // bufferTime,
   calendarIntegration,
-  connectedCalendar 
+  connectedCalendar
 }: SchedulingSummarySectionProps) => {
   const timezones = [
     { value: "America/New_York", label: "Eastern Time (ET)" },
@@ -74,23 +74,23 @@ const SchedulingSummarySection = ({
       </CardHeader>
       <CardContent>
         <div className="space-y-2 text-blue-700">
-          <p>
+          {/* <p>
             <strong>Callyn will call leads:</strong>{' '}
             {Object.entries(operatingHours || {})
               .filter(([_, dayData]) => dayData.enabled)
               .map(([day, dayData]) => `${day.charAt(0).toUpperCase() + day.slice(1)} ${dayData.start}-${dayData.end}`)
               .join(', ')
             }
-          </p>
-          <p>
+          </p> */}
+          {/* <p>
             <strong>Timezone:</strong> {timezones.find(tz => tz.value === timezone)?.label || 'Eastern Time'}
-          </p>
+          </p> */}
           <p>
             <strong>Booked meetings will appear in:</strong> {getConnectedProvider()?.name}
           </p>
-          <p>
+          {/* <p>
             <strong>Buffer time:</strong> {bufferTime || 15} minutes between meetings
-          </p>
+          </p> */}
         </div>
       </CardContent>
     </Card>

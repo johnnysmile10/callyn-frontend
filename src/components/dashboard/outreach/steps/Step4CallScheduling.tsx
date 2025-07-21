@@ -98,26 +98,26 @@ const Step4CallScheduling = ({ data, onUpdate }: Step4CallSchedulingProps) => {
         onUpdate={handleCalendarUpdate}
       />
 
-      <OperatingHoursSection
+      {/* <OperatingHoursSection
         operatingHours={data.operatingHours}
         timezone={data.timezone}
         weekendCalling={data.weekendCalling}
         onOperatingHoursChange={handleOperatingHoursChange}
         onTimezoneChange={handleTimezoneChange}
         onWeekendCallingChange={handleWeekendCallingChange}
-      />
+      /> */}
 
-      <AdvancedSettingsSection
+      {/* <AdvancedSettingsSection
         bufferTime={data.bufferTime}
         retryDelay={data.retryDelay}
         onBufferTimeChange={handleBufferTimeChange}
         onRetryDelayChange={handleRetryDelayChange}
-      />
+      /> */}
 
       <SchedulingSummarySection
-        operatingHours={data.operatingHours}
-        timezone={data.timezone}
-        bufferTime={data.bufferTime}
+        // operatingHours={data.operatingHours}
+        // timezone={data.timezone}
+        // bufferTime={data.bufferTime}
         calendarIntegration={data.calendarIntegration}
         connectedCalendar={connectedCalendar}
       />

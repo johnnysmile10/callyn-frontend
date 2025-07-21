@@ -64,13 +64,13 @@ const steps = [
     icon: Calendar,
     component: Step6CallScheduling
   },
-  {
-    id: 7,
-    title: "Test & Validate",
-    description: "Test your agent before going live",
-    icon: TestTube,
-    component: Step7TestValidate
-  },
+  // {
+  //   id: 7,
+  //   title: "Test & Validate",
+  //   description: "Test your agent before going live",
+  //   icon: TestTube,
+  //   component: Step7TestValidate
+  // },
   {
     id: 8,
     title: "Launch Campaign",
@@ -103,8 +103,6 @@ const AICampaignBuilder = () => {
   };
 
   const handleLaunchCampaign = async () => {
-    console.log('Campaign data', campaignData)
-
     const payload = {
       agent: campaignData.agentProfile,
       target_audience: campaignData.targetAudience.description,
@@ -159,7 +157,7 @@ const AICampaignBuilder = () => {
       />
 
       <div className="space-y-6">
-        {currentStep === 8 ? (
+        {currentStep === steps.length ? (
           <Step8LaunchCampaign
             data={getCurrentStepData(currentStep)}
             onUpdate={(data) => handleStepDataUpdate(currentStep, data)}
@@ -174,7 +172,7 @@ const AICampaignBuilder = () => {
           />
         )}
 
-        {currentStep !== 8 && (
+        {currentStep !== steps.length && (
           <StepNavigation
             currentStep={currentStep}
             totalSteps={steps.length}

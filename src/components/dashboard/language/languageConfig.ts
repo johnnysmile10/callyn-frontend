@@ -21,11 +21,11 @@ export const SUPPORTED_LANGUAGES: SupportedLanguage[] = [
     nativeName: 'English',
     flag: '🇺🇸',
     elevenlabsVoices: [
-      { id: '9BWtsMINqrJLrRacOk9x', name: 'Aria', gender: 'female' },
-      { id: 'CwhRBWXzGAHq8TQ4Fs17', name: 'Roger', gender: 'male' },
-      { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', gender: 'female' },
-      { id: 'TX3LPaxmHKxFdv7VOQHJ', name: 'Liam', gender: 'male' },
-      { id: 'cgSgspJ2msm6clMCkdW9', name: 'Jessica', gender: 'female' }
+      { id: "9BWtsMINqrJLrRacOk9x", name: "Aria", gender: "female", accent: "American" },
+      { id: "CwhRBWXzGAHq8TQ4Fs17", name: "Roger", gender: "male", accent: "American" },
+      { id: "EXAVITQu4vr4xnSDxMaL", name: "Sarah", gender: "female", accent: "British" },
+      { id: "IKne3meq5aSn9XLyUdCD", name: "Charlie", gender: "male", accent: "British" },
+      { id: "FGY2WhTYpPnrIDTdsKH5", name: "Laura", gender: "female", accent: "American" },
     ],
     defaultModel: 'eleven_turbo_v2_5'
   },
