@@ -3,20 +3,22 @@ import { mapApiAgentToUserAgent } from '@/utils/agent';
 import { ApiAgent } from '../types/apiTypes';
 import { User, UserAgent, OnboardingData } from '../types/authTypes';
 import ApiService from './apiService';
-import { toast } from 'sonner';
 
 export const authService = {
   login: async (email: string, password: string): Promise<User | null> => {
-    const { status, message, token } = await ApiService.post('/auth/login', { email, password });
-    if (status === 200) {
-      const user = { email }
-      localStorage.setItem('token', token)
-      ApiService.setToken(token)
-      toast.success(message)
-      return user;
-    }
-    toast.error(message)
-    return null
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { status, token } = await ApiService.post('/auth/login', { email, password });
+        if (status === 200) {
+          const user = { email }
+          localStorage.setItem('token', token)
+          ApiService.setToken(token)
+          resolve(user);
+        }
+      } catch (err) {
+        reject(err)
+      }
+    })
   },
 
   googleLogin: async (): Promise<User> => {
@@ -30,8 +32,14 @@ export const authService = {
   },
 
   signup: async (email: string, password: string, name: string): Promise<User> => {
-    const { user } = await ApiService.post('/auth/register', { name, email, password });
-    return user as User;
+    return new Promise(async (resolve, reject) => {
+      try {
+        const { user } = await ApiService.post('/auth/register', { name, email, password });
+        resolve(user);
+      } catch (err) {
+        reject(err);
+      }
+    })
   },
 
   createUserAgent: async (data: OnboardingData): Promise<UserAgent | null> => {

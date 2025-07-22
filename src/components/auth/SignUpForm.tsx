@@ -39,8 +39,7 @@ const SignUpForm = () => {
       toast.success("Register success!");
       navigate("/login");
     } catch (error) {
-      console.error("Signup error:", error);
-      toast.error("Failed to create account. Please try again.");
+      toast.error(error.response.data);
     } finally {
       setLoading(false);
     }
