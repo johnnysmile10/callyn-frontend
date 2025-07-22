@@ -16,7 +16,8 @@ const DashboardCampaignManager = () => {
   useEffect(() => {
     (async () => {
       const data = await ApiService.get('/campaign');
-      setCampaigns(data.map(mapApiCampaignToCampaign))
+      const leadCount = data.length, totalLead = data.reduce((tot, c) => tot + c.customers.length, 0);
+      setCampaigns(data.map(mapApiCampaignToCampaign({ leadCount, totalLead })))
     })()
   }, []);
 

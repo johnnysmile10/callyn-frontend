@@ -17,24 +17,26 @@ function getStatus(status: CampaignStatus, reason: CampaignEndedReason) {
     }
 }
 
-export function mapApiCampaignToCampaign(data: any) {
-    return {
-        id: data.id,
-        name: data.name,
-        status: getStatus(data.status, data.endedReason),
-        leadList: data.customers,
-        totalLeads: data.customers.length,
-        contacted: data.callsCounterEnded,
-        progress: Math.floor(data.callsCounterEnded / data.customers.length * 100),
-        startDate: date2Str(new Date(data.timestamp)),
-        updateDate: data.updatedAt,
-        callsPerHour: 0,
-        agent: data.assistant.name,
-        outcomes: {
-            interested: 0,
-            notInterested: 0,
-            callbacks: 0,
-            noAnswer: 0
+export function mapApiCampaignToCampaign({ leadCount, totalLead }) {
+    return function (data: any) {
+        return {
+            id: data.id,
+            name: data.name,
+            status: getStatus(data.status, data.endedReason),
+            leadList: data.customers.length,
+            totalLeads: totalLead,
+            contacted: data.callsCounterEnded,
+            progress: Math.floor(data.callsCounterEnded / data.customers.length * 100),
+            startDate: date2Str(new Date(data.timestamp)),
+            updateDate: data.updatedAt,
+            callsPerHour: 0,
+            agent: data.assistant.name,
+            outcomes: {
+                interested: 0,
+                notInterested: 0,
+                callbacks: 0,
+                noAnswer: 0
+            }
         }
     }
 }
