@@ -113,7 +113,7 @@ const Dashboard = () => {
       } catch (err) {
         toast({
           title: "Error",
-          description: err.message,
+          description: err.response.data,
         });
       }
     })()
