@@ -71,7 +71,7 @@ export const mapApiAgentToUserAgent = (data: ApiAgent): UserAgent => ({
         websiteUrl: data.websiteUrl,
         uploadedFile: data.uploadedFile,
         businessInfo: {
-            name: data.name || '',
+            name: data.business_name || '',
             industry: data.industry || '',
             targetAudience: data.target_audience || '',
             mainGoal: data.main_goal || ''
@@ -84,6 +84,7 @@ export const mapUserAgentToApiAgent = (data: UserAgent): ApiAgent => ({
     user_id: data.other.userId,
     assistant_id: data.other.assistantId,
     name: data.name,
+    business_name: data.configuration.businessInfo.name,
     voice: data.configuration.voice,
     model: data.configuration.model,
     instructions: data.configuration.instructions,

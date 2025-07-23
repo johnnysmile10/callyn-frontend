@@ -24,6 +24,7 @@ import AgentProfileEditModal from "./AgentProfileEditModal";
 import VoicePersonalityEditModal from "./VoicePersonalityEditModal";
 import { LanguageConfig } from "../outreach/types";
 import { getVoicesForLanguage } from "../language/languageConfig";
+import { authService } from "@/context/services/authService";
 
 const AgentOverview = () => {
   const { userAgent, onboardingData, setOnboardingData, setUserAgent } = useAuth();
@@ -65,7 +66,9 @@ const AgentOverview = () => {
           businessInfo
         }
       };
-      setUserAgent(updatedAgent);
+      authService.updateUserAgentWithAgent(updatedAgent).then(() => {
+        setUserAgent(updatedAgent);
+      })
     }
   };
 
@@ -79,7 +82,9 @@ const AgentOverview = () => {
           personality
         }
       };
-      setUserAgent(updatedAgent);
+      authService.updateUserAgentWithAgent(updatedAgent).then(() => {
+        setUserAgent(updatedAgent);
+      })
     }
   };
 
@@ -98,7 +103,9 @@ const AgentOverview = () => {
           personality: data.personality
         }
       };
-      setUserAgent(updatedAgent);
+      authService.updateUserAgentWithAgent(updatedAgent).then(() => {
+        setUserAgent(updatedAgent);
+      })
     }
   };
 

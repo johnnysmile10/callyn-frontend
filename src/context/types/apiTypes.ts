@@ -5,6 +5,7 @@ export interface ApiAgent {
     name: string,
     voice: string,
     model: string,
+    business_name: string,
     instructions?: string,
     industry: string,
     target_audience: string,

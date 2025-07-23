@@ -34,6 +34,16 @@ class ApiService {
     }
   }
 
+  static async patch(endpoint, data = {}) {
+    try {
+      const response = await api.patch(endpoint, data);
+      return response.data;
+    } catch (error) {
+      console.error('PATCH request failed:', error);
+      throw error;
+    }
+  }
+
   static async put(endpoint, data = {}) {
     try {
       const response = await api.put(endpoint, data);

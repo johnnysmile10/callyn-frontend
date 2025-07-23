@@ -10,6 +10,8 @@ import { User, Briefcase, Building } from "lucide-react";
 interface AgentProfileData {
   name: string;
   role: string;
+  businessName: string;
+  businessIndustry: string;
   businessContext: string;
   personality: string;
 }
@@ -51,7 +53,7 @@ const Step1AgentProfile = ({ data, onUpdate }: Step1AgentProfileProps) => {
                 onChange={(e) => handleUpdate('name', e.target.value)}
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="agent-role">Agent Role</Label>
               <Input
@@ -59,6 +61,28 @@ const Step1AgentProfile = ({ data, onUpdate }: Step1AgentProfileProps) => {
                 placeholder="e.g., Sales Representative, Account Executive"
                 value={profileData.role}
                 onChange={(e) => handleUpdate('role', e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="agent-name">Business Name</Label>
+              <Input
+                id="agent-name"
+                placeholder="e.g., Puma, Nike"
+                value={profileData.businessName}
+                onChange={(e) => handleUpdate('businessName', e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="agent-role">Business Industry</Label>
+              <Input
+                id="business-industry"
+                placeholder="e.g., Telecom, Healthcare, Education"
+                value={profileData.businessIndustry}
+                onChange={(e) => handleUpdate('businessIndustry', e.target.value)}
               />
             </div>
           </div>

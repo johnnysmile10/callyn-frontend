@@ -43,13 +43,13 @@ export const authService = {
   },
 
   createUserAgent: async (data: OnboardingData): Promise<UserAgent | null> => {
-    const payload: Omit<ApiAgent, 'id'> = {
-      name: data.businessName,
+    const payload: Omit<ApiAgent, 'id' | 'name'> = {
       custom_script: data.customScript,
       enthusiasm: data.enthusiasm,
       formality: data.languageConfig.formality,
       tone: data.languageConfig.tone,
       handle_objections: data.handleObjections,
+      business_name: data.businessName,
       industry: data.industry,
       main_goal: data.mainGoal,
       model: data.languageConfig.model,
@@ -67,8 +67,8 @@ export const authService = {
   },
 
   updateUserAgent: async (data: OnboardingData): Promise<UserAgent | null> => {
-    const payload: Omit<ApiAgent, 'id'> = {
-      name: data.businessName,
+    const payload: Omit<ApiAgent, 'id' | 'name'> = {
+      business_name: data.businessName,
       custom_script: data.customScript,
       enthusiasm: data.enthusiasm,
       formality: data.languageConfig.formality,
@@ -86,7 +86,31 @@ export const authService = {
       uploadedFile: null,
     };
 
-    const { data: assistant } = await ApiService.put('/update-assistant', payload);
+    const { data: assistant } = await ApiService.put('/assistant', payload);
+    return mapApiAgentToUserAgent(assistant);
+  },
+
+  updateUserAgentWithAgent: async (data: UserAgent): Promise<UserAgent | null> => {
+    const payload: Omit<ApiAgent, 'id' | 'name'> = {
+      business_name: data.configuration.businessInfo.name,
+      custom_script: data.configuration.script,
+      enthusiasm: data.configuration.enthusiasm,
+      formality: data.configuration.formality,
+      tone: data.configuration.personality,
+      handle_objections: data.configuration.handleObjections,
+      industry: data.configuration.businessInfo.industry,
+      main_goal: data.configuration.businessInfo.mainGoal,
+      model: data.configuration.model,
+      scriptMethod: data.configuration.scriptMethod,
+      speaking_speed: data.configuration.speakingSpeed,
+      target_audience: data.configuration.businessInfo.targetAudience,
+      use_small_talk: data.configuration.useSmallTalk,
+      voice: data.configuration.voice,
+      websiteUrl: data.configuration.websiteUrl,
+      uploadedFile: data.configuration.uploadedFile,
+    };
+
+    const { data: assistant } = await ApiService.put('/assistant', payload);
     return mapApiAgentToUserAgent(assistant);
   },
 
