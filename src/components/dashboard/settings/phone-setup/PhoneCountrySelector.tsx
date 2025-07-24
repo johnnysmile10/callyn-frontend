@@ -1,6 +1,6 @@
 
 import { Label } from "@/components/ui/label";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -13,13 +13,35 @@ interface PhoneCountrySelectorProps {
   onCountryChange: (country: string) => void;
 }
 
+const countries = [
+  { code: "US", name: "United States" },      // English
+  { code: "CA", name: "Canada" },             // English, French
+  { code: "GB", name: "United Kingdom" },     // English
+  { code: "AU", name: "Australia" },          // English
+  { code: "ES", name: "Spain" },              // Spanish
+  { code: "MX", name: "Mexico" },             // Spanish
+  { code: "AR", name: "Argentina" },          // Spanish
+  { code: "CL", name: "Chile" },              // Spanish
+  { code: "CO", name: "Colombia" },           // Spanish
+  { code: "IT", name: "Italy" },              // Italian
+  { code: "DE", name: "Germany" },            // German
+  { code: "FR", name: "France" },             // French
+  { code: "BE", name: "Belgium" },            // Dutch, French, German
+  { code: "PT", name: "Portugal" },           // Portuguese
+  { code: "BR", name: "Brazil" },             // Portuguese
+  { code: "NL", name: "Netherlands" },        // Dutch
+  { code: "PL", name: "Poland" },             // Polish
+  { code: "IN", name: "India" },              // Hindi, English (official)
+  { code: "DK", name: "Denmark" },            // Danish
+  { code: "NO", name: "Norway" },             // Norwegian
+  { code: "SE", name: "Sweden" },             // Swedish
+  { code: "AE", name: "United Arab Emirates" }, // Arabic
+  { code: "SA", name: "Saudi Arabia" },       // Arabic
+  { code: "TR", name: "Turkey" },             // Turkish
+  { code: "RU", name: "Russia" }              // Russian
+];
+
 const PhoneCountrySelector = ({ selectedCountry, onCountryChange }: PhoneCountrySelectorProps) => {
-  const countries = [
-    { code: "US", name: "United States" },
-    { code: "CA", name: "Canada" },
-    { code: "GB", name: "United Kingdom" },
-    { code: "AU", name: "Australia" },
-  ];
 
   return (
     <div className="space-y-2">
