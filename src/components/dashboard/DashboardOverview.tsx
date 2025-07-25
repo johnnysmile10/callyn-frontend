@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useAuth } from "@/context";
+import DashboardUploadLeadDialog from "./DashboardUploadLeadDialog";
 
 interface DashboardOverviewProps {
   onCampaignToggle: (active: boolean) => void;
@@ -29,6 +30,8 @@ interface DashboardOverviewProps {
 const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOverviewProps) => {
   const { userAgent, hasCompletedSetup } = useAuth();
   const [hasLeads, setHasLeads] = useState(false);
+
+  const [isLeadDialogOpen, setIsLeadDialogOpen] = useState(false);
 
   const hasAgent = !!userAgent;
   const setupComplete = hasCompletedSetup();
@@ -105,7 +108,9 @@ const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOvervi
                   <div className="text-sm text-green-800">
                     Upload a CSV file with your leads to begin your first campaign
                   </div>
-                  <Button className="w-full bg-green-600 hover:bg-green-700">
+                  <Button className="w-full bg-green-600 hover:bg-green-700" onClick={() => {
+                    setIsLeadDialogOpen(true)
+                  }}>
                     <Plus className="mr-2 h-4 w-4" />
                     Upload Leads
                   </Button>
@@ -310,6 +315,8 @@ const DashboardOverview = ({ onCampaignToggle, campaignActive }: DashboardOvervi
           </AlertDescription>
         </Alert>
       )}
+
+      <DashboardUploadLeadDialog isOpen={isLeadDialogOpen} onClose={() => setIsLeadDialogOpen(false)} onSave={() => { }} />
     </div>
   );
 };
